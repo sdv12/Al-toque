@@ -103,3 +103,11 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Resaltador: franja de color detrás del texto, también cuando el texto se parte en líneas. */
+@utility resaltado {
+  background-image: linear-gradient(transparent 52%, var(--lk-acento) 52%, var(--lk-acento) 94%, transparent 94%);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding-inline: 0.06em;
+}

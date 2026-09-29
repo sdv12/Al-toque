@@ -5,9 +5,14 @@ import type { LandingConfig } from "@/core/schema/landing-config";
 import { PLANTILLAS_LISTAS } from "@/templates";
 import { Bloque, botonKit } from "../campos";
 
-type Props = { config: LandingConfig; usarEjemplo: (p: Plantilla) => void };
+type Props = {
+  config: LandingConfig;
+  usarEjemplo: (p: Plantilla) => void;
+  pendiente: Plantilla | null;
+  resolverPendiente: (usarla: boolean) => void;
+};
 
-export function PestanaPlantilla({ config, usarEjemplo }: Props) {
+export function PestanaPlantilla({ config, usarEjemplo, pendiente, resolverPendiente }: Props) {
   function elegir(p: Plantilla) {
     if (p === config.plantilla) return;
     if (window.confirm(`Vas a cambiar a "${registry[p].meta.nombre}". Se carga su contenido de ejemplo y se pierde lo que editaste. ¿Seguimos?`)) {
@@ -17,6 +22,22 @@ export function PestanaPlantilla({ config, usarEjemplo }: Props) {
 
   return (
     <>
+      {pendiente && (
+        <div role="status" className="m-5 mb-0 rounded-base border-2 border-tinta bg-superficie p-4">
+          <p className="text-chico">
+            Elegiste <strong>{registry[pendiente].meta.nombre}</strong>, pero tenés un borrador guardado de{" "}
+            <strong>{registry[config.plantilla].meta.nombre}</strong> con cambios.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <button type="button" className={botonKit.primario} onClick={() => resolverPendiente(true)}>
+              Usar {registry[pendiente].meta.nombre}
+            </button>
+            <button type="button" className={botonKit.secundario} onClick={() => resolverPendiente(false)}>
+              Seguir con mi borrador
+            </button>
+          </div>
+        </div>
+      )}
       <Bloque titulo="Plantilla" descripcion="Cada plantilla es un sitio distinto, pensado para su rubro: cambia la estructura, no solo los colores.">
         <fieldset>
           <legend className="sr-only">Elegí una plantilla</legend>

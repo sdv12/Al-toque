@@ -22,7 +22,7 @@ const PESTANAS: { id: Pestana; texto: string }[] = [
 ];
 
 export default function Configurador() {
-  const { config, editar, reemplazar, usarEjemplo, errores, guardado } = useBorrador();
+  const { config, editar, reemplazar, usarEjemplo, errores, guardado, pendiente, resolverPendiente } = useBorrador();
   const [pestana, setPestana] = useState<Pestana>("plantilla");
   const [dispositivo, setDispositivo] = useState<Dispositivo>("escritorio");
   // Mobile: hoja inferior plegable sobre el preview.
@@ -97,7 +97,7 @@ export default function Configurador() {
           </Tabs.List>
           <div className="min-h-0 flex-1 overflow-y-auto">
             <Tabs.Content value="plantilla">
-              <PestanaPlantilla config={config} usarEjemplo={usarEjemplo} />
+              <PestanaPlantilla config={config} usarEjemplo={usarEjemplo} pendiente={pendiente} resolverPendiente={resolverPendiente} />
             </Tabs.Content>
             <Tabs.Content value="estilo">
               <PestanaEstilo key={config.plantilla} config={config} editar={editar} />

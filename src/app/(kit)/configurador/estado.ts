@@ -32,10 +32,41 @@ function leerBorrador(): LandingConfig | null {
 
 export type EstadoGuardado = "guardado" | "pendiente" | "sin-almacenamiento";
 
+/** Plantilla pedida desde la home ("Usar esta plantilla" → /configurador?plantilla=…). */
+function plantillaPedida(): Plantilla | null {
+  try {
+    const valor = new URLSearchParams(window.location.search).get("plantilla");
+    return esPlantilla(valor) ? valor : null;
+  } catch {
+    return null;
+  }
+}
+
+const sinTocar = (c: LandingConfig) => JSON.stringify(c) === JSON.stringify(configsPorDefecto[c.plantilla]);
+
+/**
+ * Punto de partida: el borrador guardado, o la plantilla pedida por URL. Si hay un borrador con
+ * cambios de otra plantilla, no se pisa: queda la pedida como "pendiente" para que la persona elija.
+ */
+function inicio(): { config: LandingConfig; pendiente: Plantilla | null } {
+  const guardado = leerBorrador();
+  const pedida = plantillaPedida();
+  if (!pedida) return { config: guardado ?? structuredClone(configsPorDefecto.barberia), pendiente: null };
+  if (guardado && guardado.plantilla !== pedida && !sinTocar(guardado)) return { config: guardado, pendiente: pedida };
+  return { config: guardado?.plantilla === pedida ? guardado : structuredClone(configsPorDefecto[pedida]), pendiente: null };
+}
+
 export function useBorrador() {
-  // El componente se monta solo en el cliente (ssr: false), así que se puede leer localStorage al iniciar.
-  const [config, setConfig] = useState<LandingConfig>(() => leerBorrador() ?? structuredClone(configsPorDefecto.barberia));
+  // El componente se monta solo en el cliente (ssr: false), así que se puede leer localStorage y la URL al iniciar.
+  const [arranque] = useState(inicio);
+  const [config, setConfig] = useState<LandingConfig>(arranque.config);
+  const [pendiente, setPendiente] = useState<Plantilla | null>(arranque.pendiente);
   const [guardado, setGuardado] = useState<EstadoGuardado>("guardado");
+
+  // La URL queda limpia: recargar no vuelve a aplicar la plantilla pedida.
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).has("plantilla")) window.history.replaceState(null, "", window.location.pathname);
+  }, []);
 
   useEffect(() => {
     const t = setTimeout(() => {
@@ -66,12 +97,21 @@ export function useBorrador() {
 
   const usarEjemplo = useCallback((plantilla: Plantilla) => reemplazar(configsPorDefecto[plantilla]), [reemplazar]);
 
+  /** Respuesta al aviso de plantilla pedida con un borrador propio de otra. */
+  const resolverPendiente = useCallback(
+    (usarla: boolean) => {
+      if (usarla && pendiente) usarEjemplo(pendiente);
+      setPendiente(null);
+    },
+    [pendiente, usarEjemplo],
+  );
+
   const errores = useMemo<ErrorConfig[]>(() => {
     const r = landingConfigSchema.safeParse(config);
     return r.success ? [] : erroresDeZod(r.error);
   }, [config]);
 
-  return { config, editar, reemplazar, usarEjemplo, errores, guardado };
+  return { config, editar, reemplazar, usarEjemplo, errores, guardado, pendiente, resolverPendiente };
 }
 
 /** Código LK1 de la config actual, recalculado con un pequeño retraso mientras se edita. */

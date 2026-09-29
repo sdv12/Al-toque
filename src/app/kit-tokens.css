@@ -39,3 +39,43 @@
   --lk-radio-control: 6px;
   --lk-borde-ancho: 1px;
 }
+
+/*
+ * Home pública de "landing al toque": papel, tinta y un amarillo resaltador como único acento.
+ * Titulares en Archivo condensada (afiche); cuerpo en IBM Plex, igual que la herramienta.
+ * El amarillo nunca va como texto sobre papel: solo de fondo o de resaltado, con tinta encima.
+ */
+[data-kit="home"] {
+  --lk-fondo: #f3efe6;
+  --lk-superficie: #fbf9f4;
+  --lk-superficie-2: #e8e1d2;
+  --lk-texto: #17150f;
+  --lk-texto-suave: #57524a;
+  --lk-borde: #d6cebe;
+  --lk-acento: #ffd12e;
+  --lk-acento-texto: #17150f;
+  --lk-acento-relleno: #ffd12e;
+  --lk-sobre-acento: #17150f;
+  --lk-foco: #1d4fd8;
+
+  --lk-fuente-display: var(--fuente-home-display), "Arial Narrow", system-ui, sans-serif;
+
+  --lk-t-display: clamp(3.4rem, 1.1rem + 10.5cqi, 11rem);
+  --lk-t-display-alto: 0.84;
+  --lk-t-display-tracking: -0.015em;
+  --lk-t-display-peso: 850;
+  --lk-t-titulo: clamp(2.4rem, 1.2rem + 5cqi, 5.5rem);
+  --lk-t-titulo-alto: 0.9;
+  --lk-t-subtitulo: clamp(1.2rem, 1.02rem + 0.8cqi, 1.6rem);
+  --lk-t-subtitulo-alto: 1.3;
+  --lk-t-cuerpo: 1.0625rem;
+  --lk-t-cuerpo-alto: 1.6;
+  --lk-t-chico: 0.9375rem;
+  --lk-t-chico-alto: 1.5;
+  --lk-t-mini: 0.8125rem;
+  --lk-t-mini-alto: 1.4;
+  --lk-medida: 38rem;
+
+  --lk-radio: 14px;
+  --lk-radio-control: 999px;
+}
