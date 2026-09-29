@@ -1,0 +1,41 @@
+/*
+ * Tokens de la herramienta (configurador y páginas internas). Mismo contrato --lk-* que las
+ * plantillas, así las utilidades de Tailwind funcionan igual; estética de herramienta, sobria.
+ */
+[data-kit] {
+  --lk-fondo: #f5f4f1;
+  --lk-superficie: #ffffff;
+  --lk-superficie-2: #ebe9e4;
+  --lk-texto: #1b1a18;
+  --lk-texto-suave: #5b5852;
+  --lk-borde: #d6d3cc;
+  --lk-acento: #1b1a18;
+  --lk-acento-texto: #1b1a18;
+  --lk-acento-relleno: #1b1a18;
+  --lk-sobre-acento: #ffffff;
+  --lk-foco: #2458c6;
+
+  --lk-fuente-display: var(--fuente-kit), system-ui, sans-serif;
+  --lk-fuente-cuerpo: var(--fuente-kit), system-ui, sans-serif;
+  --lk-fuente-nota: var(--fuente-kit-mono), ui-monospace, monospace;
+
+  --lk-t-display: 1.75rem;
+  --lk-t-display-alto: 1.15;
+  --lk-t-display-tracking: -0.01em;
+  --lk-t-display-peso: 600;
+  --lk-t-titulo: 1.25rem;
+  --lk-t-titulo-alto: 1.3;
+  --lk-t-subtitulo: 1rem;
+  --lk-t-subtitulo-alto: 1.4;
+  --lk-t-cuerpo: 0.9375rem;
+  --lk-t-cuerpo-alto: 1.5;
+  --lk-t-chico: 0.8125rem;
+  --lk-t-chico-alto: 1.45;
+  --lk-t-mini: 0.75rem;
+  --lk-t-mini-alto: 1.4;
+  --lk-medida: 44rem;
+
+  --lk-radio: 6px;
+  --lk-radio-control: 6px;
+  --lk-borde-ancho: 1px;
+}

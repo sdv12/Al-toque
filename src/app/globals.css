@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+@import "./kit-tokens.css";
+@import "../templates/barberia/tokens.css";
+@import "../templates/consultorio/tokens.css";
+@import "../templates/alojamiento/tokens.css";
+@import "../templates/generico/tokens.css";
+
+/*
+ * Sin paleta, fuentes, escala ni radios por defecto de Tailwind: todo sale de los tokens --lk-*
+ * del set activo ([data-plantilla="…"] o [data-kit]). Así `bg-fondo` o `text-display` significan
+ * algo distinto en cada plantilla y nadie puede colar un `bg-violet-500`.
+ */
+@theme {
+  --color-*: initial;
+  --font-*: initial;
+  --text-*: initial;
+  --radius-*: initial;
+  --shadow-*: initial;
+}
+
+@theme inline {
+  --color-fondo: var(--lk-fondo);
+  --color-superficie: var(--lk-superficie);
+  --color-superficie-2: var(--lk-superficie-2);
+  --color-tinta: var(--lk-texto);
+  --color-tinta-suave: var(--lk-texto-suave);
+  --color-borde: var(--lk-borde);
+  --color-acento: var(--lk-acento);
+  --color-acento-texto: var(--lk-acento-texto);
+  --color-acento-relleno: var(--lk-acento-relleno);
+  --color-sobre-acento: var(--lk-sobre-acento);
+  --color-foco: var(--lk-foco);
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  --font-display: var(--lk-fuente-display);
+  --font-cuerpo: var(--lk-fuente-cuerpo);
+  --font-nota: var(--lk-fuente-nota);
+
+  --text-display: var(--lk-t-display);
+  --text-display--line-height: var(--lk-t-display-alto);
+  --text-display--letter-spacing: var(--lk-t-display-tracking);
+  --text-display--font-weight: var(--lk-t-display-peso);
+  --text-titulo: var(--lk-t-titulo);
+  --text-titulo--line-height: var(--lk-t-titulo-alto);
+  --text-subtitulo: var(--lk-t-subtitulo);
+  --text-subtitulo--line-height: var(--lk-t-subtitulo-alto);
+  --text-cuerpo: var(--lk-t-cuerpo);
+  --text-cuerpo--line-height: var(--lk-t-cuerpo-alto);
+  --text-chico: var(--lk-t-chico);
+  --text-chico--line-height: var(--lk-t-chico-alto);
+  --text-mini: var(--lk-t-mini);
+  --text-mini--line-height: var(--lk-t-mini-alto);
+
+  --radius-base: var(--lk-radio);
+  --radius-control: var(--lk-radio-control);
+
+  --container-medida: var(--lk-medida);
+}
+
+@layer base {
+  /* Cada raíz de set de tokens es contenedor: las plantillas usan @container (y unidades cqi)
+     para que el preview del configurador responda a su propio ancho. */
+  [data-plantilla],
+  [data-kit] {
+    container: landing / inline-size;
+    background-color: var(--lk-fondo);
+    color: var(--lk-texto);
+    font-family: var(--lk-fuente-cuerpo);
+    font-size: var(--lk-t-cuerpo);
+    line-height: var(--lk-t-cuerpo-alto);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--lk-foco, currentColor);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background-color: var(--lk-acento-relleno);
+    color: var(--lk-sobre-acento);
+  }
+}
+
+@utility textura {
+  background-image: var(--lk-textura, none);
+}
+
+@utility borde-base {
+  border: var(--lk-borde-ancho) solid var(--lk-borde);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

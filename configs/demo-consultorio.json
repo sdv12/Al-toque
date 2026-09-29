@@ -1,0 +1,265 @@
+{
+  "version": 1,
+  "plantilla": "consultorio",
+  "estilo": {
+    "acento": "#1f5f78",
+    "esquinas": "suave",
+    "modo": "claro"
+  },
+  "negocio": {
+    "nombre": "Consultorio Dermatológico Cerro",
+    "eslogan": "Dermatología clínica y estética, con turnos en el día.",
+    "subtitulo": "Atendemos adultos y chicos en Cerro de las Rosas. Particular y obras sociales. Pedí tu turno acá: elegís prestación, día y horario, y te confirmamos por WhatsApp.",
+    "whatsapp": "5493515550202",
+    "direccion": "Av. Rafael Núñez 4620, 1.º B, Cerro de las Rosas, Córdoba",
+    "horario": "Lunes a viernes de 9 a 18 h",
+    "instagram": "dermacerro"
+  },
+  "agenda": {
+    "dias": [
+      {
+        "dia": 1,
+        "franjas": [
+          {
+            "desde": "09:00",
+            "hasta": "13:00"
+          },
+          {
+            "desde": "14:30",
+            "hasta": "18:00"
+          }
+        ]
+      },
+      {
+        "dia": 2,
+        "franjas": [
+          {
+            "desde": "09:00",
+            "hasta": "13:00"
+          },
+          {
+            "desde": "14:30",
+            "hasta": "18:00"
+          }
+        ]
+      },
+      {
+        "dia": 3,
+        "franjas": [
+          {
+            "desde": "09:00",
+            "hasta": "13:00"
+          },
+          {
+            "desde": "14:30",
+            "hasta": "18:00"
+          }
+        ]
+      },
+      {
+        "dia": 4,
+        "franjas": [
+          {
+            "desde": "09:00",
+            "hasta": "13:00"
+          },
+          {
+            "desde": "14:30",
+            "hasta": "18:00"
+          }
+        ]
+      },
+      {
+        "dia": 5,
+        "franjas": [
+          {
+            "desde": "09:00",
+            "hasta": "13:00"
+          },
+          {
+            "desde": "14:30",
+            "hasta": "18:00"
+          }
+        ]
+      }
+    ],
+    "intervaloMin": 20,
+    "anticipacionMinHoras": 12,
+    "diasHaciaAdelante": 30
+  },
+  "secciones": [
+    {
+      "tipo": "portada",
+      "variante": "turnos-lateral",
+      "activa": true
+    },
+    {
+      "tipo": "prestaciones",
+      "variante": "tabla",
+      "activa": true
+    },
+    {
+      "tipo": "profesionales",
+      "variante": "listado",
+      "activa": true
+    },
+    {
+      "tipo": "obrasSociales",
+      "variante": "lista",
+      "activa": true
+    },
+    {
+      "tipo": "primeraConsulta",
+      "variante": "checklist",
+      "activa": true
+    },
+    {
+      "tipo": "faq",
+      "variante": "acordeon",
+      "activa": true
+    },
+    {
+      "tipo": "ubicacion",
+      "variante": "mapa-texto",
+      "activa": true
+    }
+  ],
+  "contenido": {
+    "servicios": [
+      {
+        "id": "consulta-dermatologica",
+        "nombre": "Consulta dermatológica",
+        "descripcion": "Evaluación general de piel, pelo y uñas.",
+        "precio": 45000,
+        "duracionMin": 20,
+        "categoria": "Clínica",
+        "modalidad": "presencial",
+        "cobertura": "ambas"
+      },
+      {
+        "id": "control-lunares",
+        "nombre": "Control de lunares (dermatoscopía)",
+        "descripcion": "Mapeo y seguimiento con dermatoscopio digital.",
+        "precio": 60000,
+        "duracionMin": 40,
+        "categoria": "Clínica",
+        "modalidad": "presencial",
+        "cobertura": "ambas",
+        "profesionalIds": [
+          "ferreyra"
+        ]
+      },
+      {
+        "id": "teleconsulta",
+        "nombre": "Teleconsulta de control",
+        "descripcion": "Para seguimiento de tratamientos ya indicados.",
+        "precio": 35000,
+        "duracionMin": 20,
+        "categoria": "Clínica",
+        "modalidad": "virtual",
+        "cobertura": "particular"
+      },
+      {
+        "id": "peeling",
+        "nombre": "Peeling químico",
+        "descripcion": "Manchas, acné y textura. Incluye evaluación previa.",
+        "precio": 70000,
+        "precioDesde": true,
+        "duracionMin": 40,
+        "categoria": "Estética",
+        "modalidad": "presencial",
+        "cobertura": "particular",
+        "profesionalIds": [
+          "ortiz"
+        ]
+      },
+      {
+        "id": "crioterapia",
+        "nombre": "Crioterapia de lesiones",
+        "descripcion": "Verrugas y queratosis, con nitrógeno líquido.",
+        "precio": 50000,
+        "duracionMin": 20,
+        "categoria": "Procedimientos",
+        "modalidad": "presencial",
+        "cobertura": "ambas"
+      }
+    ],
+    "equipo": [
+      {
+        "id": "ferreyra",
+        "nombre": "Dra. Paula Ferreyra",
+        "rol": "Médica dermatóloga",
+        "especialidad": "Dermatología clínica y dermatoscopía",
+        "matricula": "MP 28.431 · ME 14.902",
+        "bio": "Especialista por la UNC. Miembro de la Sociedad Argentina de Dermatología."
+      },
+      {
+        "id": "ortiz",
+        "nombre": "Dr. Martín Ortiz",
+        "rol": "Médico dermatólogo",
+        "especialidad": "Dermatología estética y procedimientos",
+        "matricula": "MP 31.207 · ME 16.388",
+        "agenda": {
+          "dias": [
+            {
+              "dia": 2,
+              "franjas": [
+                {
+                  "desde": "14:30",
+                  "hasta": "18:00"
+                }
+              ]
+            },
+            {
+              "dia": 4,
+              "franjas": [
+                {
+                  "desde": "14:30",
+                  "hasta": "18:00"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "obrasSociales": [
+      "APROSS",
+      "OSDE",
+      "Swiss Medical",
+      "Galeno",
+      "Sancor Salud",
+      "Prevención Salud",
+      "Medifé",
+      "Omint",
+      "OSPE",
+      "Daspu"
+    ],
+    "primeraConsulta": [
+      "DNI y credencial de la obra social (física o digital).",
+      "Orden médica si tu plan la pide para especialistas.",
+      "Estudios o biopsias previas, si tenés.",
+      "La lista de cremas y medicamentos que estás usando.",
+      "Venir sin maquillaje si la consulta es por la cara."
+    ],
+    "faq": [
+      {
+        "id": "orden",
+        "pregunta": "¿Necesito orden para atenderme por obra social?",
+        "respuesta": "Depende del plan. APROSS pide orden de médico de cabecera; OSDE y Swiss Medical no. Si tenés dudas, escribinos antes de venir."
+      },
+      {
+        "id": "cancelar",
+        "pregunta": "¿Cómo cancelo o cambio un turno?",
+        "respuesta": "Respondé el mensaje de confirmación por WhatsApp con al menos 24 h de anticipación y te damos otro horario."
+      },
+      {
+        "id": "chicos",
+        "pregunta": "¿Atienden a chicos?",
+        "respuesta": "Sí, desde los 2 años, con un adulto responsable."
+      }
+    ]
+  },
+  "whatsappFlotante": true,
+  "demo": true
+}

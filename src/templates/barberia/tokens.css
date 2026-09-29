@@ -1,0 +1,76 @@
+/*
+ * Barbería — "Nocturna editorial"
+ * Fondo oscuro cálido (nunca negro puro), acento metálico, serif de alto contraste (Bodoni Moda)
+ * para display y sans geométrica (Jost) para cuerpo. Protagonista: el nombre del local.
+ * Los colores base se espejan en src/core/registry (hay un test que los compara).
+ */
+[data-plantilla="barberia"] {
+  --lk-fondo: #1a1511;
+  --lk-superficie: #241d17;
+  --lk-superficie-2: #2f261e;
+  --lk-texto: #efe6d8;
+  --lk-texto-suave: #b5a894;
+  --lk-borde: #43372b;
+  --lk-acento: #c9a45c;
+  --lk-acento-texto: #c9a45c;
+  --lk-acento-relleno: #c9a45c;
+  --lk-sobre-acento: #111111;
+  --lk-foco: var(--lk-acento-texto);
+
+  --lk-fuente-display: var(--fuente-barberia-display), "Didot", Georgia, serif;
+  --lk-fuente-cuerpo: var(--fuente-barberia-cuerpo), "Futura", system-ui, sans-serif;
+  --lk-fuente-nota: var(--lk-fuente-cuerpo);
+
+  /* Escala: contraste extremo entre el display y el resto. Unidades cqi para que el preview
+     del configurador responda al ancho del contenedor y no al de la ventana. */
+  --lk-t-display: clamp(3.5rem, 1.6rem + 10cqi, 9.5rem);
+  --lk-t-display-alto: 0.86;
+  --lk-t-display-tracking: -0.025em;
+  --lk-t-display-peso: 500;
+  --lk-t-titulo: clamp(2.125rem, 1.4rem + 3.6cqi, 4rem);
+  --lk-t-titulo-alto: 1;
+  --lk-t-subtitulo: clamp(1.25rem, 1.1rem + 0.8cqi, 1.625rem);
+  --lk-t-subtitulo-alto: 1.3;
+  --lk-t-cuerpo: 1.0625rem;
+  --lk-t-cuerpo-alto: 1.6;
+  --lk-t-chico: 0.9375rem;
+  --lk-t-chico-alto: 1.5;
+  --lk-t-mini: 0.8125rem;
+  --lk-t-mini-alto: 1.4;
+  --lk-medida: 38rem;
+
+  --lk-radio: 0;
+  --lk-radio-control: 0;
+  --lk-borde-ancho: 1px;
+
+  --lk-placeholder-fondo: var(--lk-superficie);
+  --lk-placeholder-trama: repeating-linear-gradient(
+    135deg,
+    transparent 0 9px,
+    color-mix(in srgb, var(--lk-acento) 14%, transparent) 9px 10px
+  );
+}
+
+[data-plantilla="barberia"][data-esquinas="suave"] {
+  --lk-radio: 2px;
+  --lk-radio-control: 2px;
+}
+
+[data-plantilla="barberia"][data-esquinas="redondeado"] {
+  --lk-radio: 6px;
+  --lk-radio-control: 999px;
+}
+
+/* Movimiento propio de la plantilla (el global lo anula con prefers-reduced-motion). */
+@keyframes barberia-panel-entra {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+@keyframes barberia-panel-sale {
+  from { transform: translateX(0); }
+  to { transform: translateX(100%); }
+}
+@keyframes barberia-velo {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

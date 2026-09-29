@@ -1,0 +1,278 @@
+{
+  "version": 1,
+  "plantilla": "alojamiento",
+  "estilo": {
+    "acento": "#9c4a2b",
+    "esquinas": "redondeado",
+    "modo": "claro"
+  },
+  "negocio": {
+    "nombre": "Casas del Arroyo",
+    "eslogan": "Tres casas de piedra a orillas del arroyo, en Los Reartes.",
+    "subtitulo": "A 5 km de Villa General Belgrano, con el arroyo a cuarenta pasos de la galería. Casas equipadas para 2 a 6 personas, con leña, parrilla y noches muy estrelladas.",
+    "whatsapp": "5493546550303",
+    "direccion": "Camino a Villa Berna s/n, Los Reartes, Calamuchita, Córdoba",
+    "horario": "Respondemos consultas todos los días de 9 a 21 h",
+    "instagram": "casasdelarroyo.lr"
+  },
+  "secciones": [
+    {
+      "tipo": "recorrido",
+      "variante": "horizontal",
+      "activa": true
+    },
+    {
+      "tipo": "mapa",
+      "variante": "ilustrado",
+      "activa": true
+    },
+    {
+      "tipo": "disponibilidad",
+      "variante": "calendario-ficha",
+      "activa": true
+    },
+    {
+      "tipo": "entorno",
+      "variante": "collage",
+      "activa": true
+    },
+    {
+      "tipo": "testimonios",
+      "variante": "cuaderno",
+      "activa": true
+    },
+    {
+      "tipo": "faq",
+      "variante": "lista",
+      "activa": true
+    }
+  ],
+  "contenido": {
+    "propiedades": [
+      {
+        "id": "el-molle",
+        "nombre": "El Molle",
+        "resumen": "La más grande: galería al arroyo, dos dormitorios y hogar a leña.",
+        "capacidad": 6,
+        "dormitorios": 2,
+        "banos": 2,
+        "camas": "1 matrimonial + 4 simples",
+        "amenities": [
+          "Hogar a leña",
+          "Parrilla",
+          "Wifi",
+          "Ropa de cama",
+          "Cocina completa",
+          "Galería al arroyo"
+        ],
+        "reglas": {
+          "mascotas": "consultar",
+          "checkIn": "14:00",
+          "checkOut": "10:00",
+          "senaPorcentaje": 30,
+          "otras": [
+            "No se permiten fiestas.",
+            "Silencio después de las 23 h."
+          ]
+        },
+        "precioNoche": 160000,
+        "minNoches": 2,
+        "fotos": [
+          {
+            "alt": "Frente de El Molle"
+          },
+          {
+            "alt": "Galería con vista al arroyo"
+          },
+          {
+            "alt": "Living con hogar"
+          }
+        ],
+        "mapa": {
+          "x": 46,
+          "y": 52
+        }
+      },
+      {
+        "id": "la-tala",
+        "nombre": "La Tala",
+        "resumen": "Para cuatro, con parque propio cercado. Ideal si venís con perro.",
+        "capacidad": 4,
+        "dormitorios": 1,
+        "banos": 1,
+        "camas": "1 matrimonial + 2 simples",
+        "amenities": [
+          "Parque cercado",
+          "Parrilla",
+          "Wifi",
+          "Ropa de cama",
+          "Estufa a leña"
+        ],
+        "reglas": {
+          "mascotas": "si",
+          "checkIn": "14:00",
+          "checkOut": "10:00",
+          "senaPorcentaje": 30,
+          "otras": [
+            "Mascotas: máximo dos, avisar al reservar."
+          ]
+        },
+        "precioNoche": 120000,
+        "minNoches": 2,
+        "fotos": [
+          {
+            "alt": "La Tala desde el parque"
+          },
+          {
+            "alt": "Dormitorio principal"
+          }
+        ],
+        "mapa": {
+          "x": 52,
+          "y": 47
+        }
+      },
+      {
+        "id": "el-espinillo",
+        "nombre": "El Espinillo",
+        "resumen": "Monoambiente para dos, con ventanal al cerro. La más tranquila.",
+        "capacidad": 2,
+        "dormitorios": 1,
+        "banos": 1,
+        "camas": "1 matrimonial",
+        "amenities": [
+          "Ventanal al cerro",
+          "Wifi",
+          "Ropa de cama",
+          "Pava eléctrica y cafetera"
+        ],
+        "reglas": {
+          "mascotas": "no",
+          "checkIn": "15:00",
+          "checkOut": "11:00",
+          "senaPorcentaje": 30,
+          "otras": []
+        },
+        "precioNoche": 95000,
+        "minNoches": 2,
+        "fotos": [
+          {
+            "alt": "Interior de El Espinillo"
+          }
+        ],
+        "mapa": {
+          "x": 56,
+          "y": 55
+        }
+      }
+    ],
+    "puntosInteres": [
+      {
+        "id": "vgb",
+        "nombre": "Villa General Belgrano",
+        "tipo": "pueblo",
+        "distanciaKm": 5,
+        "minutos": 10,
+        "nota": "Cervecerías y almacenes",
+        "x": 70,
+        "y": 70
+      },
+      {
+        "id": "los-reartes",
+        "nombre": "Los Reartes",
+        "tipo": "pueblo",
+        "distanciaKm": 2,
+        "minutos": 4,
+        "nota": "Proveeduría y panadería",
+        "x": 38,
+        "y": 36
+      },
+      {
+        "id": "arroyo",
+        "nombre": "Arroyo Los Reartes",
+        "tipo": "rio",
+        "distanciaKm": 0.05,
+        "nota": "Ollas para bañarse",
+        "x": 44,
+        "y": 60
+      },
+      {
+        "id": "ruta-5",
+        "nombre": "Ruta 5",
+        "tipo": "ruta",
+        "distanciaKm": 3,
+        "minutos": 6,
+        "x": 82,
+        "y": 40
+      },
+      {
+        "id": "la-cumbrecita",
+        "nombre": "La Cumbrecita",
+        "tipo": "pueblo",
+        "distanciaKm": 32,
+        "minutos": 45,
+        "nota": "Pueblo peatonal",
+        "x": 12,
+        "y": 18
+      },
+      {
+        "id": "cerro-de-oro",
+        "nombre": "Sendero al Cerro de Oro",
+        "tipo": "sendero",
+        "distanciaKm": 8,
+        "minutos": 15,
+        "x": 24,
+        "y": 72
+      }
+    ],
+    "galeria": [
+      {
+        "alt": "El arroyo al atardecer",
+        "epigrafe": "El arroyo, a 40 pasos"
+      },
+      {
+        "alt": "Cielo estrellado sobre las casas"
+      },
+      {
+        "alt": "Desayuno en la galería",
+        "epigrafe": "Desayunos en la galería"
+      },
+      {
+        "alt": "Sierras de Calamuchita desde el camino"
+      }
+    ],
+    "testimonios": [
+      {
+        "id": "h1",
+        "autor": "Carla y Matías",
+        "texto": "Volvimos por tercer año. La galería de El Molle con el ruido del arroyo no tiene precio.",
+        "detalle": "Enero 2026"
+      },
+      {
+        "id": "h2",
+        "autor": "Familia Gómez",
+        "texto": "Fuimos con los chicos y el perro a La Tala. Todo impecable y Rosa súper atenta.",
+        "detalle": "Semana Santa 2026"
+      }
+    ],
+    "faq": [
+      {
+        "id": "sena",
+        "pregunta": "¿Cómo se reserva?",
+        "respuesta": "Consultás fechas acá, te confirmamos disponibilidad por WhatsApp y reservás con una seña del 30 % por transferencia."
+      },
+      {
+        "id": "cancelacion",
+        "pregunta": "¿Qué pasa si cancelo?",
+        "respuesta": "Con más de 15 días de anticipación te devolvemos la seña o la pasamos a otra fecha. Con menos, la seña queda como crédito por seis meses."
+      },
+      {
+        "id": "senal",
+        "pregunta": "¿Hay señal de celular?",
+        "respuesta": "Sí, Claro y Personal andan bien. Además hay wifi en todas las casas."
+      }
+    ]
+  },
+  "whatsappFlotante": false,
+  "demo": true
+}

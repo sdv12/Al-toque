@@ -1,0 +1,68 @@
+/*
+ * Genérica — "Portfolio modular"
+ * Neutros con un acento fuerte; grotesca expresiva (Bricolage Grotesque) para display e
+ * Instrument Sans para cuerpo. Claro u oscuro. Protagonista: el bento de la home.
+ */
+[data-plantilla="generico"] {
+  --lk-fondo: #f1f0ec;
+  --lk-superficie: #ffffff;
+  --lk-superficie-2: #e4e2dc;
+  --lk-texto: #121211;
+  --lk-texto-suave: #55534e;
+  --lk-borde: #cdc9c0;
+  --lk-acento: #ff4a1c;
+  --lk-acento-texto: #c63916; /* naranja oscurecido: el original no llega a AA como texto sobre claro */
+  --lk-acento-relleno: #ff4a1c;
+  --lk-sobre-acento: #111111;
+  --lk-foco: var(--lk-texto);
+
+  --lk-fuente-display: var(--fuente-generico-display), system-ui, sans-serif;
+  --lk-fuente-cuerpo: var(--fuente-generico-cuerpo), system-ui, sans-serif;
+  --lk-fuente-nota: var(--lk-fuente-cuerpo);
+
+  --lk-t-display: clamp(3rem, 1.3rem + 8.5cqi, 8.75rem);
+  --lk-t-display-alto: 0.9;
+  --lk-t-display-tracking: -0.045em;
+  --lk-t-display-peso: 800;
+  --lk-t-titulo: clamp(2rem, 1.25rem + 3.8cqi, 4.25rem);
+  --lk-t-titulo-alto: 0.98;
+  --lk-t-subtitulo: clamp(1.25rem, 1.1rem + 0.8cqi, 1.625rem);
+  --lk-t-subtitulo-alto: 1.3;
+  --lk-t-cuerpo: 1.0625rem;
+  --lk-t-cuerpo-alto: 1.55;
+  --lk-t-chico: 0.9375rem;
+  --lk-t-chico-alto: 1.45;
+  --lk-t-mini: 0.8125rem;
+  --lk-t-mini-alto: 1.4;
+  --lk-medida: 40rem;
+
+  --lk-radio: 6px;
+  --lk-radio-control: 6px;
+  --lk-borde-ancho: 1px;
+
+  --lk-placeholder-fondo: var(--lk-superficie-2);
+  --lk-placeholder-trama: repeating-conic-gradient(
+    color-mix(in srgb, var(--lk-texto) 7%, transparent) 0 25%,
+    transparent 0 50%
+  ) 0 0 / 18px 18px;
+}
+
+[data-plantilla="generico"][data-modo="oscuro"] {
+  --lk-fondo: #121211;
+  --lk-superficie: #1c1c1a;
+  --lk-superficie-2: #292926;
+  --lk-texto: #f1f0ec;
+  --lk-texto-suave: #a9a69d;
+  --lk-borde: #3a3934;
+  --lk-acento-texto: #ff4a1c;
+}
+
+[data-plantilla="generico"][data-esquinas="recto"] {
+  --lk-radio: 0;
+  --lk-radio-control: 0;
+}
+
+[data-plantilla="generico"][data-esquinas="redondeado"] {
+  --lk-radio: 22px;
+  --lk-radio-control: 999px;
+}
