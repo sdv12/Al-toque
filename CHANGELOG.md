@@ -4,6 +4,9 @@ Versionado semántico: PATCH = arreglos y ajustes; MINOR = funcionalidad nueva v
 MAJOR = cambios que rompen algo existente (formato de configs, flujo, backend).
 La versión se muestra en el footer de la home y en el configurador.
 
+## 1.2.2 · 2026-09-30
+- Arreglo: en el footer, "al toque" se veía cortado a la mitad sobre el fondo oscuro.
+
 ## 1.2.1 · 2026-09-30
 - La versión en producción se muestra en el footer de la home y en el configurador.
 

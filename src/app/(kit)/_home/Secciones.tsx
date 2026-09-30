@@ -35,11 +35,19 @@ export const boton = {
 
 /* ───────────── Encabezado ───────────── */
 
-export function Marca({ className = "" }: { className?: string }) {
+/**
+ * Marca. Sobre papel, "al toque" lleva el resaltador (media franja). Sobre fondo oscuro la franja
+ * dejaría la mitad de arriba de las letras contra el negro: ahí va el bloque amarillo completo.
+ */
+export function Marca({ className = "", sobreOscuro = false }: { className?: string; sobreOscuro?: boolean }) {
   return (
     <span className={`${afiche} whitespace-nowrap font-extrabold leading-none ${className}`}>
-      Landing {/* Sobre el amarillo siempre va tinta, aunque la marca esté sobre fondo oscuro. */}
-      <span className="resaltado text-sobre-acento">al toque</span>
+      Landing{" "}
+      {sobreOscuro ? (
+        <span className="bg-acento-relleno px-[0.12em] text-sobre-acento [box-decoration-break:clone]">al toque</span>
+      ) : (
+        <span className="resaltado">al toque</span>
+      )}
     </span>
   );
 }
@@ -353,7 +361,7 @@ export function Pie() {
       <div className="flex flex-wrap items-end justify-between gap-8">
         <div>
           <p className="text-[2.25rem]">
-            <Marca />
+            <Marca sobreOscuro />
           </p>
           <p className="mt-3 text-chico opacity-80">Páginas para negocios chicos. Hecho en Córdoba.</p>
           <p className="mt-1 text-mini tabular-nums opacity-60">v{process.env.NEXT_PUBLIC_VERSION}</p>
