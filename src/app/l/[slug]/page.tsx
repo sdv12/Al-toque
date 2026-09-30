@@ -30,6 +30,8 @@ export async function generateMetadata({ params }: PageProps<"/l/[slug]">): Prom
       siteName: negocio.nombre,
       url: `/l/${slug}`,
     },
+    // La imagen la aporta opengraph-image.tsx de esta misma ruta.
+    twitter: { card: "summary_large_image", title: titulo, description: descripcion },
   };
 }
 

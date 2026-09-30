@@ -11,7 +11,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "capturas": "node scripts/capturas.mjs"
+    "capturas": "node scripts/capturas.mjs",
+    "publicar": "tsx scripts/publicar.mts"
   },
   "dependencies": {
     "@date-fns/tz": "^1.5.0",
@@ -36,6 +37,7 @@
     "eslint-config-next": "16.3.3",
     "playwright-core": "^1.63.0",
     "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.15",
     "typescript": "^5.9.3",
     "vitest": "^5.0.2"
   }

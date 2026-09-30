@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { configsPorDefecto } from "@/core/defaults";
 import { codificarConfig } from "@/core/lib/codigo";
+export { slugDe } from "@/core/lib/slug";
 import { esPlantilla, type Plantilla } from "@/core/registry";
 import { landingConfigSchema, type LandingConfig } from "@/core/schema/landing-config";
 import { erroresDeZod, type ErrorConfig, migrateConfig } from "@/core/schema/migrate";
@@ -128,18 +129,6 @@ export function useCodigoConfig(config: LandingConfig): string | null {
     };
   }, [config]);
   return codigo;
-}
-
-export function slugDe(nombre: string): string {
-  return (
-    nombre
-      .normalize("NFD")
-      .replace(/[̀-ͯ]/g, "")
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "")
-      .slice(0, 48) || "mi-negocio"
-  );
 }
 
 /** Id nuevo para un ítem de contenido (compatible con idSchema). */
