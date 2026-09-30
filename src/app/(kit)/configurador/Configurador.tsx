@@ -44,6 +44,7 @@ export default function Configurador() {
             <span aria-live="polite">
               {guardado === "guardado" ? "Borrador guardado" : guardado === "pendiente" ? "Guardando…" : "Sin guardado local"}
             </span>
+            <span className="tabular-nums"> · v{process.env.NEXT_PUBLIC_VERSION}</span>
           </p>
         </div>
         <fieldset className="hidden @5xl:block">

@@ -356,6 +356,7 @@ export function Pie() {
             <Marca />
           </p>
           <p className="mt-3 text-chico opacity-80">Páginas para negocios chicos. Hecho en Córdoba.</p>
+          <p className="mt-1 text-mini tabular-nums opacity-60">v{process.env.NEXT_PUBLIC_VERSION}</p>
         </div>
         <nav aria-label="Demos">
           <ul className="flex flex-wrap gap-x-6 gap-y-2 text-chico">
