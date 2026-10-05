@@ -85,6 +85,13 @@ export function LandingConsultorio({ config }: { config: Config }) {
             <p className="font-bold">{negocio.nombre}</p>
             <p className="mt-1 text-tinta-suave">{negocio.direccion}</p>
             <p className="text-tinta-suave">{negocio.horario}</p>
+            {negocio.instagram && (
+              <p className="mt-3">
+                <a href={`https://instagram.com/${negocio.instagram}`} target="_blank" rel="noopener noreferrer" className="font-semibold hover:text-acento-texto">
+                  @{negocio.instagram} en Instagram
+                </a>
+              </p>
+            )}
           </div>
           {profesionales.length > 0 && (
             <ul className="space-y-1 text-tinta-suave @3xl:text-right">

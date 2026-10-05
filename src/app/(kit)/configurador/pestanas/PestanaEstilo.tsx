@@ -2,9 +2,9 @@
 
 import { useId, useState } from "react";
 import { esHex } from "@/core/lib/color";
-import { acentoPasaAA, variablesDeEstilo } from "@/core/lib/estilo";
-import { registry } from "@/core/registry";
-import { ESQUINAS, type Esquinas, type Modo } from "@/core/schema/comun";
+import { acentoPasaAA, paletaEfectiva, resolverModo, variablesDeEstilo } from "@/core/lib/estilo";
+import { paletaDe, registry } from "@/core/registry";
+import { ESQUINAS, TAMANOS_TEXTO, type Esquinas, type Modo, type TamanoTexto } from "@/core/schema/comun";
 import type { LandingConfig } from "@/core/schema/landing-config";
 import { Bloque, claseControl } from "../campos";
 
@@ -12,11 +12,17 @@ type Props = { config: LandingConfig; editar: (f: (c: LandingConfig) => void) =>
 
 const TEXTO_ESQUINAS: Record<Esquinas, string> = { recto: "Rectas", suave: "Suaves", redondeado: "Redondeadas" };
 const TEXTO_MODO: Record<Modo, string> = { claro: "Claro", oscuro: "Oscuro" };
+const TEXTO_TAMANO: Record<TamanoTexto, string> = { chico: "Chico", normal: "Normal", grande: "Grande" };
 
 export function PestanaEstilo({ config, editar }: Props) {
   const { meta } = registry[config.plantilla];
   const idHex = useId();
+  const idFondo = useId();
   const [hex, setHex] = useState(config.estilo.acento);
+  // Fondo de la plantilla (según el modo) y el que se está usando, propio o no.
+  const fondoPlantilla = paletaDe(config.plantilla, resolverModo(config.plantilla, config.estilo)).fondo;
+  const fondoActual = paletaEfectiva(config.plantilla, config.estilo).fondo;
+  const [hexFondo, setHexFondo] = useState(fondoActual);
   const sugerido = meta.acentos.some((a) => a.hex.toLowerCase() === config.estilo.acento.toLowerCase());
   const pasa = acentoPasaAA(config.plantilla, config.estilo);
   const ajustado = variablesDeEstilo(config.plantilla, config.estilo)["--lk-acento-texto"];
@@ -24,6 +30,20 @@ export function PestanaEstilo({ config, editar }: Props) {
   const setAcento = (valor: string) => {
     setHex(valor);
     if (esHex(valor)) editar((c) => void (c.estilo.acento = valor.toLowerCase()));
+  };
+
+  const setFondo = (valor: string) => {
+    setHexFondo(valor);
+    if (!esHex(valor)) return;
+    editar((c) => {
+      // Elegir el mismo fondo de la plantilla equivale a no tener uno propio.
+      if (valor.toLowerCase() === fondoPlantilla.toLowerCase()) delete c.estilo.fondo;
+      else c.estilo.fondo = valor.toLowerCase();
+    });
+  };
+  const usarFondoDePlantilla = () => {
+    setHexFondo(fondoPlantilla);
+    editar((c) => void delete c.estilo.fondo);
   };
 
   return (
@@ -82,6 +102,69 @@ export function PestanaEstilo({ config, editar }: Props) {
             contraste AA; en fondos y detalles va tal cual.
           </p>
         )}
+      </Bloque>
+
+      <Bloque
+        titulo="Color de fondo"
+        descripcion="El fondo de toda la página. El texto, las tarjetas y los bordes se acomodan solos para que todo se siga leyendo."
+      >
+        <div>
+          <label htmlFor={idFondo} className="block text-chico font-medium">
+            Fondo {!config.estilo.fondo && <span className="font-normal text-tinta-suave">(el de la plantilla)</span>}
+          </label>
+          <div className="mt-1 flex items-center gap-2">
+            <input
+              type="color"
+              aria-label="Elegir el fondo con el selector"
+              value={esHex(hexFondo) ? hexFondo : fondoActual}
+              onChange={(e) => setFondo(e.target.value)}
+              className="h-10 w-12 cursor-pointer rounded-control border border-borde bg-superficie p-1"
+            />
+            <input
+              id={idFondo}
+              value={hexFondo}
+              onChange={(e) => setFondo(e.target.value.trim())}
+              placeholder={fondoPlantilla}
+              maxLength={7}
+              aria-invalid={!esHex(hexFondo) || undefined}
+              className={`${claseControl} font-nota`}
+            />
+          </div>
+        </div>
+        {config.estilo.fondo && (
+          <button type="button" onClick={usarFondoDePlantilla} className="self-start text-chico underline underline-offset-2">
+            Volver al fondo de la plantilla
+          </button>
+        )}
+      </Bloque>
+
+      <Bloque titulo="Tamaño del texto" descripcion="Agranda o achica todos los textos de la página por igual.">
+        <fieldset>
+          <legend className="sr-only">Tamaño del texto</legend>
+          <div className="grid grid-cols-3 gap-2">
+            {TAMANOS_TEXTO.map((t) => (
+              <label key={t} className="cursor-pointer">
+                <input
+                  type="radio"
+                  name="tamano-texto"
+                  value={t}
+                  checked={(config.estilo.texto ?? "normal") === t}
+                  onChange={() =>
+                    editar((c) => {
+                      // "Normal" es no tener el campo: la config queda igual que antes de existir la opción.
+                      if (t === "normal") delete c.estilo.texto;
+                      else c.estilo.texto = t;
+                    })
+                  }
+                  className="peer sr-only"
+                />
+                <span className="block rounded-control border border-borde bg-superficie px-3 py-2 text-center text-chico peer-checked:border-tinta peer-checked:shadow-[inset_0_0_0_1px_var(--lk-texto)] peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-foco">
+                  {TEXTO_TAMANO[t]}
+                </span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
       </Bloque>
 
       <Bloque titulo="Esquinas">

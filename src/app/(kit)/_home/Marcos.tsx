@@ -14,7 +14,15 @@ export function Telefono({ src, alt, sizes, className = "", prioridad }: Props) 
 }
 
 /** Captura dentro de una ventana de navegador, con la dirección real de la demo. */
-export function Navegador({ src, alt, sizes, url, className = "" }: Props & { url: string }) {
+type PropsNavegador = Props & {
+  url: string;
+  /** Si hay video, se muestra con sus controles y la captura `src` como portada. */
+  video?: string;
+  /** Proporción del contenido (sin la barra), en formato CSS: "1440 / 900", "16 / 9". */
+  aspecto?: string;
+};
+
+export function Navegador({ src, alt, sizes, url, video, aspecto = "1440 / 900", className = "" }: PropsNavegador) {
   return (
     <div className={`overflow-hidden rounded-[10px] border-2 border-tinta bg-superficie shadow-[0_30px_60px_-30px_rgb(23_21_15/0.5)] ${className}`}>
       <div className="flex items-center gap-3 border-b-2 border-tinta bg-superficie px-3 py-2">
@@ -25,8 +33,12 @@ export function Navegador({ src, alt, sizes, url, className = "" }: Props & { ur
         </span>
         <span className="min-w-0 flex-1 truncate rounded-full bg-fondo px-3 py-0.5 text-center text-mini text-tinta-suave">{url}</span>
       </div>
-      <div className="relative aspect-[1440/900]">
-        <Image src={src} alt={alt} fill sizes={sizes} className="object-cover object-top" />
+      <div className="relative" style={{ aspectRatio: aspecto }}>
+        {video ? (
+          <video src={video} poster={src} controls muted playsInline preload="metadata" aria-label={alt} className="absolute inset-0 size-full bg-tinta object-cover object-top" />
+        ) : (
+          <Image src={src} alt={alt} fill sizes={sizes} className="object-cover object-top" />
+        )}
       </div>
     </div>
   );

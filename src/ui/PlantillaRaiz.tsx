@@ -23,6 +23,7 @@ export function PlantillaRaiz({ plantilla, estilo, fuentes, className, children 
       data-plantilla={plantilla}
       data-modo={resolverModo(plantilla, estilo)}
       data-esquinas={estilo.esquinas}
+      data-texto={estilo.texto ?? "normal"}
       className={className ? `${fuentes} ${className}` : fuentes}
       style={estiloInline}
     >

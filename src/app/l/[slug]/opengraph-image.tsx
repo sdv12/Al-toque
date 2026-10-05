@@ -1,8 +1,8 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { ImageResponse } from "next/og";
-import { resolverModo, variablesDeEstilo } from "@/core/lib/estilo";
-import { paletaDe, type Plantilla } from "@/core/registry";
+import { paletaEfectiva, variablesDeEstilo } from "@/core/lib/estilo";
+import type { Plantilla } from "@/core/registry";
 import type { Esquinas } from "@/core/schema/comun";
 import { cargarConfig, listarSlugs } from "./cargar";
 
@@ -59,7 +59,7 @@ export default async function Imagen({ params }: { params: Promise<{ slug: strin
   if (!config) return new Response("No existe", { status: 404 });
 
   const { plantilla, negocio, estilo } = config;
-  const paleta = paletaDe(plantilla, resolverModo(plantilla, estilo));
+  const paleta = paletaEfectiva(plantilla, estilo);
   const vars = variablesDeEstilo(plantilla, estilo);
   const largo = negocio.nombre.length;
   const tamNombre = largo <= 14 ? 124 : largo <= 24 ? 100 : 78;
