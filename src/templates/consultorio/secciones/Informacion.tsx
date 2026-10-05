@@ -291,6 +291,11 @@ export function Ubicacion({ config, variante }: { config: Config; variante: Vari
       <a href={linkWhatsApp(negocio.whatsapp)} target="_blank" rel="noopener noreferrer" className={`${boton.enlace} inline-flex items-center gap-1.5`}>
         <IconoWhatsApp className="size-4" /> WhatsApp
       </a>
+      {negocio.instagram && (
+        <a href={`https://instagram.com/${negocio.instagram}`} target="_blank" rel="noopener noreferrer" className={boton.enlace}>
+          @{negocio.instagram}
+        </a>
+      )}
     </p>
   );
 

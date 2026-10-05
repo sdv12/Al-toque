@@ -38,19 +38,19 @@
   --font-cuerpo: var(--lk-fuente-cuerpo);
   --font-nota: var(--lk-fuente-nota);
 
-  --text-display: var(--lk-t-display);
+  --text-display: calc(var(--lk-t-display) * var(--lk-escala-texto, 1));
   --text-display--line-height: var(--lk-t-display-alto);
   --text-display--letter-spacing: var(--lk-t-display-tracking);
   --text-display--font-weight: var(--lk-t-display-peso);
-  --text-titulo: var(--lk-t-titulo);
+  --text-titulo: calc(var(--lk-t-titulo) * var(--lk-escala-texto, 1));
   --text-titulo--line-height: var(--lk-t-titulo-alto);
-  --text-subtitulo: var(--lk-t-subtitulo);
+  --text-subtitulo: calc(var(--lk-t-subtitulo) * var(--lk-escala-texto, 1));
   --text-subtitulo--line-height: var(--lk-t-subtitulo-alto);
-  --text-cuerpo: var(--lk-t-cuerpo);
+  --text-cuerpo: calc(var(--lk-t-cuerpo) * var(--lk-escala-texto, 1));
   --text-cuerpo--line-height: var(--lk-t-cuerpo-alto);
-  --text-chico: var(--lk-t-chico);
+  --text-chico: calc(var(--lk-t-chico) * var(--lk-escala-texto, 1));
   --text-chico--line-height: var(--lk-t-chico-alto);
-  --text-mini: var(--lk-t-mini);
+  --text-mini: calc(var(--lk-t-mini) * var(--lk-escala-texto, 1));
   --text-mini--line-height: var(--lk-t-mini-alto);
 
   --radius-base: var(--lk-radio);
@@ -68,7 +68,7 @@
     background-color: var(--lk-fondo);
     color: var(--lk-texto);
     font-family: var(--lk-fuente-cuerpo);
-    font-size: var(--lk-t-cuerpo);
+    font-size: calc(var(--lk-t-cuerpo) * var(--lk-escala-texto, 1));
     line-height: var(--lk-t-cuerpo-alto);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
@@ -83,6 +83,14 @@
     background-color: var(--lk-acento-relleno);
     color: var(--lk-sobre-acento);
   }
+}
+
+/* Tamaño de texto elegido en el configurador (Estilo › Tamaño del texto). Sin elegir, 1. */
+[data-texto="chico"] {
+  --lk-escala-texto: 0.92;
+}
+[data-texto="grande"] {
+  --lk-escala-texto: 1.12;
 }
 
 @utility textura {

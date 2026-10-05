@@ -101,7 +101,7 @@ export default function Configurador() {
               <PestanaPlantilla config={config} usarEjemplo={usarEjemplo} pendiente={pendiente} resolverPendiente={resolverPendiente} />
             </Tabs.Content>
             <Tabs.Content value="estilo">
-              <PestanaEstilo key={config.plantilla} config={config} editar={editar} />
+              <PestanaEstilo key={`${config.plantilla}-${config.estilo.modo ?? ""}`} config={config} editar={editar} />
             </Tabs.Content>
             <Tabs.Content value="secciones">
               <PestanaSecciones config={config} editar={editar} />

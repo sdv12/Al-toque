@@ -31,11 +31,16 @@ export const imagenSchema = z.object({
 
 export const ESQUINAS = ["recto", "suave", "redondeado"] as const;
 export const MODOS = ["claro", "oscuro"] as const;
+export const TAMANOS_TEXTO = ["chico", "normal", "grande"] as const;
 
 export const estiloSchema = z.object({
   acento: hexSchema,
   esquinas: z.enum(ESQUINAS),
   modo: z.enum(MODOS).optional(),
+  /** Fondo propio. Sin indicar, el de la plantilla; texto y superficies se derivan de él. */
+  fondo: hexSchema.optional(),
+  /** Escala todos los textos de la plantilla. Sin indicar = normal. */
+  texto: z.enum(TAMANOS_TEXTO).optional(),
 });
 
 export const negocioSchema = z.object({
@@ -83,3 +88,4 @@ export type Negocio = z.infer<typeof negocioSchema>;
 export type Agenda = z.infer<typeof agendaSchema>;
 export type Modo = (typeof MODOS)[number];
 export type Esquinas = (typeof ESQUINAS)[number];
+export type TamanoTexto = (typeof TAMANOS_TEXTO)[number];

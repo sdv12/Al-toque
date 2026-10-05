@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { configsPorDefecto } from "../defaults";
 import { AA_TEXTO, ajustarContraste, contraste, mezclar } from "../lib/color";
-import { acentoPasaAA, resolverModo, variablesDeEstilo } from "../lib/estilo";
+import { acentoPasaAA, paletaPropia, resolverModo, variablesDeEstilo } from "../lib/estilo";
 import { PLANTILLAS, paletaDe, registry } from "../registry";
 import type { Modo } from "../schema/comun";
 
@@ -57,6 +57,33 @@ describe("paletas del registry", () => {
       }
     }
   });
+});
+
+describe("fondo propio", () => {
+  const FONDOS = ["#ffffff", "#000000", "#f4d03f", "#1e3a5f", "#808080", "#ff4a1c", "#e8f5e9"];
+
+  it("sin fondo propio no pisa los colores de la plantilla", () => {
+    expect(paletaPropia("consultorio", {})).toBeNull();
+    expect(variablesDeEstilo("consultorio", { acento: "#1f5f78", esquinas: "suave" })).not.toHaveProperty("--lk-fondo");
+  });
+
+  for (const plantilla of PLANTILLAS) {
+    it(`${plantilla}: con cualquier fondo, texto y acento se siguen leyendo`, () => {
+      for (const fondo of FONDOS) {
+        const p = paletaPropia(plantilla, { fondo })!;
+        expect(p.fondo).toBe(fondo);
+        // Se busca AAA (7), pero con fondos grises medios ni el negro llega: el piso garantizado es AA.
+        expect(contraste(p.texto, p.fondo)).toBeGreaterThanOrEqual(AA_TEXTO);
+        expect(contraste(p.textoSuave, p.fondo)).toBeGreaterThanOrEqual(AA_TEXTO);
+        expect(contraste(p.texto, p.superficie)).toBeGreaterThanOrEqual(AA_TEXTO);
+
+        const vars = variablesDeEstilo(plantilla, { acento: registry[plantilla].meta.acentos[0].hex, esquinas: "suave", fondo });
+        expect(vars["--lk-fondo"]).toBe(fondo);
+        expect(contraste(vars["--lk-acento-texto"], fondo)).toBeGreaterThanOrEqual(AA_TEXTO);
+        expect(contraste(vars["--lk-acento-texto"], p.superficie)).toBeGreaterThanOrEqual(AA_TEXTO);
+      }
+    });
+  }
 });
 
 describe("estilo", () => {

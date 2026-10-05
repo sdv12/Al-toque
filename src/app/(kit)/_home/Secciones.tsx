@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Fragment } from "react";
 import { PLANTILLAS, paletaDe, registry, type Plantilla } from "@/core/registry";
 import { fuentes as fuentesAlojamiento } from "@/templates/alojamiento";
 import { fuentes as fuentesBarberia } from "@/templates/barberia";
@@ -15,8 +16,14 @@ const FUENTES: Record<Plantilla, string> = {
 };
 
 const DOMINIO = "landing-al-toque.netlify.app";
+
+/**
+ * Video del configurador para "Cómo funciona" (mp4 en public/, ej. "/muestras/configurador.mp4").
+ * Sin video, se muestra la captura.
+ */
+const VIDEO_CONFIGURADOR: string | undefined = undefined;
 const margen = "px-4 @3xl:px-8 @6xl:px-12";
-const afiche = "font-display font-extrabold uppercase [font-stretch:72%]";
+const afiche = "font-display font-extrabold uppercase [font-stretch:68%]";
 
 /**
  * Secciones debajo del primer pantallazo: el navegador no las maqueta hasta que se acercan,
@@ -92,7 +99,7 @@ function Abanico() {
     { p: "generico", clase: "left-[62%] top-[14%] rotate-[9deg] z-10" },
   ] as const;
   return (
-    <div className="relative mx-auto aspect-[10/8] w-full max-w-[38rem] @5xl:-mt-24">
+    <div className="relative mx-auto aspect-[10/8] w-full max-w-[38rem] @7xl:-mt-18 @7xl:-translate-y-[3%]">
       {disposicion.map(({ p, clase }) => (
         <Telefono
           key={p}
@@ -110,7 +117,7 @@ function Abanico() {
 export function Hero() {
   return (
     <section aria-labelledby="hero-titulo" className={`${margen} pb-20 pt-4 @5xl:pt-8`}>
-      <h1 id="hero-titulo" className={`${afiche} max-w-[14ch] text-[clamp(3.25rem,0.9rem+10.5cqi,9.5rem)] leading-[0.84] @5xl:max-w-none`}>
+      <h1 id="hero-titulo" className={`${afiche} max-w-[14ch] text-[clamp(3.25rem,0.9rem+8.5cqi,8rem)] leading-[0.84] @5xl:max-w-none`}>
         Tu negocio, con página propia. <span className="resaltado whitespace-nowrap">Al toque.</span>
       </h1>
       <div className="mt-10 grid items-start gap-12 @5xl:mt-8 @5xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1fr)] @5xl:gap-10">
@@ -137,20 +144,32 @@ export function Hero() {
 
 /* ───────────── Rubros ───────────── */
 
+/** Desde acá la lista va en dos renglones parejos: corta a la mitad y el tamaño escala con el ancho. */
+const MITAD_RUBROS = Math.ceil(RUBROS.length / 2);
+
 export function Rubros() {
   return (
     <section aria-label="Para qué rubros" className="bg-tinta py-10 text-fondo @4xl:py-14">
-      <ul className={`${margen} flex flex-wrap items-center gap-x-5 gap-y-1 ${afiche} text-[clamp(2rem,1.1rem+3.6cqi,4.25rem)] leading-[0.95]`}>
-        {RUBROS.map((r, i) => (
-          <li key={r} className="flex items-center gap-5">
-            {r}
-            {i < RUBROS.length - 1 && (
-              <span aria-hidden className="text-acento">
-                ✳
-              </span>
-            )}
-          </li>
-        ))}
+      <ul
+        className={`${margen} flex flex-wrap items-center justify-center gap-x-5 gap-y-1 text-center ${afiche} text-[clamp(1.75rem,2.8cqi,3.75rem)] leading-[0.95]`}
+      >
+        {RUBROS.map((r, i) => {
+          const finDeRenglon = i === MITAD_RUBROS - 1;
+          return (
+            <Fragment key={r}>
+              <li className="flex items-center gap-5">
+                {r}
+                {i < RUBROS.length - 1 && (
+                  // En pantallas anchas el fin del primer renglón no lleva separador colgando.
+                  <span aria-hidden className={`text-acento ${finDeRenglon ? "@3xl:hidden" : ""}`}>
+                    ✳
+                  </span>
+                )}
+              </li>
+              {finDeRenglon && <li aria-hidden className="hidden basis-full @3xl:block" />}
+            </Fragment>
+          );
+        })}
       </ul>
     </section>
   );
@@ -265,8 +284,16 @@ export function ComoFunciona() {
             </li>
           ))}
         </ol>
-        <figure className="mt-16">
-          <Navegador src="/muestras/configurador.jpg" alt="El configurador: panel de edición a la izquierda y la página en vivo a la derecha" url={`${DOMINIO}/configurador`} sizes="(min-width: 1280px) 1200px, 94vw" />
+        {/* Tamaño de visor de video: 16:9 y a lo sumo 600 px de ancho (≈ 375 px de alto con la barra). */}
+        <figure className="mx-auto mt-16 max-w-[600px]">
+          <Navegador
+            src="/muestras/configurador.jpg"
+            video={VIDEO_CONFIGURADOR}
+            alt="El configurador: panel de edición a la izquierda y la página en vivo a la derecha"
+            url={`${DOMINIO}/configurador`}
+            sizes="(min-width: 640px) 600px, 94vw"
+            aspecto="16 / 9"
+          />
           <figcaption className="mt-4 text-chico text-tinta-suave">
             El configurador: a la izquierda editás, a la derecha ves tu página como la va a ver tu cliente.
           </figcaption>
@@ -305,12 +332,13 @@ export function Beneficios() {
 
 export function Preguntas() {
   return (
-    <section id="preguntas" aria-labelledby="preguntas-titulo" className={`${diferida} ${margen} scroll-mt-4 pb-24`}>
-      <div className="grid gap-10 @5xl:grid-cols-12">
-        <h2 id="preguntas-titulo" className={`${afiche} text-titulo @5xl:col-span-4`}>
-          Preguntas
+    <section id="preguntas" aria-labelledby="preguntas-titulo" className={`${diferida} ${margen} scroll-mt-4 bg-superficie-2 py-24`}>
+      {/* Título arriba y la lista centrada, en una columna que no se estira de punta a punta. */}
+      <div className="mx-auto max-w-4xl">
+        <h2 id="preguntas-titulo" className={`${afiche} text-center text-[clamp(2.4rem,1.2rem+5cqi,4.25rem)] leading-[0.95]`}>
+          Preguntas frecuentes
         </h2>
-        <div className="border-b-2 border-tinta @5xl:col-span-8">
+        <div className="mt-10 border-b-2 border-tinta">
           {PREGUNTAS.map((f) => (
             <details key={f.pregunta} className="group border-t-2 border-tinta">
               <summary className="flex min-h-16 cursor-pointer list-none items-center justify-between gap-6 py-5 text-subtitulo font-semibold [&::-webkit-details-marker]:hidden">
@@ -332,9 +360,9 @@ export function Preguntas() {
 
 export function Cierre({ whatsapp }: { whatsapp: string | undefined }) {
   return (
-    <section aria-labelledby="cierre-titulo" className="bg-acento-relleno py-24 text-sobre-acento @5xl:py-28">
+    <section aria-labelledby="cierre-titulo" className="bg-acento-relleno py-24 text-sobre-acento @5xl:py-20">
       <div className={margen}>
-        <h2 id="cierre-titulo" className={`${afiche} text-[clamp(2.5rem,12.5cqi,11rem)] leading-[0.84]`}>
+        <h2 id="cierre-titulo" className={`${afiche} text-[clamp(2.5rem,12.5cqi,7rem)] leading-[0.84]`}>
           ¿Arrancamos?
         </h2>
         <div className="mt-10 flex flex-wrap items-center justify-between gap-6 border-t-2 border-tinta pt-8">
