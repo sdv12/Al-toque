@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { configsPorDefecto } from "../defaults";
+import { libreEjemplo } from "../defaults/libre";
+import { PLANTILLAS_DE_RUBRO } from "../registry";
 import { barberiaDefault } from "../defaults/barberia";
 import { codificarConfig, leerEntradaConfig } from "../lib/codigo";
 import { jsonLdNegocio } from "../lib/jsonld";
@@ -73,7 +75,7 @@ describe("mensajes", () => {
 
 describe("código LK1", () => {
   it("ida y vuelta sin pérdida y bastante más corto que el JSON", async () => {
-    for (const config of Object.values(configsPorDefecto)) {
+    for (const config of [...PLANTILLAS_DE_RUBRO.map((p) => configsPorDefecto[p]), libreEjemplo]) {
       const codigo = await codificarConfig(config);
       expect(codigo).toMatch(/^LK1\.[A-Za-z0-9_-]+$/);
       expect(codigo.length).toBeLessThan(JSON.stringify(config).length * 0.7);

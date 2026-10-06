@@ -5,6 +5,7 @@
 @import "../templates/consultorio/tokens.css";
 @import "../templates/alojamiento/tokens.css";
 @import "../templates/generico/tokens.css";
+@import "../templates/libre/tokens.css";
 
 /*
  * Sin paleta, fuentes, escala ni radios por defecto de Tailwind: todo sale de los tokens --lk-*

@@ -1,4 +1,6 @@
-import type { Plantilla } from "@/core/registry";
+import type { PLANTILLAS_DE_RUBRO } from "@/core/registry";
+
+type Plantilla = (typeof PLANTILLAS_DE_RUBRO)[number];
 
 /** Textos de la home pública. Solo afirmaciones que el producto cumple hoy. */
 
@@ -128,4 +130,19 @@ export const PREGUNTAS = [
     pregunta: "¿Se guarda lo que voy armando?",
     respuesta: "Sí, en tu navegador. Si cerrás y volvés desde el mismo dispositivo, lo encontrás donde lo dejaste.",
   },
+];
+
+/**
+ * RESEÑAS DE MUESTRA. Mientras sea true, la home muestra una aclaración visible de que son de
+ * ejemplo. Cuando haya reseñas reales: reemplazar la lista y pasarlo a false.
+ */
+export const RESENAS_DE_MUESTRA = true;
+
+export const RESENAS = [
+  { autor: "Mariano R.", negocio: "Barbería en Alberdi", texto: "En una tarde tenía la página andando. Ahora los turnos me llegan por WhatsApp con todo armado y no pierdo tiempo preguntando.", estrellas: 5 },
+  { autor: "Lucía F.", negocio: "Consultorio de nutrición", texto: "Me gustó poder ver cómo quedaba mientras cambiaba los textos. Mis pacientes encuentran la lista de obras sociales sin preguntarme.", estrellas: 5 },
+  { autor: "Carla y Matías", negocio: "Cabañas en Calamuchita", texto: "El calendario con el estimado nos ahorra un montón de mensajes. La gente llega preguntando por fechas concretas.", estrellas: 5 },
+  { autor: "Gustavo P.", negocio: "Carpintería a medida", texto: "Subí los trabajos con antes y después y la diferencia se nota: los presupuestos llegan más claros.", estrellas: 4 },
+  { autor: "Romina D.", negocio: "Centro de estética", texto: "Elegí mis colores y el fondo, y quedó con la cara de mi marca. Se ve muy bien en el celular.", estrellas: 5 },
+  { autor: "Diego A.", negocio: "Profe particular", texto: "Arranqué con la hoja en blanco y sumé solo lo que necesitaba. Simple y rápido.", estrellas: 5 },
 ];

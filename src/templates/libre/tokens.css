@@ -1,0 +1,71 @@
+/*
+ * "A tu medida": base neutra que se adapta a la marca del cliente (acento, fondo propio,
+ * esquinas y tamaño de texto). Schibsted Grotesk para titulares, Source Sans 3 para leer.
+ * Los colores base se espejan en src/core/registry (hay un test que los compara).
+ */
+[data-plantilla="libre"] {
+  --lk-fondo: #f6f5f2;
+  --lk-superficie: #ffffff;
+  --lk-superficie-2: #ebe9e3;
+  --lk-texto: #17171a;
+  --lk-texto-suave: #55555e;
+  --lk-borde: #dcdad3;
+  --lk-acento: #2350c8;
+  --lk-acento-texto: #2350c8;
+  --lk-acento-relleno: #2350c8;
+  --lk-sobre-acento: #ffffff;
+  --lk-foco: var(--lk-acento-texto);
+
+  --lk-fuente-display: var(--fuente-libre-display), system-ui, sans-serif;
+  --lk-fuente-cuerpo: var(--fuente-libre-cuerpo), system-ui, sans-serif;
+  --lk-fuente-nota: var(--lk-fuente-cuerpo);
+
+  --lk-t-display: clamp(2.75rem, 1.4rem + 6.5cqi, 6.5rem);
+  --lk-t-display-alto: 0.95;
+  --lk-t-display-tracking: -0.03em;
+  --lk-t-display-peso: 800;
+  --lk-t-titulo: clamp(1.9rem, 1.3rem + 2.8cqi, 3.4rem);
+  --lk-t-titulo-alto: 1.05;
+  --lk-t-subtitulo: clamp(1.2rem, 1.06rem + 0.7cqi, 1.5rem);
+  --lk-t-subtitulo-alto: 1.35;
+  --lk-t-cuerpo: 1.0625rem;
+  --lk-t-cuerpo-alto: 1.6;
+  --lk-t-chico: 0.9375rem;
+  --lk-t-chico-alto: 1.5;
+  --lk-t-mini: 0.8125rem;
+  --lk-t-mini-alto: 1.4;
+  --lk-medida: 40rem;
+
+  --lk-radio: 12px;
+  --lk-radio-control: 10px;
+  --lk-borde-ancho: 1px;
+
+  --lk-placeholder-fondo: var(--lk-superficie-2);
+  --lk-placeholder-trama: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--lk-texto) 5%, transparent) 25%,
+    transparent 25% 50%,
+    color-mix(in srgb, var(--lk-texto) 5%, transparent) 50% 75%,
+    transparent 75%
+  ) 0 0 / 16px 16px;
+}
+
+[data-plantilla="libre"][data-modo="oscuro"] {
+  --lk-fondo: #131316;
+  --lk-superficie: #1c1c21;
+  --lk-superficie-2: #26262c;
+  --lk-texto: #f3f3f1;
+  --lk-texto-suave: #a8a8b0;
+  --lk-borde: #34343b;
+  --lk-acento-texto: #6283d8; /* azul aclarado: el original no llega a AA como texto sobre oscuro */
+}
+
+[data-plantilla="libre"][data-esquinas="recto"] {
+  --lk-radio: 0;
+  --lk-radio-control: 0;
+}
+
+[data-plantilla="libre"][data-esquinas="redondeado"] {
+  --lk-radio: 24px;
+  --lk-radio-control: 999px;
+}

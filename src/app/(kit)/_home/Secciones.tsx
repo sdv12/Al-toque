@@ -1,11 +1,15 @@
 import Link from "next/link";
 import { Fragment } from "react";
-import { PLANTILLAS, paletaDe, registry, type Plantilla } from "@/core/registry";
+import { PLANTILLAS_DE_RUBRO as PLANTILLAS, paletaDe, registry } from "@/core/registry";
+
+type Plantilla = (typeof PLANTILLAS)[number];
 import { fuentes as fuentesAlojamiento } from "@/templates/alojamiento";
 import { fuentes as fuentesBarberia } from "@/templates/barberia";
 import { fuentes as fuentesConsultorio } from "@/templates/consultorio";
 import { fuentes as fuentesGenerico } from "@/templates/generico";
-import { BENEFICIOS, FICHAS, PASOS, PREGUNTAS, RUBROS } from "./contenido";
+import { formatearPesos } from "@/core/lib/mensajes";
+import { planes } from "@/core/lib/precios";
+import { BENEFICIOS, FICHAS, PASOS, PREGUNTAS, RESENAS, RESENAS_DE_MUESTRA, RUBROS } from "./contenido";
 import { Navegador, Telefono } from "./Marcos";
 
 const FUENTES: Record<Plantilla, string> = {
@@ -70,6 +74,7 @@ export function Encabezado() {
           {[
             ["#plantillas", "Plantillas"],
             ["#como-funciona", "Cómo funciona"],
+            ["#precios", "Precios"],
             ["#preguntas", "Preguntas"],
           ].map(([href, texto]) => (
             <li key={href}>
@@ -303,6 +308,104 @@ export function ComoFunciona() {
   );
 }
 
+/* ───────────── Precios ───────────── */
+
+const DESTINO_PLAN: Record<string, { href: string; texto: string }> = {
+  vidriera: { href: "/configurador", texto: "Elegir plantilla" },
+  medida: { href: "/configurador?plantilla=libre", texto: "Armar desde cero" },
+  sistema: { href: "/configurador?plantilla=libre", texto: "Ver componentes" },
+};
+
+export function Precios() {
+  return (
+    <section id="precios" aria-labelledby="precios-titulo" className={`${diferida} ${margen} scroll-mt-4 py-24`}>
+      <div className="grid gap-6 @5xl:grid-cols-12 @5xl:items-end">
+        <h2 id="precios-titulo" className={`${afiche} text-titulo @5xl:col-span-7`}>
+          Precios <span className="resaltado">claros</span>
+        </h2>
+        <p className="max-w-medida text-subtitulo @5xl:col-span-5">
+          Un pago para armarla y un mensual chico para tenerla online. El configurador te muestra el total mientras la armás.
+        </p>
+      </div>
+      <ul className="mt-14 grid gap-4 @4xl:grid-cols-3">
+        {planes().map((p) => {
+          const destacado = p.id === "medida";
+          return (
+            <li
+              key={p.id}
+              className={`flex flex-col rounded-base border-2 border-tinta p-7 ${destacado ? "bg-acento-relleno text-sobre-acento" : "bg-superficie"}`}
+            >
+              <h3 className={`${afiche} text-[clamp(2rem,1.4rem+2cqi,2.75rem)] leading-none`}>{p.nombre}</h3>
+              <p className={`mt-3 ${destacado ? "" : "text-tinta-suave"}`}>{p.bajada}</p>
+              <p className="mt-6">
+                {p.desde && <span className="block text-chico">desde</span>}
+                <span className={`${afiche} block text-[clamp(2.5rem,1.6rem+3cqi,3.5rem)] leading-none tabular-nums`}>{formatearPesos(p.unico)}</span>
+                <span className="mt-1 block text-chico">pago único + {formatearPesos(p.mensual)} por mes</span>
+              </p>
+              <ul className="mt-6 flex-1 space-y-2.5 text-chico">
+                {p.incluye.map((i) => (
+                  <li key={i} className="flex gap-2.5">
+                    <span aria-hidden className={`mt-[0.5em] h-1.5 w-3 shrink-0 ${destacado ? "bg-tinta" : "bg-acento"}`} />
+                    {i}
+                  </li>
+                ))}
+              </ul>
+              <Link href={DESTINO_PLAN[p.id]!.href} className={`${destacado ? boton.tinta : boton.contorno} mt-8`}>
+                {DESTINO_PLAN[p.id]!.texto}
+                <span className="sr-only"> ({p.nombre})</span>
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+      <p className="mt-6 max-w-3xl text-chico text-tinta-suave">
+        Precios de referencia en pesos argentinos. El valor final se confirma al ver tu proyecto. Los componentes con sistema (agenda real, pagos online,
+        recordatorios, panel) suman instalación y mensual porque necesitan base de datos y servidor.
+      </p>
+    </section>
+  );
+}
+
+/* ───────────── Reseñas ───────────── */
+
+export function Resenas() {
+  return (
+    <section aria-labelledby="resenas-titulo" className={`${diferida} bg-superficie-2 py-24`}>
+      <div className={margen}>
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <h2 id="resenas-titulo" className={`${afiche} text-titulo`}>
+            Lo que <span className="resaltado">dicen</span>
+          </h2>
+          {RESENAS_DE_MUESTRA && (
+            <p className="rounded-control border-2 border-tinta bg-fondo px-4 py-2 text-chico font-semibold">
+              Reseñas de muestra mientras sumamos las de nuestros primeros clientes.
+            </p>
+          )}
+        </div>
+        <ul className="mt-12 columns-1 gap-4 @3xl:columns-2 @5xl:columns-3">
+          {RESENAS.map((r) => (
+            <li key={r.autor} className="mb-4 break-inside-avoid">
+              <figure className="rounded-base border-2 border-tinta bg-superficie p-6">
+                <p role="img" className="text-acento-relleno [text-shadow:0_0_1px_var(--lk-texto)]" aria-label={`${r.estrellas} de 5 estrellas`}>
+                  <span aria-hidden>{"★".repeat(r.estrellas)}</span>
+                  <span aria-hidden className="text-borde [text-shadow:none]">
+                    {"★".repeat(5 - r.estrellas)}
+                  </span>
+                </p>
+                <blockquote className="mt-3 text-subtitulo leading-snug">“{r.texto}”</blockquote>
+                <figcaption className="mt-4 text-chico">
+                  <span className="font-semibold">{r.autor}</span>
+                  <span className="text-tinta-suave"> · {r.negocio}</span>
+                </figcaption>
+              </figure>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
 /* ───────────── Beneficios ───────────── */
 
 export function Beneficios() {
@@ -391,7 +494,7 @@ export function Pie() {
           <p className="text-[2.25rem]">
             <Marca sobreOscuro />
           </p>
-          <p className="mt-3 text-chico opacity-80">Páginas para negocios chicos. Hecho en Córdoba.</p>
+          <p className="mt-3 text-chico opacity-80">Producto cordobés. Hecho por sdv12 y jrd9 - 2026</p>
           <p className="mt-1 text-mini tabular-nums opacity-60">v{process.env.NEXT_PUBLIC_VERSION}</p>
         </div>
         <nav aria-label="Demos">

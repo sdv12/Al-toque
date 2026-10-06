@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { configsPorDefecto } from "../defaults";
-import { PLANTILLAS, type SeccionConfig } from "../registry";
+import { libreEjemplo } from "../defaults/libre";
+import { PLANTILLAS_DE_RUBRO, type SeccionConfig } from "../registry";
 import { landingConfigSchema, type ConfigDe } from "../schema/landing-config";
 
 const clonar = <P extends keyof typeof configsPorDefecto>(p: P): ConfigDe<P> => structuredClone(configsPorDefecto[p]);
@@ -11,9 +12,40 @@ function mensajes(valor: unknown): string[] {
 }
 
 describe("landingConfigSchema", () => {
-  it.each(PLANTILLAS)("acepta la config de ejemplo de %s", (plantilla) => {
+  it.each(PLANTILLAS_DE_RUBRO)("acepta la config de ejemplo de %s", (plantilla) => {
     const r = landingConfigSchema.safeParse(configsPorDefecto[plantilla]);
     expect(r.success ? [] : r.error.issues).toEqual([]);
+  });
+
+  describe("plantilla a tu medida", () => {
+    it("la hoja en blanco pide bloques y un WhatsApp real", () => {
+      expect(mensajes(configsPorDefecto.libre).sort()).toEqual(["Agregá al menos un bloque a la página", "Cargá tu número de WhatsApp"].sort());
+    });
+
+    it("acepta el ejemplo armado con bloques", () => {
+      expect(mensajes(libreEjemplo)).toEqual([]);
+    });
+
+    it("permite repetir bloques repetibles y no los demás", () => {
+      const c = structuredClone(libreEjemplo);
+      c.secciones.push({ id: "b-texto-2", tipo: "texto", variante: "simple", activa: true, datos: { cuerpo: "Otro texto." } });
+      expect(mensajes(c)).toEqual([]);
+      c.secciones.push({ id: "b-faq-2", tipo: "faq", variante: "acordeon", activa: true });
+      expect(mensajes(c)).toContain('La sección "faq" está repetida');
+    });
+
+    it("exige ids únicos y valida los datos propios de cada bloque", () => {
+      const c = structuredClone(libreEjemplo);
+      c.secciones.push({ id: "b-texto", tipo: "texto", variante: "simple", activa: true, datos: { cuerpo: "" } });
+      const m = mensajes(c);
+      expect(m).toContain("Id de bloque repetido: b-texto");
+      expect(m).toContain("No puede quedar vacío");
+    });
+
+    it("solo acepta extras conocidos", () => {
+      expect(mensajes({ ...libreEjemplo, extras: ["recordatorios", "dominio"] })).toEqual([]);
+      expect(mensajes({ ...libreEjemplo, extras: ["teletransporte"] }).length).toBeGreaterThan(0);
+    });
   });
 
   it("rechaza una plantilla desconocida", () => {

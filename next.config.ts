@@ -6,8 +6,8 @@ const nextConfig: NextConfig = {
   // Versión visible en el footer: única fuente de verdad, el "version" de package.json.
   env: { NEXT_PUBLIC_VERSION: paquete.version },
   images: {
-    // Las fotos de clientes pueden venir de cualquier host https (Instagram CDN, Drive, etc.).
-    remotePatterns: [{ protocol: "https", hostname: "**" }],
+    // Solo se optimizan imágenes propias (/public). Las fotos externas de clientes se sirven sin
+    // optimizar desde su origen: así el optimizador no queda como proxy abierto para cualquier URL.
     qualities: [75],
   },
 };

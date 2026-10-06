@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { fuentesHome } from "./_home/fuentes";
-import { Beneficios, Cierre, ComoFunciona, Encabezado, Hero, Pie, Plantillas, Preguntas, Rubros } from "./_home/Secciones";
+import { Beneficios, Cierre, ComoFunciona, Encabezado, Hero, Pie, Plantillas, Precios, Preguntas, Resenas, Rubros } from "./_home/Secciones";
 
 export const metadata: Metadata = {
   title: "Landing al toque · Tu página para tu negocio",
@@ -32,6 +32,8 @@ export default function Inicio() {
         <Rubros />
         <Plantillas />
         <ComoFunciona />
+        <Precios />
+        <Resenas />
         <Beneficios />
         <Preguntas />
         <Cierre whatsapp={process.env.NEXT_PUBLIC_OWNER_WHATSAPP} />

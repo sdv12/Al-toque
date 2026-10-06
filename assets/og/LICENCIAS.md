@@ -13,5 +13,7 @@ bajo la SIL Open Font License 1.1, que permite redistribuirlas junto al software
 | alojamiento-cuerpo.ttf | Literata | 400 |
 | generico-display.ttf | Bricolage Grotesque | 800 |
 | generico-cuerpo.ttf | Instrument Sans | 400 |
+| libre-display.ttf | Schibsted Grotesk | 800 |
+| libre-cuerpo.ttf | Source Sans 3 | 400 |
 
 Texto de la licencia: https://openfontlicense.org

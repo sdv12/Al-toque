@@ -16,10 +16,19 @@ type Props = { config: LandingConfig; editar: Editar; errorDe: (ruta: string) =>
 
 /** Colecciones que usa la plantilla actual (según lo que exigen sus secciones). */
 function coleccionesDe(config: LandingConfig): Set<ClaveContenido> {
-  return new Set(Object.values(seccionesDe(config.plantilla)).flatMap((d) => d.requiere ?? []));
+  const defs = seccionesDe(config.plantilla);
+  // "A tu medida": solo lo que piden los bloques que el cliente agregó.
+  if (config.plantilla === "libre") {
+    return new Set((config.secciones as readonly { tipo: string }[]).flatMap((s) => defs[s.tipo]?.requiere ?? []));
+  }
+  return new Set(Object.values(defs).flatMap((d) => d.requiere ?? []));
 }
 
-const USA_TURNOS = new Set(["barberia", "consultorio"]);
+/** La agenda de turnos se edita en las plantillas con reserva y en "a tu medida" con el bloque de turnos. */
+function usaTurnos(config: LandingConfig): boolean {
+  if (config.plantilla === "barberia" || config.plantilla === "consultorio") return true;
+  return config.plantilla === "libre" && (config.secciones as readonly { tipo: string }[]).some((s) => s.tipo === "turnos");
+}
 
 export function PestanaContenido({ config, editar, errorDe }: Props) {
   const usadas = coleccionesDe(config);
@@ -213,7 +222,7 @@ export function PestanaContenido({ config, editar, errorDe }: Props) {
         </Bloque>
       )}
 
-      {USA_TURNOS.has(config.plantilla) && <EditorAgenda agenda={config.agenda} editar={editar} />}
+      {usaTurnos(config) && <EditorAgenda agenda={config.agenda} editar={editar} />}
 
       {usadas.has("obrasSociales") && (
         <Bloque titulo="Obras sociales" descripcion="Una por línea. Aparecen en la lista buscable y en el selector de cobertura del turno.">

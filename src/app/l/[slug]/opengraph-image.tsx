@@ -23,6 +23,7 @@ const LLAMADO: Record<Plantilla, string> = {
   consultorio: "Pedí tu turno online",
   alojamiento: "Consultá fechas",
   generico: "Pedí presupuesto",
+  libre: "Escribinos",
 };
 
 const RADIO_BOTON: Record<Esquinas, number> = { recto: 0, suave: 10, redondeado: 999 };
@@ -48,6 +49,8 @@ function Detalle({ plantilla, acento, borde }: { plantilla: Plantilla; acento: s
       return <div style={{ position: "absolute", left: 0, top: 0, right: 0, height: 14, background: acento }} />;
     case "alojamiento":
       return <div style={{ position: "absolute", left: 28, top: 28, right: 28, bottom: 28, border: `3px dashed ${borde}`, borderRadius: 28 }} />;
+    case "libre":
+      return <div style={{ position: "absolute", left: 80, right: 80, bottom: 40, height: 6, borderRadius: 999, background: acento }} />;
     case "generico":
       return <div style={{ position: "absolute", right: -140, top: -140, width: 420, height: 420, borderRadius: 999, background: acento }} />;
   }

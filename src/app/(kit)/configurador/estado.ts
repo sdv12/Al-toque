@@ -170,4 +170,4 @@ export function pestanaDeRuta(ruta: string): Pestana {
   return "enviar";
 }
 
-export type Pestana = "plantilla" | "estilo" | "secciones" | "textos" | "contenido" | "enviar";
+export type Pestana = "plantilla" | "estilo" | "secciones" | "textos" | "contenido" | "precio" | "enviar";

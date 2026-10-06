@@ -7,6 +7,7 @@ import { registry } from "@/core/registry";
 import type { LandingConfig } from "@/core/schema/landing-config";
 import { migrateConfig, type ErrorConfig } from "@/core/schema/migrate";
 import { Bloque, botonKit, claseControl } from "../campos";
+import { totalCorto } from "./PestanaPrecio";
 import { pestanaDeRuta, rutaLegible, slugDe, useCodigoConfig, type Pestana } from "../estado";
 
 type Props = {
@@ -34,6 +35,7 @@ export function PestanaEnviar({ config, errores, reemplazar, irA }: Props) {
       ``,
       `Negocio: ${config.negocio.nombre}`,
       `Plantilla: ${registry[config.plantilla].meta.nombre}`,
+      `Estimado: ${totalCorto(config)}`,
       ``,
       `Código (no lo edites):`,
       codigo,

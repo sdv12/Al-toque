@@ -1,0 +1,146 @@
+{
+  "version": 1,
+  "plantilla": "libre",
+  "estilo": {
+    "acento": "#1d7a46",
+    "esquinas": "redondeado",
+    "modo": "claro"
+  },
+  "negocio": {
+    "nombre": "Huerta Lola",
+    "eslogan": "Verdura agroecológica de Colonia Caroya, en tu casa los jueves.",
+    "subtitulo": "Armamos bolsones con lo que da la huerta cada semana y los llevamos a Córdoba capital. Pedís hasta el martes por WhatsApp.",
+    "whatsapp": "5493525550505",
+    "direccion": "Colonia Caroya, Córdoba",
+    "horario": "Pedidos de lunes a martes · Entregas los jueves",
+    "instagram": "huertalola"
+  },
+  "secciones": [
+    {
+      "id": "b-portada",
+      "tipo": "portada",
+      "variante": "partida",
+      "activa": true
+    },
+    {
+      "id": "b-texto",
+      "tipo": "texto",
+      "variante": "destacado",
+      "activa": true,
+      "datos": {
+        "titulo": "Cómo trabajamos",
+        "cuerpo": "Cosechamos el miércoles a la tarde y entregamos el jueves. Sin agroquímicos, con semillas propias y riego por goteo. Lo que no se vende va a compost."
+      }
+    },
+    {
+      "id": "b-servicios",
+      "tipo": "servicios",
+      "variante": "tarjetas",
+      "activa": true
+    },
+    {
+      "id": "b-galeria",
+      "tipo": "galeria",
+      "variante": "grilla",
+      "activa": true
+    },
+    {
+      "id": "b-testimonios",
+      "tipo": "testimonios",
+      "variante": "citas",
+      "activa": true
+    },
+    {
+      "id": "b-cta",
+      "tipo": "cta",
+      "variante": "banda",
+      "activa": true,
+      "datos": {
+        "titulo": "¿Querés tu bolsón este jueves?",
+        "texto": "Pedí hasta el martes a la noche.",
+        "boton": "Hacer mi pedido"
+      }
+    },
+    {
+      "id": "b-faq",
+      "tipo": "faq",
+      "variante": "acordeon",
+      "activa": true
+    },
+    {
+      "id": "b-ubicacion",
+      "tipo": "ubicacion",
+      "variante": "horario",
+      "activa": true
+    },
+    {
+      "id": "b-contacto",
+      "tipo": "contacto",
+      "variante": "whatsapp",
+      "activa": true
+    }
+  ],
+  "contenido": {
+    "servicios": [
+      {
+        "id": "bolson-chico",
+        "nombre": "Bolsón chico",
+        "descripcion": "Para 1 o 2 personas: 4 kg de verdura de estación.",
+        "precio": 14000,
+        "duracionMin": 30
+      },
+      {
+        "id": "bolson-familiar",
+        "nombre": "Bolsón familiar",
+        "descripcion": "Para 4 personas: 8 kg de verdura y hojas.",
+        "precio": 24000,
+        "duracionMin": 30
+      },
+      {
+        "id": "huevos",
+        "nombre": "Maple de huevos",
+        "descripcion": "30 huevos de gallinas libres.",
+        "precio": 9500,
+        "duracionMin": 30
+      }
+    ],
+    "galeria": [
+      {
+        "alt": "Bolsón de verduras de estación",
+        "epigrafe": "Bolsón de otoño"
+      },
+      {
+        "alt": "La huerta en Colonia Caroya"
+      },
+      {
+        "alt": "Cosecha de lechugas"
+      }
+    ],
+    "testimonios": [
+      {
+        "id": "t-1",
+        "autor": "Romina, Cerro de las Rosas",
+        "texto": "La verdura dura el doble que la del súper. Ya vamos dos años."
+      },
+      {
+        "id": "t-2",
+        "autor": "Diego, General Paz",
+        "texto": "Puntuales siempre y los tomates saben a tomate."
+      }
+    ],
+    "faq": [
+      {
+        "id": "zona",
+        "pregunta": "¿A qué zonas llegan?",
+        "respuesta": "Córdoba capital y Gran Córdoba. Para otras zonas, consultanos."
+      },
+      {
+        "id": "pago",
+        "pregunta": "¿Cómo se paga?",
+        "respuesta": "Transferencia o efectivo al recibir."
+      }
+    ]
+  },
+  "whatsappFlotante": true,
+  "demo": true
+}

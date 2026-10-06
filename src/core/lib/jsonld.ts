@@ -7,6 +7,7 @@ const TIPO_SCHEMA_ORG: Record<Plantilla, string> = {
   consultorio: "MedicalClinic",
   alojamiento: "LodgingBusiness",
   generico: "LocalBusiness",
+  libre: "LocalBusiness",
 };
 
 const DIAS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"] as const;

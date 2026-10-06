@@ -1,3 +1,4 @@
+import type { ZodType } from "zod";
 import type { Modo } from "../schema/comun";
 import type { ClaveContenido } from "../schema/contenido";
 
@@ -17,6 +18,12 @@ export type DefSeccion = {
   requiere?: readonly ClaveContenido[];
   /** Sección de apertura: obligatoria, activa y siempre primera. */
   inicio?: boolean;
+  /** Se puede agregar más de una vez (cada instancia lleva su propio id). */
+  repetible?: boolean;
+  /** Necesita backend real (base de datos, servidor): suma costo y mantenimiento. */
+  sistema?: boolean;
+  /** Datos propios de cada instancia (ej. título y texto de un bloque de texto). */
+  datos?: ZodType;
 };
 
 export type MetaPlantilla = {

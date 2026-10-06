@@ -20,6 +20,8 @@ export function Foto({ imagen, aspecto = "4 / 5", sizes, className = "", destaca
     <div className={`relative overflow-hidden rounded-base bg-superficie ${className}`} style={{ aspectRatio: aspecto }}>
       <Image
         src={imagen.src}
+        // Fotos de otros dominios: directo desde su origen (el optimizador no es un proxy abierto).
+        unoptimized={!imagen.src.startsWith("/")}
         alt={imagen.alt}
         fill
         sizes={sizes}

@@ -1,4 +1,5 @@
-import type { Modo } from "../schema/comun";
+import { textoCorto, textoOpcional, type Modo } from "../schema/comun";
+import { z } from "../schema/z";
 import { definirPlantilla, type DefPlantilla, type DefSeccion, type Paleta } from "./define";
 
 /**
@@ -249,13 +250,126 @@ export const registry = {
       },
     },
   }),
+
+  /**
+   * "A tu medida": arranca en blanco (solo header y footer) y se arma agregando bloques.
+   * Los bloques marcados `sistema` necesitan backend real y suman costo (ver lib/precios).
+   */
+  libre: definirPlantilla({
+    meta: {
+      nombre: "A tu medida",
+      rubro: "Cualquier negocio",
+      descripcion: "Empezás con una hoja en blanco y vas sumando los bloques que necesitás. La página se arma sola con tu estilo.",
+      modos: ["claro", "oscuro"],
+      paletas: {
+        claro: { fondo: "#f6f5f2", superficie: "#ffffff", texto: "#17171a", textoSuave: "#55555e" },
+        oscuro: { fondo: "#131316", superficie: "#1c1c21", texto: "#f3f3f1", textoSuave: "#a8a8b0" },
+      },
+      acentos: [
+        { nombre: "Azul tinta", hex: "#2350c8" },
+        { nombre: "Verde", hex: "#1d7a46" },
+        { nombre: "Coral", hex: "#e4572e" },
+        { nombre: "Mostaza", hex: "#c99a06" },
+        { nombre: "Grafito", hex: "#2b2b31" },
+      ],
+    },
+    secciones: {
+      portada: {
+        etiqueta: "Portada",
+        descripcion: "Nombre del negocio, eslogan y botón de contacto.",
+        variantes: { centrada: "Centrada", partida: "Texto y foto" },
+      },
+      texto: {
+        etiqueta: "Texto",
+        descripcion: "Un título y un párrafo: quiénes son, cómo trabajan, lo que quieras contar.",
+        variantes: { simple: "Simple", destacado: "Destacado" },
+        repetible: true,
+        datos: z.object({ titulo: textoOpcional(80), cuerpo: textoCorto(1200) }),
+      },
+      servicios: {
+        etiqueta: "Servicios y precios",
+        descripcion: "Lo que ofrecés, con precio y duración.",
+        variantes: { lista: "Lista", tarjetas: "Tarjetas" },
+        requiere: ["servicios"],
+      },
+      galeria: {
+        etiqueta: "Galería",
+        descripcion: "Fotos del lugar o de trabajos.",
+        variantes: { grilla: "Grilla", tira: "Tira deslizable" },
+        requiere: ["galeria"],
+      },
+      testimonios: {
+        etiqueta: "Testimonios",
+        descripcion: "Lo que dicen tus clientes.",
+        variantes: { citas: "Citas" },
+        requiere: ["testimonios"],
+      },
+      faq: {
+        etiqueta: "Preguntas frecuentes",
+        descripcion: "Respuestas a las dudas de siempre.",
+        variantes: { acordeon: "Acordeón" },
+        requiere: ["faq"],
+      },
+      ubicacion: {
+        etiqueta: "Ubicación y horario",
+        descripcion: "Dirección, horario y cómo llegar.",
+        variantes: { horario: "Con horario", compacta: "Compacta" },
+      },
+      contacto: {
+        etiqueta: "Contacto por WhatsApp",
+        descripcion: "Formulario corto que abre WhatsApp con el mensaje armado.",
+        variantes: { whatsapp: "Formulario" },
+      },
+      redes: {
+        etiqueta: "Redes",
+        descripcion: "Botones a Instagram y WhatsApp.",
+        variantes: { botones: "Botones" },
+      },
+      cta: {
+        etiqueta: "Llamado a la acción",
+        descripcion: "Una banda con una frase y un botón.",
+        variantes: { banda: "Banda" },
+        repetible: true,
+        datos: z.object({ titulo: textoCorto(80), texto: textoOpcional(200), boton: textoCorto(30) }),
+      },
+      turnos: {
+        etiqueta: "Agenda de turnos",
+        descripcion: "Elegir servicio, día y horario. Con sistema: los turnos se guardan y no se superponen.",
+        variantes: { agenda: "Agenda" },
+        requiere: ["servicios"],
+        sistema: true,
+      },
+      disponibilidad: {
+        etiqueta: "Calendario de disponibilidad",
+        descripcion: "Fechas de entrada y salida para alojamientos. Con sistema: las noches tomadas se bloquean solas.",
+        variantes: { fechas: "Fechas" },
+        requiere: ["propiedades"],
+        sistema: true,
+      },
+      formulario: {
+        etiqueta: "Formulario de consultas",
+        descripcion: "Consultas que quedan guardadas en un panel, además de llegar a WhatsApp.",
+        variantes: { consultas: "Consultas" },
+        sistema: true,
+      },
+      pagos: {
+        etiqueta: "Seña o pago online",
+        descripcion: "Cobrar la seña con Mercado Pago al reservar.",
+        variantes: { sena: "Seña" },
+        sistema: true,
+      },
+    },
+  }),
 } as const satisfies Record<string, DefPlantilla>;
 
 type Registro = typeof registry;
 
 export type Plantilla = keyof Registro;
 
-export const PLANTILLAS = ["barberia", "consultorio", "alojamiento", "generico"] as const satisfies readonly Plantilla[];
+export const PLANTILLAS = ["barberia", "consultorio", "alojamiento", "generico", "libre"] as const satisfies readonly Plantilla[];
+
+/** Plantillas con estructura propia y demo (las que se muestran en la home). */
+export const PLANTILLAS_DE_RUBRO = ["barberia", "consultorio", "alojamiento", "generico"] as const satisfies readonly Plantilla[];
 
 type SeccionesDe<P extends Plantilla> = Registro[P]["secciones"];
 
@@ -266,7 +380,7 @@ export type VarianteDe<P extends Plantilla, T extends TipoSeccion<P>> =
 
 /** Una sección de la config de la plantilla P: tipo y variante quedan atados entre sí. */
 export type SeccionConfig<P extends Plantilla> = {
-  [T in TipoSeccion<P>]: { tipo: T; variante: VarianteDe<P, T>; activa: boolean };
+  [T in TipoSeccion<P>]: { tipo: T; variante: VarianteDe<P, T>; activa: boolean; id?: string; datos?: unknown };
 }[TipoSeccion<P>];
 
 export function esPlantilla(valor: unknown): valor is Plantilla {

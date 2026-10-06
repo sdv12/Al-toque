@@ -21,8 +21,16 @@ Cada una tiene su propia estructura, no solo otros colores.
 | Clínica clara | Consultorio / estética | Turnos desde la portada, prestaciones comparables, obras sociales con buscador |
 | Cuaderno de campo | Casas de campo | Recorrido casa por casa, mapa ilustrado, calendario de fechas con estimado |
 | Portfolio modular | Cualquier rubro | Portada en bento, trabajos con antes/después, contacto que termina en WhatsApp |
+| A tu medida | Cualquier negocio | Hoja en blanco que se arma sumando bloques; los componentes con sistema avisan que suman costo |
 
-Demos: `/l/demo-barberia`, `/l/demo-consultorio`, `/l/demo-casas`, `/l/demo-portfolio`.
+Demos: `/l/demo-barberia`, `/l/demo-consultorio`, `/l/demo-casas`, `/l/demo-portfolio`, `/l/demo-a-medida`.
+
+## Precios
+
+Son estimados de referencia y viven en un solo lugar: [`src/core/lib/precios.ts`](src/core/lib/precios.ts).
+Cambiarlos ahí actualiza la calculadora del configurador y la sección de precios de la home.
+Las reseñas de la home son de muestra mientras `RESENAS_DE_MUESTRA` (en
+`src/app/(kit)/_home/contenido.ts`) sea `true`.
 
 ## Publicar la página de un cliente
 

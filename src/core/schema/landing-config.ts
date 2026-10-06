@@ -5,7 +5,8 @@ import {
   type Plantilla,
   type SeccionConfig,
 } from "../registry";
-import { agendaSchema, estiloSchema, negocioSchema } from "./comun";
+import { EXTRAS } from "../lib/precios";
+import { agendaSchema, estiloSchema, idSchema, negocioSchema } from "./comun";
 import { contenidoSchema, type ClaveContenido, type Contenido } from "./contenido";
 import { VERSION_ACTUAL } from "./version";
 import { z } from "./z";
@@ -19,6 +20,9 @@ function seccionesSchema<P extends Plantilla>(plantilla: P) {
         error: `Variante no disponible para "${def.etiqueta}"`,
       }),
       activa: z.boolean(),
+      /** Identifica cada instancia (obligatorio en la práctica para bloques repetibles). */
+      id: idSchema.optional(),
+      ...(def.datos ? { datos: def.datos } : {}),
     }),
   );
   const [primera, ...resto] = opciones;
@@ -28,8 +32,11 @@ function seccionesSchema<P extends Plantilla>(plantilla: P) {
     error: `Sección no soportada por la plantilla ${registry[plantilla].meta.nombre}`,
   });
   // El schema se arma en runtime desde el registry; el tipo se ata al registry con SeccionConfig.
-  return z.array(seccion).min(1).max(20) as unknown as z.ZodType<SeccionConfig<P>[]>;
+  return z.array(seccion).min(1, "Agregá al menos un bloque a la página").max(30) as unknown as z.ZodType<SeccionConfig<P>[]>;
 }
+
+/** WhatsApp de relleno de la hoja en blanco: sirve para la vista previa, no para publicar. */
+export const NUMERO_DE_RELLENO = "5493510000000";
 
 const base = z.object({
   version: z.literal(VERSION_ACTUAL),
@@ -38,6 +45,8 @@ const base = z.object({
   agenda: agendaSchema.optional(),
   contenido: contenidoSchema,
   whatsappFlotante: z.boolean(),
+  /** Funciones extra elegidas en el configurador (afectan el precio; ver lib/precios). */
+  extras: z.array(z.enum(Object.keys(EXTRAS) as [string, ...string[]])).max(10).optional(),
   /**
    * Landing de muestra: simula horarios ocupados y noches tomadas para que la demo se vea real.
    * Las landings de clientes no lo llevan: sin backend, todo lo de la agenda se muestra libre
@@ -67,6 +76,7 @@ export const landingConfigSchema = z
       configPara("consultorio"),
       configPara("alojamiento"),
       configPara("generico"),
+      configPara("libre"),
     ],
     { error: `Plantilla desconocida. Opciones: ${PLANTILLAS.join(", ")}` },
   )
@@ -77,8 +87,14 @@ export const landingConfigSchema = z
 
     // Secciones: sin repetidas, las de inicio presentes, activas y primeras.
     const vistos = new Set<string>();
+    const idsSeccion = new Set<string>();
+    (config.secciones as readonly { id?: string }[]).forEach((s, i) => {
+      if (!s.id) return;
+      if (idsSeccion.has(s.id)) ctx.addIssue({ code: "custom", message: `Id de bloque repetido: ${s.id}`, path: ["secciones", i, "id"] });
+      idsSeccion.add(s.id);
+    });
     secciones.forEach((s, i) => {
-      if (vistos.has(s.tipo)) {
+      if (vistos.has(s.tipo) && !defs[s.tipo]?.repetible) {
         ctx.addIssue({ code: "custom", message: `La sección "${s.tipo}" está repetida`, path: ["secciones", i, "tipo"] });
       }
       vistos.add(s.tipo);
@@ -110,6 +126,11 @@ export const landingConfigSchema = z
         }
       }
     });
+
+    // El número de relleno de la hoja en blanco no se puede publicar.
+    if (config.negocio.whatsapp === NUMERO_DE_RELLENO) {
+      ctx.addIssue({ code: "custom", message: "Cargá tu número de WhatsApp", path: ["negocio", "whatsapp"] });
+    }
 
     // Modo soportado por la plantilla.
     const modos: readonly string[] = meta.modos;
