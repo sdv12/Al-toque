@@ -4,6 +4,7 @@ import { normalizarWhatsappAR } from "@/core/lib/whatsapp";
 import type { LandingConfig } from "@/core/schema/landing-config";
 import type { Negocio } from "@/core/schema/comun";
 import { Bloque, CampoArea, CampoTexto, Interruptor } from "../campos";
+import { EditorRedes } from "./EditorRedes";
 
 type Props = {
   config: LandingConfig;
@@ -65,19 +66,6 @@ export function PestanaTextos({ config, editar, errorDe }: Props) {
           maxLength={120}
           error={errorDe("negocio.horario")}
         />
-        <CampoTexto
-          etiqueta="Instagram"
-          ayuda="Solo el usuario. Si pegás el link, lo recortamos."
-          valor={negocio.instagram ?? ""}
-          onCambio={(v) =>
-            editar((c) => {
-              const usuario = v.trim().replace(/^@/, "").replace(/^https?:\/\/(www\.)?instagram\.com\//, "").replace(/[/?].*$/, "");
-              if (usuario) c.negocio.instagram = usuario;
-              else delete c.negocio.instagram;
-            })
-          }
-          error={errorDe("negocio.instagram")}
-        />
         <Interruptor
           etiqueta="WhatsApp siempre visible"
           ayuda="Suma un acceso directo a WhatsApp que acompaña al usuario mientras recorre la página."
@@ -85,6 +73,8 @@ export function PestanaTextos({ config, editar, errorDe }: Props) {
           onCambio={(v) => editar((c) => void (c.whatsappFlotante = v))}
         />
       </Bloque>
+
+      <EditorRedes redes={negocio.redes} editar={editar} />
     </>
   );
 }

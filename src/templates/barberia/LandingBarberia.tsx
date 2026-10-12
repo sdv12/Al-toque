@@ -1,9 +1,12 @@
 import type { ComponentType } from "react";
+import { Fragment } from "react";
 import { linkWhatsApp } from "@/core/lib/mensajes";
 import type { TipoSeccion } from "@/core/registry";
 import type { ConfigDe } from "@/core/schema/landing-config";
+import { RedesSociales } from "@/ui/primitives/RedesSociales";
+import { Separador } from "@/ui/primitives/Separador";
 import { boton } from "./estilos";
-import { IconoInstagram, IconoWhatsApp } from "./iconos";
+import { IconoWhatsApp } from "./iconos";
 import { BotonReservar } from "./reserva/BotonReservar";
 import { ReservaProvider } from "./reserva/ReservaContext";
 import { Equipo } from "./secciones/Equipo";
@@ -62,9 +65,14 @@ export function LandingBarberia({ config }: { config: Config }) {
 
         <div>
           <main id="contenido">
-            {activas.map((s) => {
+            {activas.map((s, i) => {
               const Seccion = SECCIONES[s.tipo];
-              return <Seccion key={s.tipo} config={config} variante={s.variante} />;
+              return (
+                <Fragment key={s.tipo}>
+                  {i > 0 && s.separador && <Separador />}
+                  <Seccion config={config} variante={s.variante} />
+                </Fragment>
+              );
             })}
           </main>
           <Pie config={config} />
@@ -149,12 +157,14 @@ function Pie({ config }: { config: Config }) {
         <p>
           {negocio.direccion} · {negocio.horario}
         </p>
-        <div className="flex items-center gap-5">
-          {negocio.instagram && (
-            <a href={`https://instagram.com/${negocio.instagram}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 hover:text-tinta">
-              <IconoInstagram className="size-4" />@{negocio.instagram}
-            </a>
-          )}
+        <div className="flex flex-wrap items-center gap-5">
+          <RedesSociales
+            redes={negocio.redes}
+            nombre={negocio.nombre}
+            className="gap-2"
+            claseBoton="grid size-9 place-items-center rounded-full border border-borde text-tinta-suave transition-colors hover:border-acento hover:text-acento-texto"
+            claseIcono="size-4"
+          />
           <a href={linkWhatsApp(negocio.whatsapp)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 hover:text-tinta">
             <IconoWhatsApp className="size-4" />
             WhatsApp

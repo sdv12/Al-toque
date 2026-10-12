@@ -20,6 +20,8 @@ function seccionesSchema<P extends Plantilla>(plantilla: P) {
         error: `Variante no disponible para "${def.etiqueta}"`,
       }),
       activa: z.boolean(),
+      /** Línea horizontal de 1 px arriba de la sección, para separarla de la anterior. */
+      separador: z.boolean().optional(),
       /** Identifica cada instancia (obligatorio en la práctica para bloques repetibles). */
       id: idSchema.optional(),
       ...(def.datos ? { datos: def.datos } : {}),

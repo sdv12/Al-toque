@@ -1,5 +1,6 @@
 import { formatearDuracion, formatearPrecio, linkWhatsApp } from "@/core/lib/mensajes";
 import { IconoWhatsApp } from "@/ui/primitives/IconoWhatsApp";
+import { RedesSociales } from "@/ui/primitives/RedesSociales";
 import { bloque, boton, contenedor, margen, titulo } from "../estilos";
 import { Foto } from "../Foto";
 import type { PropsBloque } from "../tipos";
@@ -253,15 +254,11 @@ export function Redes({ config, anclaId }: PropsBloque) {
   const { negocio } = config;
   return (
     <section id={anclaId} aria-label="Redes" className={`${margen} py-12`}>
-      <div className={`${contenedor} flex flex-wrap justify-center gap-3`}>
+      <div className={`${contenedor} flex flex-col items-center gap-5`}>
         <a href={linkWhatsApp(negocio.whatsapp)} target="_blank" rel="noopener noreferrer" className={boton.primario}>
           <IconoWhatsApp className="size-5" /> WhatsApp
         </a>
-        {negocio.instagram && (
-          <a href={`https://instagram.com/${negocio.instagram}`} target="_blank" rel="noopener noreferrer" className={boton.secundario}>
-            Instagram · @{negocio.instagram}
-          </a>
-        )}
+        <RedesSociales redes={negocio.redes} nombre={negocio.nombre} className="justify-center" />
       </div>
     </section>
   );

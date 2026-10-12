@@ -22,10 +22,9 @@ const FUENTES: Record<Plantilla, string> = {
 const DOMINIO = "landing-al-toque.netlify.app";
 
 /**
- * Video del configurador para "Cómo funciona" (mp4 en public/, ej. "/muestras/configurador.mp4").
- * Sin video, se muestra la captura.
+ * Video de demo para "Tres pasos y listo" (mp4 en public/). Si no hay o no carga, se ve la captura.
  */
-const VIDEO_CONFIGURADOR: string | undefined = undefined;
+const VIDEO_CONFIGURADOR: string | undefined = "/Demo/Demo_plantillas.mp4";
 const margen = "px-4 @3xl:px-8 @6xl:px-12";
 const afiche = "font-display font-extrabold uppercase [font-stretch:68%]";
 
@@ -289,14 +288,14 @@ export function ComoFunciona() {
             </li>
           ))}
         </ol>
-        {/* Tamaño de visor de video: 16:9 y a lo sumo 600 px de ancho (≈ 375 px de alto con la barra). */}
-        <figure className="mx-auto mt-16 max-w-[600px]">
+        {/* Visor de video: 16:9, a lo sumo 1000 px de ancho (≈ 600 px de alto con la barra); en angosto, todo el ancho. */}
+        <figure className="mx-auto mt-16 max-w-[1000px]">
           <Navegador
             src="/muestras/configurador.jpg"
             video={VIDEO_CONFIGURADOR}
             alt="El configurador: panel de edición a la izquierda y la página en vivo a la derecha"
             url={`${DOMINIO}/configurador`}
-            sizes="(min-width: 640px) 600px, 94vw"
+            sizes="(min-width: 1080px) 1000px, 94vw"
             aspecto="16 / 9"
           />
           <figcaption className="mt-4 text-chico text-tinta-suave">
@@ -324,7 +323,8 @@ export function Precios() {
           Precios <span className="resaltado">claros</span>
         </h2>
         <p className="max-w-medida text-subtitulo @5xl:col-span-5">
-          Un pago para armarla y un mensual chico para tenerla online. El configurador te muestra el total mientras la armás.
+          Un pago inicial para armarla y una cuota mensual accesible para mantenerla online.
+           <p>Mientras la armás, ves el precio final al instante.</p>
         </p>
       </div>
       <ul className="mt-14 grid gap-4 @4xl:grid-cols-3">
@@ -358,8 +358,8 @@ export function Precios() {
           );
         })}
       </ul>
-      <p className="mt-6 max-w-3xl text-chico text-tinta-suave">
-        Precios de referencia en pesos argentinos. El valor final se confirma al ver tu proyecto. Los componentes con sistema (agenda real, pagos online,
+      <p className="mt-6 text-pretty text-chico text-tinta-suave">
+        * Precios de referencia en pesos argentinos. El valor final se confirma al ver tu proyecto. Los componentes con sistema (agenda real, pagos online,
         recordatorios, panel) suman instalación y mensual porque necesitan base de datos y servidor.
       </p>
     </section>

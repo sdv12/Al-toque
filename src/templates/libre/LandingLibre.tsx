@@ -1,7 +1,10 @@
 import type { ComponentType } from "react";
+import { Fragment } from "react";
 import { linkWhatsApp } from "@/core/lib/mensajes";
 import type { TipoSeccion } from "@/core/registry";
 import { IconoWhatsApp } from "@/ui/primitives/IconoWhatsApp";
+import { RedesSociales } from "@/ui/primitives/RedesSociales";
+import { Separador } from "@/ui/primitives/Separador";
 import { Cta, Faq, Galeria, Portada, Redes, Servicios, Testimonios, Texto, Ubicacion } from "./bloques/Basicos";
 import { Contacto, Disponibilidad, Formulario, Pagos, Turnos } from "./bloques/Interactivos";
 import { boton, contenedor, margen } from "./estilos";
@@ -65,7 +68,12 @@ export function LandingLibre({ config }: { config: Config }) {
           activos.map((b, i) => {
             const Bloque = BLOQUES[b.tipo];
             const anclaId = b.id ?? `${b.tipo}-${i}`;
-            return <Bloque key={anclaId} config={config} bloque={b} anclaId={anclaId} />;
+            return (
+              <Fragment key={anclaId}>
+                {i > 0 && b.separador && <Separador />}
+                <Bloque config={config} bloque={b} anclaId={anclaId} />
+              </Fragment>
+            );
           })
         )}
       </main>
@@ -77,12 +85,8 @@ export function LandingLibre({ config }: { config: Config }) {
             {negocio.direccion && <p className="mt-1 text-tinta-suave">{negocio.direccion}</p>}
             {negocio.horario && <p className="text-tinta-suave">{negocio.horario}</p>}
           </div>
-          <div className="flex gap-5 font-semibold">
-            {negocio.instagram && (
-              <a href={`https://instagram.com/${negocio.instagram}`} target="_blank" rel="noopener noreferrer" className="hover:text-acento-texto">
-                Instagram
-              </a>
-            )}
+          <div className="flex flex-wrap items-center gap-5 font-semibold">
+            <RedesSociales redes={negocio.redes} nombre={negocio.nombre} className="gap-2" />
             <a href={linkWhatsApp(negocio.whatsapp)} target="_blank" rel="noopener noreferrer" className="hover:text-acento-texto">
               WhatsApp
             </a>

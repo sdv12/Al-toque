@@ -1,0 +1,23 @@
+<!doctype html>
+<!--
+  Declaración de los formularios para Netlify Forms. Con @netlify/plugin-nextjs v5 los forms
+  tienen que existir en un HTML estático de public/ para que Netlify los detecte al deployar,
+  y el envío se hace con un POST a este archivo (ver PestanaEnviar.tsx). Nadie navega acá.
+-->
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>Formularios</title>
+  </head>
+  <body>
+    <form name="configuraciones" method="POST" netlify netlify-honeypot="bot-field" hidden>
+      <input type="hidden" name="form-name" value="configuraciones" />
+      <input name="bot-field" />
+      <input name="negocio" />
+      <input name="plantilla" />
+      <input name="estimado" />
+      <input name="slug" />
+      <textarea name="codigo"></textarea>
+    </form>
+  </body>
+</html>

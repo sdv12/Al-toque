@@ -3,6 +3,7 @@ import type { VarianteDe } from "@/core/registry";
 import type { Servicio } from "@/core/schema/contenido";
 import type { ConfigDe } from "@/core/schema/landing-config";
 import { IconoWhatsApp } from "@/ui/primitives/IconoWhatsApp";
+import { RedesSociales } from "@/ui/primitives/RedesSociales";
 import { bloque, boton, tituloBloque } from "../estilos";
 import { Foto } from "../Foto";
 import { BotonPedirTurno, BuscadorObrasSociales } from "../interactivos";
@@ -291,13 +292,9 @@ export function Ubicacion({ config, variante }: { config: Config; variante: Vari
       <a href={linkWhatsApp(negocio.whatsapp)} target="_blank" rel="noopener noreferrer" className={`${boton.enlace} inline-flex items-center gap-1.5`}>
         <IconoWhatsApp className="size-4" /> WhatsApp
       </a>
-      {negocio.instagram && (
-        <a href={`https://instagram.com/${negocio.instagram}`} target="_blank" rel="noopener noreferrer" className={boton.enlace}>
-          @{negocio.instagram}
-        </a>
-      )}
     </p>
   );
+  const redes = <RedesSociales redes={negocio.redes} nombre={negocio.nombre} className="mt-5" />;
 
   if (variante === "compacta") {
     return (
@@ -309,6 +306,7 @@ export function Ubicacion({ config, variante }: { config: Config; variante: Vari
           {negocio.direccion}. {negocio.horario}.
         </p>
         {enlaces}
+        {redes}
       </section>
     );
   }
@@ -331,6 +329,7 @@ export function Ubicacion({ config, variante }: { config: Config; variante: Vari
             </div>
           </dl>
           {enlaces}
+        {redes}
         </div>
         <a
           href={mapa}

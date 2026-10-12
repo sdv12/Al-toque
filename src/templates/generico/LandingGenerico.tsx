@@ -1,8 +1,11 @@
 import type { ComponentType } from "react";
+import { Fragment } from "react";
 import { linkWhatsApp } from "@/core/lib/mensajes";
 import type { TipoSeccion } from "@/core/registry";
 import type { ConfigDe } from "@/core/schema/landing-config";
 import { IconoWhatsApp } from "@/ui/primitives/IconoWhatsApp";
+import { RedesSociales } from "@/ui/primitives/RedesSociales";
+import { Separador } from "@/ui/primitives/Separador";
 import { margen } from "./estilos";
 import { Bento } from "./secciones/Bento";
 import { Casos, Contacto, Faq, Servicios, Testimonios } from "./secciones/Secciones";
@@ -69,9 +72,14 @@ export function LandingGenerico({ config }: { config: Config }) {
       </header>
 
       <main id="contenido">
-        {activas.map((s) => {
+        {activas.map((s, i) => {
           const Seccion = SECCIONES[s.tipo];
-          return <Seccion key={s.tipo} config={config} variante={s.variante} />;
+          return (
+            <Fragment key={s.tipo}>
+              {i > 0 && s.separador && <Separador />}
+              <Seccion config={config} variante={s.variante} />
+            </Fragment>
+          );
         })}
       </main>
 
@@ -80,16 +88,12 @@ export function LandingGenerico({ config }: { config: Config }) {
           <p>
             {negocio.direccion} · {negocio.horario}
           </p>
-          <p className="flex gap-5">
-            {negocio.instagram && (
-              <a href={`https://instagram.com/${negocio.instagram}`} target="_blank" rel="noopener noreferrer" className="font-semibold hover:text-acento-texto">
-                Instagram
-              </a>
-            )}
+          <div className="flex flex-wrap items-center gap-5">
+            <RedesSociales redes={negocio.redes} nombre={negocio.nombre} className="gap-2" />
             <a href={linkWhatsApp(negocio.whatsapp)} target="_blank" rel="noopener noreferrer" className="font-semibold hover:text-acento-texto">
               WhatsApp
             </a>
-          </p>
+          </div>
         </div>
         <p aria-hidden className="mt-10 whitespace-nowrap font-display text-[clamp(3.5rem,17cqi,15rem)] font-extrabold leading-[0.8] tracking-[-0.05em]">
           {negocio.nombre}

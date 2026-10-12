@@ -1,7 +1,7 @@
 import type { ConfigDe } from "../schema/landing-config";
 
 export const genericoDefault: ConfigDe<"generico"> = {
-  version: 1,
+  version: 2,
   plantilla: "generico",
   estilo: { acento: "#ff4a1c", esquinas: "suave", modo: "claro" },
   negocio: {
@@ -12,7 +12,7 @@ export const genericoDefault: ConfigDe<"generico"> = {
     whatsapp: "5493515550404",
     direccion: "Av. Vélez Sársfield 3980, Barrio Jardín, Córdoba",
     horario: "Lunes a viernes de 8 a 17 h",
-    instagram: "tallersur.cba",
+    redes: [{ red: "instagram", url: "https://instagram.com/tallersur.cba" }],
   },
   secciones: [
     { tipo: "bento", variante: "clasico", activa: true },

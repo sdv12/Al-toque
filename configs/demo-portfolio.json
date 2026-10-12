@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "plantilla": "generico",
   "estilo": {
     "acento": "#ff4a1c",
@@ -13,7 +13,12 @@
     "whatsapp": "5493515550404",
     "direccion": "Av. Vélez Sársfield 3980, Barrio Jardín, Córdoba",
     "horario": "Lunes a viernes de 8 a 17 h",
-    "instagram": "tallersur.cba"
+    "redes": [
+      {
+        "red": "instagram",
+        "url": "https://instagram.com/tallersur.cba"
+      }
+    ]
   },
   "secciones": [
     {

@@ -14,12 +14,22 @@ type Objeto = Record<string, unknown>;
 export type Migraciones = Readonly<Record<number, (config: Objeto) => Objeto>>;
 
 /**
- * Migraciones registradas. Cuando se publique la v2 del schema:
- *   1. subir VERSION_ACTUAL a 2 en version.ts
- *   2. agregar acá `1: (c) => ({ ...c, version: 2, ...cambios })`
- *   3. sumar un caso de test con una config v1 real
+ * Migraciones registradas. Para publicar una versión nueva del schema:
+ *   1. subir VERSION_ACTUAL en version.ts
+ *   2. agregar acá `n: (c) => ({ ...c, ...cambios })` (la versión la pone aplicarMigraciones)
+ *   3. sumar un caso de test con una config de la versión anterior real
  */
-export const migraciones: Migraciones = {};
+export const migraciones: Migraciones = {
+  /** v1 → v2: el Instagram suelto del negocio pasa a ser la primera de sus redes sociales. */
+  1: (c) => {
+    if (!esObjeto(c.negocio)) return c;
+    const { instagram, ...negocio } = c.negocio;
+    if (typeof instagram === "string" && instagram.trim()) {
+      negocio.redes = [{ red: "instagram", url: `https://instagram.com/${instagram.trim().replace(/^@/, "")}` }];
+    }
+    return { ...c, negocio };
+  },
+};
 
 function esObjeto(valor: unknown): valor is Objeto {
   return typeof valor === "object" && valor !== null && !Array.isArray(valor);

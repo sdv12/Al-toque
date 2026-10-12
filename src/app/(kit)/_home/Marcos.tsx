@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { VideoDemo } from "./VideoDemo";
 
 type Props = { src: string; alt: string; sizes: string; className?: string; prioridad?: boolean };
 
@@ -16,7 +17,7 @@ export function Telefono({ src, alt, sizes, className = "", prioridad }: Props) 
 /** Captura dentro de una ventana de navegador, con la dirección real de la demo. */
 type PropsNavegador = Props & {
   url: string;
-  /** Si hay video, se muestra con sus controles y la captura `src` como portada. */
+  /** Si hay video, se reproduce con la captura `src` de portada (y de respaldo si no carga). */
   video?: string;
   /** Proporción del contenido (sin la barra), en formato CSS: "1440 / 900", "16 / 9". */
   aspecto?: string;
@@ -35,7 +36,7 @@ export function Navegador({ src, alt, sizes, url, video, aspecto = "1440 / 900",
       </div>
       <div className="relative" style={{ aspectRatio: aspecto }}>
         {video ? (
-          <video src={video} poster={src} controls muted playsInline preload="metadata" aria-label={alt} className="absolute inset-0 size-full bg-tinta object-cover object-top" />
+          <VideoDemo video={video} poster={src} alt={alt} sizes={sizes} />
         ) : (
           <Image src={src} alt={alt} fill sizes={sizes} className="object-cover object-top" />
         )}

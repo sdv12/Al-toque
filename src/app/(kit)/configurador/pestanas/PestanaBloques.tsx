@@ -14,7 +14,7 @@ import { Bloque, CampoArea, CampoTexto, Selector, botonKit } from "../campos";
 import { nuevoId } from "../estado";
 
 type Editar = (f: (c: LandingConfig) => void) => void;
-type Instancia = { id: string; tipo: string; variante: string; activa: boolean; datos?: Record<string, string | undefined> };
+type Instancia = { id: string; tipo: string; variante: string; activa: boolean; separador?: boolean; datos?: Record<string, string | undefined> };
 
 const lista = (c: LandingConfig) => c.secciones as unknown as Instancia[];
 
@@ -100,6 +100,7 @@ export function PestanaBloques({ config, editar }: { config: LandingConfig; edit
                     key={b.id}
                     bloque={b}
                     def={defs[b.tipo]!}
+                    primero={i === 0}
                     onSubir={i > 0 ? () => mover(i, i - 1) : undefined}
                     onBajar={i < bloques.length - 1 ? () => mover(i, i + 1) : undefined}
                     onQuitar={() => quitar(b.id, defs[b.tipo]?.etiqueta ?? b.tipo)}
@@ -177,6 +178,7 @@ function Biblioteca({
 function FilaBloque({
   bloque: b,
   def,
+  primero,
   onSubir,
   onBajar,
   onQuitar,
@@ -184,6 +186,8 @@ function FilaBloque({
 }: {
   bloque: Instancia;
   def: DefSeccion;
+  /** El primero va pegado al encabezado: no lleva línea arriba. */
+  primero: boolean;
   onSubir: (() => void) | undefined;
   onBajar: (() => void) | undefined;
   onQuitar: () => void;
@@ -227,6 +231,22 @@ function FilaBloque({
         <div className="mt-2 space-y-3 pl-9">
           {variantes.length > 1 && (
             <Selector etiqueta={`Variante de ${def.etiqueta}`} oculto valor={b.variante} opciones={variantes} onCambio={(v) => actualizar((x) => void (x.variante = v))} />
+          )}
+          {!primero && (
+            <label className="flex w-fit cursor-pointer items-center gap-2 text-mini text-tinta-suave">
+              <input
+                type="checkbox"
+                checked={!!b.separador}
+                onChange={(e) =>
+                  actualizar((x) => {
+                    if (e.target.checked) x.separador = true;
+                    else delete x.separador;
+                  })
+                }
+                className="size-4 accent-[var(--lk-acento)]"
+              />
+              Línea divisoria arriba
+            </label>
           )}
           {b.tipo === "texto" && (
             <>

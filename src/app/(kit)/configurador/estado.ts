@@ -6,7 +6,7 @@ import { codificarConfig } from "@/core/lib/codigo";
 export { slugDe } from "@/core/lib/slug";
 import { esPlantilla, type Plantilla } from "@/core/registry";
 import { landingConfigSchema, type LandingConfig } from "@/core/schema/landing-config";
-import { erroresDeZod, type ErrorConfig, migrateConfig } from "@/core/schema/migrate";
+import { aplicarMigraciones, erroresDeZod, type ErrorConfig, migraciones, migrateConfig } from "@/core/schema/migrate";
 import { VERSION_ACTUAL } from "@/core/schema/version";
 
 const CLAVE = "landing-kit:borrador";
@@ -22,9 +22,12 @@ function leerBorrador(): LandingConfig | null {
     const crudo: unknown = JSON.parse(texto);
     const r = migrateConfig(crudo);
     if (r.ok) return r.config;
-    const c = crudo as Partial<LandingConfig>;
+    // A medio escribir no valida, pero se recupera igual (migrado a la versión actual si era de una anterior).
+    const migrado = aplicarMigraciones(crudo, migraciones, VERSION_ACTUAL);
+    if (!migrado.ok) return null;
+    const c = migrado.valor as Partial<LandingConfig>;
     return c.version === VERSION_ACTUAL && esPlantilla(c.plantilla) && Array.isArray(c.secciones) && c.contenido && c.negocio
-      ? (crudo as LandingConfig)
+      ? (c as LandingConfig)
       : null;
   } catch {
     return null;

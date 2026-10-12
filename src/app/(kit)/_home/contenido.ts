@@ -72,12 +72,12 @@ export const PASOS = [
     texto: "Barbería, consultorio, casas de campo o una general para cualquier oficio. Cada una está armada distinto.",
   },
   {
-    titulo: "Cambiale todo y mirá cómo queda",
+    titulo: "Modificá a tu gusto y mirá cómo queda",
     texto: "Textos, colores, secciones, precios, horarios y fotos. La vista previa se actualiza mientras escribís, en compu y en celular.",
   },
   {
-    titulo: "Mandámela por WhatsApp",
-    texto: "Con un botón me llega tu configuración. La reviso, la publico y te paso el link.",
+    titulo: "Enviala por WhatsApp",
+    texto: "Con un click nos llega tu configuración, con la que podemos armar tu landing en un lapso de pocos días.",
   },
 ];
 
@@ -143,6 +143,6 @@ export const RESENAS = [
   { autor: "Lucía F.", negocio: "Consultorio de nutrición", texto: "Me gustó poder ver cómo quedaba mientras cambiaba los textos. Mis pacientes encuentran la lista de obras sociales sin preguntarme.", estrellas: 5 },
   { autor: "Carla y Matías", negocio: "Cabañas en Calamuchita", texto: "El calendario con el estimado nos ahorra un montón de mensajes. La gente llega preguntando por fechas concretas.", estrellas: 5 },
   { autor: "Gustavo P.", negocio: "Carpintería a medida", texto: "Subí los trabajos con antes y después y la diferencia se nota: los presupuestos llegan más claros.", estrellas: 4 },
-  { autor: "Romina D.", negocio: "Centro de estética", texto: "Elegí mis colores y el fondo, y quedó con la cara de mi marca. Se ve muy bien en el celular.", estrellas: 5 },
+  { autor: "Romina D.", negocio: "Centro de estética", texto: "Elegí mis colores y el fondo, y quedó con la identidad de mi marca. Se ve muy bien en el celular.", estrellas: 5 },
   { autor: "Diego A.", negocio: "Profe particular", texto: "Arranqué con la hoja en blanco y sumé solo lo que necesitaba. Simple y rápido.", estrellas: 5 },
 ];
