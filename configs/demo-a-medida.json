@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "plantilla": "libre",
   "estilo": {
     "acento": "#1d7a46",
@@ -13,7 +13,12 @@
     "whatsapp": "5493525550505",
     "direccion": "Colonia Caroya, Córdoba",
     "horario": "Pedidos de lunes a martes · Entregas los jueves",
-    "instagram": "huertalola"
+    "redes": [
+      {
+        "red": "instagram",
+        "url": "https://instagram.com/huertalola"
+      }
+    ]
   },
   "secciones": [
     {

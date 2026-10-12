@@ -1,8 +1,11 @@
 import type { ComponentType } from "react";
+import { Fragment } from "react";
 import { linkWhatsApp } from "@/core/lib/mensajes";
 import type { TipoSeccion } from "@/core/registry";
 import type { ConfigDe } from "@/core/schema/landing-config";
 import { IconoWhatsApp } from "@/ui/primitives/IconoWhatsApp";
+import { RedesSociales } from "@/ui/primitives/RedesSociales";
+import { Separador } from "@/ui/primitives/Separador";
 import { boton } from "./estilos";
 import { BotonPedirTurno, Indice } from "./interactivos";
 import { Faq, ObrasSociales, PrimeraConsulta, Prestaciones, Profesionales, Ubicacion } from "./secciones/Informacion";
@@ -31,7 +34,7 @@ export function LandingConsultorio({ config }: { config: Config }) {
   const { negocio } = config;
   const activas = config.secciones.filter((s) => s.activa);
   const portada = activas.find((s) => s.tipo === "portada");
-  const informativas = activas.flatMap((s) => (s.tipo === "portada" ? [] : [{ ...SECCIONES[s.tipo], tipo: s.tipo, variante: s.variante }]));
+  const informativas = activas.flatMap((s) => (s.tipo === "portada" ? [] : [{ ...SECCIONES[s.tipo], tipo: s.tipo, variante: s.variante, separador: s.separador }]));
   const profesionales = (config.contenido.equipo ?? []).filter((p) => p.matricula);
 
   return (
@@ -71,8 +74,11 @@ export function LandingConsultorio({ config }: { config: Config }) {
               <Indice items={informativas.map(({ id, etiqueta }) => ({ id, etiqueta }))} />
             </aside>
             <div className="max-w-[46rem]">
-              {informativas.map(({ componente: Seccion, tipo, variante }) => (
-                <Seccion key={tipo} config={config} variante={variante} />
+              {informativas.map(({ componente: Seccion, tipo, variante, separador }) => (
+                <Fragment key={tipo}>
+                  {separador && <Separador />}
+                  <Seccion config={config} variante={variante} />
+                </Fragment>
               ))}
             </div>
           </div>
@@ -85,13 +91,7 @@ export function LandingConsultorio({ config }: { config: Config }) {
             <p className="font-bold">{negocio.nombre}</p>
             <p className="mt-1 text-tinta-suave">{negocio.direccion}</p>
             <p className="text-tinta-suave">{negocio.horario}</p>
-            {negocio.instagram && (
-              <p className="mt-3">
-                <a href={`https://instagram.com/${negocio.instagram}`} target="_blank" rel="noopener noreferrer" className="font-semibold hover:text-acento-texto">
-                  @{negocio.instagram} en Instagram
-                </a>
-              </p>
-            )}
+            <RedesSociales redes={negocio.redes} nombre={negocio.nombre} className="mt-4" />
           </div>
           {profesionales.length > 0 && (
             <ul className="space-y-1 text-tinta-suave @3xl:text-right">

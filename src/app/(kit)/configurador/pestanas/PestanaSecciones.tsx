@@ -18,7 +18,7 @@ import type { LandingConfig } from "@/core/schema/landing-config";
 import { Bloque, Selector, botonKit } from "../campos";
 
 type Props = { config: LandingConfig; editar: (f: (c: LandingConfig) => void) => void };
-type SeccionPlana = { tipo: string; variante: string; activa: boolean };
+type SeccionPlana = { tipo: string; variante: string; activa: boolean; separador?: boolean };
 
 /** Las secciones se editan sin tipos literales: el schema valida el resultado. */
 function secciones(c: LandingConfig): SeccionPlana[] {
@@ -53,7 +53,9 @@ export function PestanaSecciones({ config, editar }: Props) {
   const actualizar = (tipo: string, cambio: Partial<SeccionPlana>) =>
     editar((c) => {
       const s = secciones(c).find((x) => x.tipo === tipo);
-      if (s) Object.assign(s, cambio);
+      if (!s) return;
+      Object.assign(s, cambio);
+      if (s.separador === undefined) delete s.separador;
     });
 
   const alSoltar = ({ active, over }: DragEndEvent) => {
@@ -194,6 +196,17 @@ function FilaSeccion({
           <Selector etiqueta={`Variante de ${def.etiqueta}`} oculto valor={seccion.variante} opciones={opciones} onCambio={(v) => onCambio(seccion.tipo, { variante: v })} />
         ) : (
           <p className="text-mini text-tinta-suave">{opciones[0]?.texto}</p>
+        )}
+        {!fija && (
+          <label className="mt-2 flex w-fit cursor-pointer items-center gap-2 text-mini text-tinta-suave">
+            <input
+              type="checkbox"
+              checked={!!seccion.separador}
+              onChange={(e) => onCambio(seccion.tipo, { separador: e.target.checked || undefined })}
+              className="size-4 accent-[var(--lk-acento)]"
+            />
+            Línea divisoria arriba
+          </label>
         )}
         {faltante && <p className="mt-2 text-mini text-[#b3261e]">Falta cargar contenido en la pestaña Contenido.</p>}
       </div>

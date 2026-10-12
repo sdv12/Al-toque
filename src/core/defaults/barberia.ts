@@ -1,7 +1,7 @@
 import type { ConfigDe } from "../schema/landing-config";
 
 export const barberiaDefault: ConfigDe<"barberia"> = {
-  version: 1,
+  version: 2,
   plantilla: "barberia",
   estilo: { acento: "#c9a45c", esquinas: "recto", modo: "oscuro" },
   negocio: {
@@ -12,7 +12,7 @@ export const barberiaDefault: ConfigDe<"barberia"> = {
     whatsapp: "5493515550101",
     direccion: "Belgrano 780, Barrio Güemes, Córdoba",
     horario: "Martes a sábado de 10 a 20 h",
-    instagram: "barberiaguemes",
+    redes: [{ red: "instagram", url: "https://instagram.com/barberiaguemes" }],
   },
   agenda: {
     dias: [2, 3, 4, 5, 6].map((dia) => ({ dia, franjas: [{ desde: "10:00", hasta: "20:00" }] })),

@@ -1,3 +1,4 @@
+import { REDES, esUrlDeRed } from "../lib/redes";
 import { WHATSAPP_AR } from "../lib/whatsapp";
 import { z } from "./z";
 
@@ -16,9 +17,14 @@ export const textoCorto = (max: number) =>
 export const textoOpcional = (max: number) =>
   z.string().trim().max(max, `Máximo ${max} caracteres`).optional();
 
+/** Usuario de Instagram de una persona del equipo (el del negocio va en `negocio.redes`). */
 export const instagramSchema = z
   .string()
   .regex(/^[A-Za-z0-9._]{1,30}$/, "Solo el usuario, sin @ ni link");
+
+export const redSocialSchema = z
+  .object({ red: z.enum(REDES), url: z.string().trim().max(200) })
+  .refine((r) => esUrlDeRed(r.red, r.url), { message: "El link no es de un perfil de esa red", path: ["url"] });
 
 /** Imagen con `src` opcional: si falta, la plantilla muestra un placeholder "Tu foto acá". */
 export const imagenSchema = z.object({
@@ -50,7 +56,12 @@ export const negocioSchema = z.object({
   whatsapp: z.string().regex(WHATSAPP_AR, "WhatsApp en formato 549 + área + número (ej: 5493515551234)"),
   direccion: z.string().trim().max(120),
   horario: z.string().trim().max(120),
-  instagram: instagramSchema.optional(),
+  /** Redes del negocio, en el orden en que se muestran. Una por red. */
+  redes: z
+    .array(redSocialSchema)
+    .max(REDES.length)
+    .refine((lista) => new Set(lista.map((r) => r.red)).size === lista.length, "Cada red puede ir una sola vez")
+    .optional(),
 });
 
 const franjaSchema = z
@@ -85,6 +96,7 @@ export const agendaProfesionalSchema = z.object({ dias: diasAgendaSchema });
 export type Imagen = z.infer<typeof imagenSchema>;
 export type Estilo = z.infer<typeof estiloSchema>;
 export type Negocio = z.infer<typeof negocioSchema>;
+export type RedNegocio = z.infer<typeof redSocialSchema>;
 export type Agenda = z.infer<typeof agendaSchema>;
 export type Modo = (typeof MODOS)[number];
 export type Esquinas = (typeof ESQUINAS)[number];

@@ -1,7 +1,7 @@
 import type { ConfigDe } from "../schema/landing-config";
 
 export const alojamientoDefault: ConfigDe<"alojamiento"> = {
-  version: 1,
+  version: 2,
   plantilla: "alojamiento",
   estilo: { acento: "#9c4a2b", esquinas: "redondeado", modo: "claro" },
   negocio: {
@@ -12,7 +12,7 @@ export const alojamientoDefault: ConfigDe<"alojamiento"> = {
     whatsapp: "5493546550303",
     direccion: "Camino a Villa Berna s/n, Los Reartes, Calamuchita, Córdoba",
     horario: "Respondemos consultas todos los días de 9 a 21 h",
-    instagram: "casasdelarroyo.lr",
+    redes: [{ red: "instagram", url: "https://instagram.com/casasdelarroyo.lr" }],
   },
   secciones: [
     { tipo: "recorrido", variante: "horizontal", activa: true },

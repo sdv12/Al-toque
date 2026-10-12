@@ -1,8 +1,9 @@
 import type { VarianteDe } from "@/core/registry";
 import type { ConfigDe } from "@/core/schema/landing-config";
 import { linkWhatsApp } from "@/core/lib/mensajes";
+import { RedesSociales } from "@/ui/primitives/RedesSociales";
 import { boton, seccion } from "../estilos";
-import { IconoInstagram, IconoWhatsApp } from "../iconos";
+import { IconoWhatsApp } from "../iconos";
 
 type Props = { config: ConfigDe<"barberia">; variante: VarianteDe<"barberia", "ubicacion"> };
 
@@ -25,13 +26,11 @@ function Contacto({ config }: { config: ConfigDe<"barberia"> }) {
           <IconoWhatsApp className="size-5" /> Escribinos por WhatsApp
         </a>
       </li>
-      {negocio.instagram && (
-        <li>
-          <a href={`https://instagram.com/${negocio.instagram}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 hover:text-acento-texto">
-            <IconoInstagram className="size-5" /> @{negocio.instagram}
-          </a>
+      {negocio.redes?.length ? (
+        <li className="pt-2">
+          <RedesSociales redes={negocio.redes} nombre={negocio.nombre} />
         </li>
-      )}
+      ) : null}
     </ul>
   );
 }

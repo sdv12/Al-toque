@@ -24,7 +24,23 @@ const PESTANAS: { id: Pestana; texto: string }[] = [
   { id: "enviar", texto: "Enviar" },
 ];
 
+const CLAVE_ADMIN = "landing-kit:admin";
+
+/**
+ * Modo admin: /configurador?admin muestra las herramientas internas (JSON, importar). Se lee
+ * antes de que useBorrador limpie la URL y se recuerda mientras dure la pestaña del navegador.
+ */
+function esAdmin(): boolean {
+  try {
+    if (new URLSearchParams(window.location.search).has("admin")) sessionStorage.setItem(CLAVE_ADMIN, "1");
+    return sessionStorage.getItem(CLAVE_ADMIN) === "1";
+  } catch {
+    return false;
+  }
+}
+
 export default function Configurador() {
+  const [admin] = useState(esAdmin);
   const { config, editar, reemplazar, usarEjemplo, errores, guardado, pendiente, resolverPendiente } = useBorrador();
   const [pestana, setPestana] = useState<Pestana>("plantilla");
   const [dispositivo, setDispositivo] = useState<Dispositivo>("escritorio");
@@ -128,7 +144,7 @@ export default function Configurador() {
               <PestanaPrecio config={config} editar={editar} />
             </Tabs.Content>
             <Tabs.Content value="enviar">
-              <PestanaEnviar config={config} errores={errores} reemplazar={reemplazar} irA={irA} />
+              <PestanaEnviar config={config} errores={errores} reemplazar={reemplazar} irA={irA} admin={admin} />
             </Tabs.Content>
           </div>
         </Tabs.Root>

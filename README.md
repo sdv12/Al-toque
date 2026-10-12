@@ -34,8 +34,11 @@ Las reseñas de la home son de muestra mientras `RESENAS_DE_MUESTRA` (en
 
 ## Publicar la página de un cliente
 
-El cliente toca **Enviar por WhatsApp** en el configurador y me llega un mensaje con un código
-que empieza con `LK1.`. Con ese mensaje:
+El cliente toca **Enviar** en el configurador: se le abre WhatsApp con un mensaje armado que trae
+un código que empieza con `LK1.` y, al mismo tiempo, la configuración queda de respaldo en
+**Netlify Forms** (formulario `configuraciones`, declarado en `public/__forms.html`; llega por mail
+y queda en el panel de Netlify aunque el cliente no termine de mandar el WhatsApp). Con el
+mensaje, o con el código del respaldo:
 
 ```bash
 pnpm publicar "<mensaje completo que llegó por WhatsApp>"
@@ -52,6 +55,13 @@ cliente. Opciones:
 | `--probar` | Solo valida y muestra la URL; no guarda ni publica nada |
 | `--reemplazar` | Actualizar una página ya publicada |
 | `--sin-deploy` | Guarda, commitea y sube, pero no despliega |
+
+Para ver el JSON o cargar una configuración en el configurador, abrilo como `/configurador?admin`:
+aparecen «Copiar JSON», «Descargar JSON» e «Importar» (el cliente no los ve). Queda activo mientras
+dure esa pestaña del navegador.
+
+Para que el respaldo funcione, en Netlify hay que activar una vez **Forms › Enable form detection**
+y, si querés aviso por mail, sumar la notificación del formulario `configuraciones`.
 
 Los commits salen con la identidad de git configurada **en este repo** (cuenta sdv12). Si git
 fuera a firmar con el mail del trabajo, el comando frena y explica cómo configurarlo.

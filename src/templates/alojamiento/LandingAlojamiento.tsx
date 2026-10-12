@@ -1,8 +1,11 @@
 import type { ComponentType } from "react";
+import { Fragment } from "react";
 import { linkWhatsApp } from "@/core/lib/mensajes";
 import type { TipoSeccion } from "@/core/registry";
 import type { ConfigDe } from "@/core/schema/landing-config";
 import { IconoWhatsApp } from "@/ui/primitives/IconoWhatsApp";
+import { RedesSociales } from "@/ui/primitives/RedesSociales";
+import { Separador } from "@/ui/primitives/Separador";
 import { DisponibilidadProvider } from "./disponibilidad/DisponibilidadContext";
 import { boton, margen } from "./estilos";
 import { BarraMovil, BotonVerFechas } from "./interactivos";
@@ -76,9 +79,14 @@ export function LandingAlojamiento({ config }: { config: Config }) {
       </header>
 
       <main id="contenido">
-        {activas.map((s) => {
+        {activas.map((s, i) => {
           const Seccion = SECCIONES[s.tipo];
-          return <Seccion key={s.tipo} config={config} variante={s.variante} />;
+          return (
+            <Fragment key={s.tipo}>
+              {i > 0 && s.separador && <Separador />}
+              <Seccion config={config} variante={s.variante} />
+            </Fragment>
+          );
         })}
       </main>
 
@@ -93,13 +101,7 @@ export function LandingAlojamiento({ config }: { config: Config }) {
             <a href={linkWhatsApp(negocio.whatsapp)} target="_blank" rel="noopener noreferrer" className={boton.enlace}>
               <IconoWhatsApp className="size-4" /> Escribinos por WhatsApp
             </a>
-            {negocio.instagram && (
-              <p>
-                <a href={`https://instagram.com/${negocio.instagram}`} target="_blank" rel="noopener noreferrer" className={boton.enlace}>
-                  @{negocio.instagram} en Instagram
-                </a>
-              </p>
-            )}
+            <RedesSociales redes={negocio.redes} nombre={negocio.nombre} className="pt-2" />
           </div>
         </div>
       </footer>

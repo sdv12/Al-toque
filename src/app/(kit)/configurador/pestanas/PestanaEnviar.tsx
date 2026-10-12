@@ -15,18 +15,35 @@ type Props = {
   errores: ErrorConfig[];
   reemplazar: (c: LandingConfig) => void;
   irA: (p: Pestana) => void;
+  /** Con /configurador?admin: herramientas internas (JSON, importar). El cliente no las ve. */
+  admin: boolean;
 };
 
 const DUENO = process.env.NEXT_PUBLIC_OWNER_WHATSAPP;
 
-export function PestanaEnviar({ config, errores, reemplazar, irA }: Props) {
+/** Respaldo en Netlify Forms (declarado en public/__forms.html). En local no existe: devuelve false. */
+async function respaldar(campos: Record<string, string>): Promise<boolean> {
+  try {
+    const r = await fetch("/__forms.html", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({ "form-name": "configuraciones", ...campos }).toString(),
+      keepalive: true,
+    });
+    return r.ok;
+  } catch {
+    return false;
+  }
+}
+
+type Envio = { estado: "enviando" } | { estado: "listo"; porWhatsapp: boolean } | { estado: "error" };
+
+export function PestanaEnviar({ config, errores, reemplazar, irA, admin }: Props) {
   const codigo = useCodigoConfig(config);
-  const [aviso, setAviso] = useState<string | null>(null);
-  const [entrada, setEntrada] = useState("");
-  const [erroresImportar, setErroresImportar] = useState<string[]>([]);
+  const [envio, setEnvio] = useState<Envio | null>(null);
   const lista = errores.length === 0;
   const slug = slugDe(config.negocio.nombre);
-  const json = JSON.stringify(config, null, 2);
+  const plantilla = registry[config.plantilla].meta.nombre;
 
   const mensaje =
     codigo &&
@@ -34,12 +51,100 @@ export function PestanaEnviar({ config, errores, reemplazar, irA }: Props) {
       `Hola! Te mando la configuración de mi landing.`,
       ``,
       `Negocio: ${config.negocio.nombre}`,
-      `Plantilla: ${registry[config.plantilla].meta.nombre}`,
+      `Plantilla: ${plantilla}`,
       `Estimado: ${totalCorto(config)}`,
       ``,
       `Código (no lo edites):`,
       codigo,
     ].join("\n");
+
+  async function enviar() {
+    if (!lista || !codigo || !mensaje) return;
+    // WhatsApp se abre en el mismo clic: si se abre después de un await, el navegador lo bloquea como ventana emergente.
+    let porWhatsapp = false;
+    if (DUENO) {
+      const ventana = window.open(linkWhatsApp(DUENO, mensaje), "_blank");
+      if (ventana) {
+        ventana.opener = null;
+        porWhatsapp = true;
+      }
+    }
+    setEnvio({ estado: "enviando" });
+    // El respaldo llega aunque la persona no termine de mandar el WhatsApp.
+    const respaldada = await respaldar({ negocio: config.negocio.nombre, plantilla, estimado: totalCorto(config), slug, codigo });
+    setEnvio(porWhatsapp || respaldada ? { estado: "listo", porWhatsapp } : { estado: "error" });
+  }
+
+  return (
+    <>
+      {!lista && (
+        <Bloque titulo="Antes de enviar" descripcion="Falta completar esto. Tocá cada punto para ir a corregirlo.">
+          <ul className="space-y-2">
+            {errores.map((e, i) => (
+              <li key={i}>
+                <button
+                  type="button"
+                  onClick={() => irA(pestanaDeRuta(e.ruta))}
+                  className="w-full rounded-base border border-[#b3261e]/40 bg-superficie px-3 py-2 text-left text-chico hover:border-[#b3261e]"
+                >
+                  <span className="block text-mini text-tinta-suave">{rutaLegible(e.ruta)}</span>
+                  {e.mensaje}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </Bloque>
+      )}
+
+      <Bloque titulo="Enviar" descripcion="Una vez lista tu configuración, ya podés enviarla para que la revisemos.">
+        {envio?.estado === "listo" ? (
+          <div role="status" className="space-y-2 rounded-base border border-borde bg-superficie p-4 text-chico">
+            <p className="font-semibold">¡Listo! Recibimos tu configuración.</p>
+            {envio.porWhatsapp && <p>Se abrió WhatsApp con el mensaje armado: si todavía no lo mandaste, solo falta tocar enviar.</p>}
+            <p>Te escribimos por WhatsApp cuando esté lista tu página.</p>
+            <p className="text-tinta-suave">
+              En caso de querer modificar algo, no dudes en contactarte
+              {DUENO ? (
+                <>
+                  {" "}
+                  <a href={linkWhatsApp(DUENO)} target="_blank" rel="noopener noreferrer" className="font-semibold text-tinta underline underline-offset-2">
+                    por WhatsApp
+                  </a>
+                  .
+                </>
+              ) : (
+                "."
+              )}
+            </p>
+            <button type="button" className="text-mini underline underline-offset-2" onClick={() => setEnvio(null)}>
+              Enviar de nuevo
+            </button>
+          </div>
+        ) : (
+          <>
+            <button type="button" onClick={enviar} disabled={!lista || !codigo || envio?.estado === "enviando"} className={`${botonKit.primario} w-full`}>
+              {envio?.estado === "enviando" ? "Enviando…" : "Enviar"}
+            </button>
+            {envio?.estado === "error" && (
+              <p role="alert" className="text-chico text-[#b3261e]">
+                No pudimos enviarla. Probá de nuevo en un rato.
+              </p>
+            )}
+          </>
+        )}
+      </Bloque>
+
+      {admin && <HerramientasAdmin config={config} slug={slug} reemplazar={reemplazar} />}
+    </>
+  );
+}
+
+/** Solo con ?admin: ver/bajar el JSON y cargar una configuración que llegó por WhatsApp. */
+function HerramientasAdmin({ config, slug, reemplazar }: { config: LandingConfig; slug: string; reemplazar: (c: LandingConfig) => void }) {
+  const [aviso, setAviso] = useState<string | null>(null);
+  const [entrada, setEntrada] = useState("");
+  const [erroresImportar, setErroresImportar] = useState<string[]>([]);
+  const json = JSON.stringify(config, null, 2);
 
   async function copiar() {
     try {
@@ -75,41 +180,10 @@ export function PestanaEnviar({ config, errores, reemplazar, irA }: Props) {
 
   return (
     <>
-      <Bloque titulo={lista ? "Todo listo" : "Revisá antes de enviar"}>
-        {lista ? (
-          <p className="text-chico">La configuración está completa. Mandámela y armo tu landing con esto.</p>
-        ) : (
-          <ul className="space-y-2">
-            {errores.map((e, i) => (
-              <li key={i}>
-                <button
-                  type="button"
-                  onClick={() => irA(pestanaDeRuta(e.ruta))}
-                  className="w-full rounded-base border border-[#b3261e]/40 bg-superficie px-3 py-2 text-left text-chico hover:border-[#b3261e]"
-                >
-                  <span className="block text-mini text-tinta-suave">{rutaLegible(e.ruta)}</span>
-                  {e.mensaje}
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
-      </Bloque>
-
-      <Bloque titulo="Enviar" descripcion={`Se guardaría como /l/${slug}`}>
-        {DUENO ? (
-          <a
-            href={lista && mensaje ? linkWhatsApp(DUENO, mensaje) : undefined}
-            aria-disabled={!lista || !mensaje}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`${botonKit.primario} w-full ${lista && mensaje ? "" : "pointer-events-none opacity-40"}`}
-          >
-            Enviar por WhatsApp
-          </a>
-        ) : (
+      <Bloque titulo="Admin" descripcion={`Solo se ve con ?admin. Se publicaría como /l/${slug}`}>
+        {!DUENO && (
           <p className="rounded-base border border-borde bg-superficie-2 p-3 text-chico">
-            Falta configurar <code className="font-nota">NEXT_PUBLIC_OWNER_WHATSAPP</code> para enviar por WhatsApp.
+            Falta configurar <code className="font-nota">NEXT_PUBLIC_OWNER_WHATSAPP</code>: sin eso, «Enviar» solo guarda el respaldo en Netlify Forms.
           </p>
         )}
         <div className="grid grid-cols-2 gap-2">

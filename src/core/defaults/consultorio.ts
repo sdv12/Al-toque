@@ -1,7 +1,7 @@
 import type { ConfigDe } from "../schema/landing-config";
 
 export const consultorioDefault: ConfigDe<"consultorio"> = {
-  version: 1,
+  version: 2,
   plantilla: "consultorio",
   estilo: { acento: "#1f5f78", esquinas: "suave", modo: "claro" },
   negocio: {
@@ -12,7 +12,7 @@ export const consultorioDefault: ConfigDe<"consultorio"> = {
     whatsapp: "5493515550202",
     direccion: "Av. Rafael Núñez 4620, 1.º B, Cerro de las Rosas, Córdoba",
     horario: "Lunes a viernes de 9 a 18 h",
-    instagram: "dermacerro",
+    redes: [{ red: "instagram", url: "https://instagram.com/dermacerro" }],
   },
   agenda: {
     dias: [1, 2, 3, 4, 5].map((dia) => ({

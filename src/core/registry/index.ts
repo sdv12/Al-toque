@@ -380,7 +380,7 @@ export type VarianteDe<P extends Plantilla, T extends TipoSeccion<P>> =
 
 /** Una sección de la config de la plantilla P: tipo y variante quedan atados entre sí. */
 export type SeccionConfig<P extends Plantilla> = {
-  [T in TipoSeccion<P>]: { tipo: T; variante: VarianteDe<P, T>; activa: boolean; id?: string; datos?: unknown };
+  [T in TipoSeccion<P>]: { tipo: T; variante: VarianteDe<P, T>; activa: boolean; separador?: boolean; id?: string; datos?: unknown };
 }[TipoSeccion<P>];
 
 export function esPlantilla(valor: unknown): valor is Plantilla {

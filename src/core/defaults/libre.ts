@@ -6,7 +6,7 @@ import { NUMERO_DE_RELLENO, type ConfigDe } from "../schema/landing-config";
  * el configurador lo muestra en "Enviar".
  */
 export const libreDefault: ConfigDe<"libre"> = {
-  version: 1,
+  version: 2,
   plantilla: "libre",
   estilo: { acento: "#2350c8", esquinas: "suave", modo: "claro" },
   negocio: {
@@ -66,7 +66,7 @@ export const DATOS_INICIALES: Record<string, unknown> = {
 
 /** Ejemplo completo armado con bloques: demo pública y fixture de tests. */
 export const libreEjemplo: ConfigDe<"libre"> = {
-  version: 1,
+  version: 2,
   plantilla: "libre",
   estilo: { acento: "#1d7a46", esquinas: "redondeado", modo: "claro" },
   negocio: {
@@ -76,7 +76,7 @@ export const libreEjemplo: ConfigDe<"libre"> = {
     whatsapp: "5493525550505",
     direccion: "Colonia Caroya, Córdoba",
     horario: "Pedidos de lunes a martes · Entregas los jueves",
-    instagram: "huertalola",
+    redes: [{ red: "instagram", url: "https://instagram.com/huertalola" }],
   },
   secciones: [
     { id: "b-portada", tipo: "portada", variante: "partida", activa: true },

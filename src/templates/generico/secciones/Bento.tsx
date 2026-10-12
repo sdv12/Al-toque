@@ -3,6 +3,7 @@ import { formatearPrecio, linkWhatsApp } from "@/core/lib/mensajes";
 import type { VarianteDe } from "@/core/registry";
 import type { ConfigDe } from "@/core/schema/landing-config";
 import { IconoWhatsApp } from "@/ui/primitives/IconoWhatsApp";
+import { RedesSociales } from "@/ui/primitives/RedesSociales";
 import { boton, tile, tileBase } from "../estilos";
 import { Foto } from "../Foto";
 
@@ -155,11 +156,7 @@ function Datos({ config }: { config: Config }) {
           <dd>{negocio.horario}</dd>
         </div>
       </dl>
-      {negocio.instagram && (
-        <a href={`https://instagram.com/${negocio.instagram}`} target="_blank" rel="noopener noreferrer" className={`${boton.enlace} self-start`}>
-          @{negocio.instagram}
-        </a>
-      )}
+      <RedesSociales redes={negocio.redes} nombre={negocio.nombre} className="gap-2" />
     </div>
   );
 }

@@ -38,7 +38,7 @@ export function jsonLdNegocio(config: LandingConfig, url?: string): Record<strin
     ...(negocio.direccion
       ? { address: { "@type": "PostalAddress", streetAddress: negocio.direccion, addressRegion: "Córdoba", addressCountry: "AR" } }
       : {}),
-    ...(negocio.instagram ? { sameAs: [`https://instagram.com/${negocio.instagram}`] } : {}),
+    ...(negocio.redes?.length ? { sameAs: negocio.redes.map((r) => r.url) } : {}),
     ...(config.agenda ? { openingHoursSpecification: horarios(config.agenda) } : {}),
     ...(precios.length ? { priceRange: `$${Math.min(...precios)} - $${Math.max(...precios)}`, currenciesAccepted: "ARS" } : {}),
   };
