@@ -19,7 +19,7 @@ const FUENTES: Record<Plantilla, string> = {
   generico: fuentesGenerico,
 };
 
-const DOMINIO = "landing-al-toque.netlify.app";
+const DOMINIO = "altoque-cba.com.ar";
 
 /**
  * Video de demo para "Tres pasos y listo" (mp4 en public/). Si no hay o no carga, se ve la captura.
@@ -322,10 +322,11 @@ export function Precios() {
         <h2 id="precios-titulo" className={`${afiche} text-titulo @5xl:col-span-7`}>
           Precios <span className="resaltado">claros</span>
         </h2>
-        <p className="max-w-medida text-subtitulo @5xl:col-span-5">
-          Un pago inicial para armarla y una cuota mensual accesible para mantenerla online.
-           <p>Mientras la armás, ves el precio final al instante.</p>
-        </p>
+        {/* Dos párrafos hermanos: un <p> no puede ir dentro de otro (rompe la hidratación). */}
+        <div className="max-w-medida space-y-1 text-subtitulo @5xl:col-span-5">
+          <p>Un pago inicial para armarla y una cuota mensual accesible para mantenerla online.</p>
+          <p>Mientras la armás, ves el precio final al instante.</p>
+        </div>
       </div>
       <ul className="mt-14 grid gap-4 @4xl:grid-cols-3">
         {planes().map((p) => {

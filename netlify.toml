@@ -8,3 +8,10 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+# El dominio viejo de Netlify redirige al propio (links ya compartidos incluidos).
+[[redirects]]
+  from = "https://landing-al-toque.netlify.app/*"
+  to = "https://altoque-cba.com.ar/:splat"
+  status = 301
+  force = true

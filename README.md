@@ -4,8 +4,8 @@ Landings para negocios chicos, armadas por rubro. El cliente entra al **configur
 plantilla, la personaliza viendo el resultado en vivo y me manda su configuración por WhatsApp.
 Con esa configuración se publica su página en `/l/<slug>`.
 
-- Sitio: https://landing-al-toque.netlify.app
-- Configurador: https://landing-al-toque.netlify.app/configurador
+- Sitio: https://altoque-cba.com.ar
+- Configurador: https://altoque-cba.com.ar/configurador
 
 **Estado: beta sin backend.** Las configuraciones son archivos JSON en `configs/`, los turnos y
 consultas se confirman por WhatsApp y no se guarda nada en ningún servidor. Supabase (datos) y

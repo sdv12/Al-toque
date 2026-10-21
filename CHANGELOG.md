@@ -4,6 +4,14 @@ Versionado semántico: PATCH = arreglos y ajustes; MINOR = funcionalidad nueva v
 MAJOR = cambios que rompen algo existente (formato de configs, flujo, backend).
 La versión se muestra en el footer de la home y en el configurador.
 
+## 1.4.0 · 2026-10-21
+- **Dominio propio**: el sitio pasa a https://altoque-cba.com.ar. El dominio de Netlify redirige al nuevo (301), y los links canónicos, las vistas previas y `pnpm publicar` usan el dominio nuevo.
+- **Redes sociales** (Jime): el negocio carga Instagram, Facebook, TikTok, YouTube, X y LinkedIn. El formato de configuración pasa a v2 con migración automática (las configs v1 se siguen aceptando).
+- **Respaldo en Netlify Forms** (Jime): cada envío del configurador queda guardado además de ir por WhatsApp.
+- **Video demo** en "Cómo funciona" (Jime), comprimido de 21 MB a 1,7 MB (sin audio, que era silencio).
+- Capturas de la home actualizadas.
+- Arreglo: un párrafo anidado en la sección Precios generaba un error de hidratación en la home.
+
 ## 1.3.0 · 2026-10-06
 - Nueva opción **A tu medida**: hoja en blanco (solo encabezado y pie) que se arma sumando bloques desde el configurador; los bloques toman el estilo elegido y se reordenan.
 - Componentes **con sistema** (agenda real, calendario, consultas guardadas, seña online) marcados con advertencia de costo; en la beta confirman por WhatsApp.

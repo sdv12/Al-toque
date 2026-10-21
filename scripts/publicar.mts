@@ -21,7 +21,7 @@ import { registry } from "../src/core/registry";
 import { migrateConfig } from "../src/core/schema/migrate";
 
 const RAIZ = path.resolve(import.meta.dirname, "..");
-const SITIO = process.env.NEXT_PUBLIC_SITE_URL ?? "https://landing-al-toque.netlify.app";
+const SITIO = process.env.NEXT_PUBLIC_SITE_URL ?? "https://altoque-cba.com.ar";
 
 type Opciones = { entrada?: string; archivo?: string; slug?: string; probar: boolean; sinDeploy: boolean; reemplazar: boolean };
 
