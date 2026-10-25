@@ -146,3 +146,46 @@ export const RESENAS = [
   { autor: "Romina D.", negocio: "Centro de estética", texto: "Elegí mis colores y el fondo, y quedó con la identidad de mi marca. Se ve muy bien en el celular.", estrellas: 5 },
   { autor: "Diego A.", negocio: "Profe particular", texto: "Arranqué con la hoja en blanco y sumé solo lo que necesitaba. Simple y rápido.", estrellas: 5 },
 ];
+
+/**
+ * Proyectos reales que hicimos (sitios publicados). No todos se armaron con el configurador:
+ * la sección los presenta como trabajos del equipo, con link al sitio. Capturas en
+ * public/proyectos/<id>.jpg, regenerables con `SOLO=proyectos pnpm capturas`.
+ */
+export const PROYECTOS = [
+  {
+    id: "cuervo",
+    nombre: "Cuervo Peluquería",
+    rubro: "Peluquería",
+    texto: "Turnos con los horarios libres a la vista y confirmación por WhatsApp.",
+    url: "https://cuervo-pelu.netlify.app",
+  },
+  {
+    id: "1918",
+    nombre: "1918 Peluquería",
+    rubro: "Peluquería de barrio",
+    texto: "Identidad propia, turnos online y un espacio para publicitar comercios de la zona.",
+    url: "https://1918-peluqueria.netlify.app",
+  },
+  {
+    id: "lunagui",
+    nombre: "Lunagui Viajes",
+    rubro: "Agencia de viajes",
+    texto: "Buscador de destinos por fecha y cantidad de personas, ofertas y consulta directa.",
+    url: "https://lunagui-viajes.netlify.app",
+  },
+  {
+    id: "casas-de-sierra",
+    nombre: "Casas de Sierra",
+    rubro: "Alojamientos en las sierras",
+    texto: "Casas y cabañas por zona y fechas, con contacto directo con cada anfitrión.",
+    url: "https://casas-de-sierra-cba.netlify.app",
+  },
+  {
+    id: "for-her",
+    nombre: "For her",
+    rubro: "App de estudio",
+    texto: "Plan de estudio, tarjetas y simulacros para preparar un examen final.",
+    url: "https://for-her-estudio.netlify.app",
+  },
+];

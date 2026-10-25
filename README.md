@@ -84,7 +84,9 @@ Variables de entorno (ver `.env.example`):
 
 ### Capturas de la home
 
-La home muestra capturas reales de las demos (`public/muestras`). Si cambia una plantilla:
+La home muestra capturas reales de las demos (`public/muestras`) y de los proyectos ya publicados
+(`public/proyectos`, lista en `PROYECTOS` de `src/app/(kit)/_home/contenido.ts`). Si cambia una
+plantilla o un proyecto:
 
 ```bash
 pnpm build && pnpm start -p 3124     # en otra terminal

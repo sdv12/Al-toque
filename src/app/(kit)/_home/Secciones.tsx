@@ -9,7 +9,7 @@ import { fuentes as fuentesConsultorio } from "@/templates/consultorio";
 import { fuentes as fuentesGenerico } from "@/templates/generico";
 import { formatearPesos } from "@/core/lib/mensajes";
 import { planes } from "@/core/lib/precios";
-import { BENEFICIOS, FICHAS, PASOS, PREGUNTAS, RESENAS, RESENAS_DE_MUESTRA, RUBROS } from "./contenido";
+import { BENEFICIOS, FICHAS, PASOS, PREGUNTAS, PROYECTOS, RESENAS, RESENAS_DE_MUESTRA, RUBROS } from "./contenido";
 import { Navegador, Telefono } from "./Marcos";
 
 const FUENTES: Record<Plantilla, string> = {
@@ -71,6 +71,7 @@ export function Encabezado() {
       <nav aria-label="Principal" className="flex items-center gap-1">
         <ul className="hidden items-center gap-1 @3xl:flex">
           {[
+            ["#proyectos", "Proyectos"],
             ["#plantillas", "Plantillas"],
             ["#como-funciona", "Cómo funciona"],
             ["#precios", "Precios"],
@@ -172,6 +173,57 @@ export function Rubros() {
               </li>
               {finDeRenglon && <li aria-hidden className="hidden basis-full @3xl:block" />}
             </Fragment>
+          );
+        })}
+      </ul>
+    </section>
+  );
+}
+
+/* ───────────── Proyectos ───────────── */
+
+/** Disposición destacada: los dos primeros grandes, el resto en una fila de tres. */
+const TAMANO_PROYECTO = ["@4xl:col-span-3", "@4xl:col-span-3", "@4xl:col-span-2", "@4xl:col-span-2", "@4xl:col-span-2"];
+
+export function Proyectos() {
+  return (
+    <section id="proyectos" aria-labelledby="proyectos-titulo" className={`${diferida} ${margen} scroll-mt-4 py-24`}>
+      <div className="grid gap-6 @5xl:grid-cols-12 @5xl:items-end">
+        <h2 id="proyectos-titulo" className={`${afiche} text-titulo @5xl:col-span-7`}>
+          Ya están <span className="resaltado">online</span>
+        </h2>
+        <p className="max-w-medida text-subtitulo @5xl:col-span-5">
+          Algunos sitios que hicimos para negocios y proyectos de Córdoba. Entrá y recorrelos: están funcionando.
+        </p>
+      </div>
+      <ul className="mt-14 grid gap-x-6 gap-y-12 @4xl:grid-cols-6">
+        {PROYECTOS.map((p, i) => {
+          const dominio = new URL(p.url).host;
+          return (
+            <li key={p.id} className={`min-w-0 ${TAMANO_PROYECTO[i] ?? "@4xl:col-span-2"}`}>
+              <a href={p.url} target="_blank" rel="noopener noreferrer" className="group block">
+                <Navegador
+                  src={`/proyectos/${p.id}.jpg`}
+                  alt={`Portada del sitio de ${p.nombre}`}
+                  url={dominio}
+                  sizes={i < 2 ? "(min-width: 896px) 46vw, 92vw" : "(min-width: 896px) 30vw, 92vw"}
+                  className="transition-transform duration-200 group-hover:-translate-y-1"
+                />
+                <div className="mt-4 flex items-start justify-between gap-4">
+                  <div className="min-w-0">
+                    <p className="text-chico text-tinta-suave">{p.rubro}</p>
+                    <h3 className={`${afiche} mt-1 text-[clamp(1.75rem,1.3rem+1.6cqi,2.5rem)] leading-none`}>{p.nombre}</h3>
+                    <p className="mt-2 text-chico">{p.texto}</p>
+                  </div>
+                  <span aria-hidden className="grid size-10 shrink-0 place-items-center rounded-full border-2 border-tinta transition-colors group-hover:bg-acento-relleno">
+                    <svg viewBox="0 0 20 20" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M6 14 14 6M8 6h6v6" />
+                    </svg>
+                  </span>
+                </div>
+                <span className="sr-only"> (se abre el sitio en otra pestaña)</span>
+              </a>
+            </li>
           );
         })}
       </ul>

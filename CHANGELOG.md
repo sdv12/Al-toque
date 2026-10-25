@@ -4,6 +4,10 @@ Versionado semántico: PATCH = arreglos y ajustes; MINOR = funcionalidad nueva v
 MAJOR = cambios que rompen algo existente (formato de configs, flujo, backend).
 La versión se muestra en el footer de la home y en el configurador.
 
+## 1.5.0 · 2026-10-24
+- Home: nueva sección **Proyectos** ("Ya están online") con capturas y links a sitios que hicimos: Cuervo Peluquería, 1918 Peluquería, Lunagui Viajes, Casas de Sierra y For her. Los proyectos se editan en `PROYECTOS` (`src/app/(kit)/_home/contenido.ts`).
+- `pnpm capturas` también saca las capturas de los proyectos (`public/proyectos`, sin el cartel de Netlify); `SOLO=proyectos` saca solo esas.
+
 ## 1.4.0 · 2026-10-21
 - **Dominio propio**: el sitio pasa a https://altoque-cba.com.ar. El dominio de Netlify redirige al nuevo (301), y los links canónicos, las vistas previas y `pnpm publicar` usan el dominio nuevo.
 - **Redes sociales** (Jime): el negocio carga Instagram, Facebook, TikTok, YouTube, X y LinkedIn. El formato de configuración pasa a v2 con migración automática (las configs v1 se siguen aceptando).
