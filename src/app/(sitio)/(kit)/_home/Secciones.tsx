@@ -8,7 +8,7 @@ import { fuentes as fuentesBarberia } from "@/templates/barberia";
 import { fuentes as fuentesConsultorio } from "@/templates/consultorio";
 import { fuentes as fuentesGenerico } from "@/templates/generico";
 import { formatearPesos } from "@/core/lib/mensajes";
-import { planes } from "@/core/lib/precios";
+import { planCaja, planes } from "@/core/lib/precios";
 import { BENEFICIOS, FICHAS, PASOS, PREGUNTAS, PROYECTOS, RESENAS, RESENAS_DE_MUESTRA, RUBROS } from "./contenido";
 import { Navegador, Telefono } from "./Marcos";
 
@@ -25,8 +25,8 @@ const DOMINIO = "altoque-cba.com.ar";
  * Video de demo para "Tres pasos y listo" (mp4 en public/). Si no hay o no carga, se ve la captura.
  */
 const VIDEO_CONFIGURADOR: string | undefined = "/Demo/Demo_plantillas.mp4";
-const margen = "px-4 @3xl:px-8 @6xl:px-12";
-const afiche = "font-display font-extrabold uppercase [font-stretch:68%]";
+export const margen = "px-4 @3xl:px-8 @6xl:px-12";
+export const afiche = "font-display font-extrabold uppercase [font-stretch:68%]";
 
 /**
  * Secciones debajo del primer pantallazo: el navegador no las maqueta hasta que se acercan,
@@ -62,7 +62,8 @@ export function Marca({ className = "", sobreOscuro = false }: { className?: str
   );
 }
 
-export function Encabezado() {
+/** `desde`: en otras páginas que no son la home, los links de secciones apuntan a "/#…". */
+export function Encabezado({ desde = "" }: { desde?: "" | "/" }) {
   return (
     <header className={`${margen} flex h-18 items-center justify-between gap-3 py-4`}>
       <Link href="/" aria-label="Landing al toque, inicio" className="text-[1.4rem] @md:text-[1.75rem]">
@@ -71,14 +72,14 @@ export function Encabezado() {
       <nav aria-label="Principal" className="flex items-center gap-1">
         <ul className="hidden items-center gap-1 @3xl:flex">
           {[
-            ["#proyectos", "Proyectos"],
-            ["#plantillas", "Plantillas"],
-            ["#como-funciona", "Cómo funciona"],
-            ["#precios", "Precios"],
-            ["#preguntas", "Preguntas"],
+            [`${desde}#proyectos`, "Proyectos"],
+            [`${desde}#plantillas`, "Plantillas"],
+            ["/caja", "Caja"],
+            [`${desde}#precios`, "Precios"],
+            [`${desde}#preguntas`, "Preguntas"],
           ].map(([href, texto]) => (
             <li key={href}>
-              <a href={href} className="inline-flex min-h-11 items-center rounded-control px-4 text-chico font-semibold hover:bg-superficie-2">
+              <a href={href} aria-current={href === "/caja" && desde ? "page" : undefined} className="inline-flex min-h-11 items-center rounded-control px-4 text-chico font-semibold hover:bg-superficie-2">
                 {texto}
               </a>
             </li>
@@ -317,6 +318,61 @@ function FichaPlantilla({ plantilla, indice }: { plantilla: Plantilla; indice: n
         </div>
       </div>
     </article>
+  );
+}
+
+/* ───────────── Caja ───────────── */
+
+export function CajaDelLocal() {
+  const plan = planCaja();
+  return (
+    <section id="caja" aria-labelledby="caja-titulo" className={`${diferida} ${margen} scroll-mt-4 bg-tinta py-24 text-fondo`}>
+      <div className="grid items-center gap-14 @4xl:grid-cols-12">
+        <div className="@4xl:col-span-7">
+          <p className="text-chico font-semibold opacity-80">Verdulerías, almacenes, kioscos y dietéticas</p>
+          <h2 id="caja-titulo" className={`${afiche} mt-3 text-titulo`}>
+            ¿Tenés un local? <span className="bg-acento-relleno px-[0.12em] text-sobre-acento [box-decoration-break:clone]">También la caja.</span>
+          </h2>
+          <p className="mt-6 max-w-medida text-subtitulo">
+            Vender por kilo o por unidad, precios, fiado y el cierre del día, en el celular que ya tenés. Botones grandes, anda sin internet y la probás
+            antes de pedirla.
+          </p>
+          <ul className="mt-8 grid max-w-medida gap-2.5 text-chico @xl:grid-cols-2">
+            {["Productos de tu rubro ya cargados", "Vuelto y medios de pago", "Fiado con saldo por WhatsApp", "Apertura, arqueo y cierre"].map((i) => (
+              <li key={i} className="flex gap-2.5">
+                <span aria-hidden className="mt-[0.5em] h-1.5 w-3 shrink-0 bg-acento-relleno" />
+                {i}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-8">
+            <span className="block text-chico opacity-80">desde</span>
+            <span className={`${afiche} text-[clamp(2.5rem,1.6rem+3cqi,3.5rem)] leading-none tabular-nums`}>{formatearPesos(plan.unico)}</span>
+            <span className="ml-2 text-chico opacity-80">+ {formatearPesos(plan.mensual)} por mes</span>
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link href="/caja" className={boton.amarillo}>
+              Armar mi caja
+            </Link>
+            <Link
+              href="/c/demo-verduleria"
+              className="inline-flex min-h-12 items-center justify-center rounded-control border-2 border-fondo px-7 text-cuerpo font-semibold text-fondo transition-colors hover:bg-fondo hover:text-tinta"
+            >
+              Ver una demo
+            </Link>
+          </div>
+        </div>
+        <div className="relative mx-auto grid w-full max-w-md grid-cols-2 items-start gap-4 @4xl:col-span-5">
+          <Telefono src="/muestras/caja-vender.jpg" alt="La caja de una verdulería: buscador y botones grandes con cada producto y su precio por kilo" sizes="(min-width: 896px) 210px, 45vw" />
+          <Telefono
+            src="/muestras/caja-cierre.jpg"
+            alt="Caja del día de un almacén: lo vendido en efectivo, transferencia, QR y fiado"
+            sizes="(min-width: 896px) 210px, 45vw"
+            className="mt-14"
+          />
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -559,6 +615,16 @@ export function Pie() {
                 </Link>
               </li>
             ))}
+            <li>
+              <Link href="/c/demo-verduleria" className="underline-offset-4 hover:underline">
+                Demo caja
+              </Link>
+            </li>
+            <li>
+              <Link href="/caja" className="font-semibold underline underline-offset-4">
+                Caja
+              </Link>
+            </li>
             <li>
               <Link href="/configurador" className="font-semibold underline underline-offset-4">
                 Configurador

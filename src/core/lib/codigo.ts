@@ -21,9 +21,23 @@ function deBase64Url(texto: string): Uint8Array {
   return Uint8Array.from(binario, (c) => c.charCodeAt(0));
 }
 
+/** Comprime un objeto a texto para pegar en un mensaje: `${prefijo}` + base64url(deflate(JSON)). */
+export async function codificar(prefijo: string, valor: unknown): Promise<string> {
+  const json = new TextEncoder().encode(JSON.stringify(valor));
+  return prefijo + aBase64Url(await transformar(json, new CompressionStream("deflate-raw")));
+}
+
+/** Busca un código `${prefijo}…` (también dentro de un mensaje más largo) y lo descomprime. Falla si está dañado. */
+export async function decodificar(prefijo: string, texto: string): Promise<unknown | undefined> {
+  const escapado = prefijo.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const codigo = new RegExp(`${escapado}([A-Za-z0-9_-]+)`).exec(texto)?.[1];
+  if (!codigo) return undefined;
+  const bytes = await transformar(deBase64Url(codigo), new DecompressionStream("deflate-raw"));
+  return JSON.parse(new TextDecoder().decode(bytes));
+}
+
 export async function codificarConfig(config: unknown): Promise<string> {
-  const json = new TextEncoder().encode(JSON.stringify(config));
-  return PREFIJO + aBase64Url(await transformar(json, new CompressionStream("deflate-raw")));
+  return codificar(PREFIJO, config);
 }
 
 /**
@@ -34,10 +48,9 @@ export async function leerEntradaConfig(texto: string): Promise<{ ok: true; valo
   const limpio = texto.trim();
   try {
     if (limpio.startsWith("{")) return { ok: true, valor: JSON.parse(limpio) };
-    const codigo = /LK1\.([A-Za-z0-9_-]+)/.exec(limpio)?.[1];
-    if (!codigo) return { ok: false, error: "Pegá el JSON o el código que empieza con LK1." };
-    const bytes = await transformar(deBase64Url(codigo), new DecompressionStream("deflate-raw"));
-    return { ok: true, valor: JSON.parse(new TextDecoder().decode(bytes)) };
+    const valor = await decodificar(PREFIJO, limpio);
+    if (valor === undefined) return { ok: false, error: "Pegá el JSON o el código que empieza con LK1." };
+    return { ok: true, valor };
   } catch {
     return { ok: false, error: "No se pudo leer: el texto está incompleto o dañado." };
   }

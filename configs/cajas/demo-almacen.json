@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "tipo": "simple",
+  "negocio": {
+    "nombre": "Almacén La Esquina"
+  },
+  "rubro": "almacen",
+  "color": "azul",
+  "modulos": {
+    "fiado": true,
+    "cajones": false
+  },
+  "demo": true
+}

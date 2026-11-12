@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "tipo": "simple",
+  "negocio": {
+    "nombre": "Dietética Grano a Grano"
+  },
+  "rubro": "dietetica",
+  "color": "bordo",
+  "modulos": {
+    "fiado": true,
+    "cajones": false
+  },
+  "demo": true
+}

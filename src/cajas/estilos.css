@@ -1,0 +1,74 @@
+/*
+ * Estilos de las cajas (/c/…). Instancia de Tailwind aparte de la del kit: la caja usa la escala y
+ * los radios normales de Tailwind, y el kit los anula a propósito. Solo mira el código de src/cajas
+ * y las rutas de (caja); el kit, a su vez, no mira src/cajas (ver app/globals.css).
+ */
+@import "tailwindcss" source(none);
+@source "./";
+@source "../app/(caja)";
+
+/* Colores de alto contraste: fondo claro, texto casi negro. El acento lo elige el negocio. */
+@theme {
+  --color-papel: #fffdf7;
+  --color-tinta: #111111;
+  --color-gris: #3d3d3d; /* texto secundario: igual se lee bien */
+  --color-borde: #6b6b6b;
+  --color-rojo: #b3261e;
+  --color-rojo-claro: #fde7e5;
+  --color-amarillo-claro: #fff4cc;
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+@theme inline {
+  --color-acento: var(--cj-acento);
+  --color-acento-oscuro: var(--cj-acento-oscuro);
+  --color-acento-claro: var(--cj-acento-claro);
+}
+
+:root {
+  --cj-acento: #146c2e;
+  --cj-acento-oscuro: #0d4d20;
+  --cj-acento-claro: #e3f5e6;
+}
+
+html {
+  /* 18px de base: todo lo que está en rem escala con esto. */
+  font-size: 112.5%;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background: var(--color-papel);
+  color: var(--color-tinta);
+  font-family: var(--font-sans);
+  overscroll-behavior-y: none;
+}
+
+/* Que no se seleccione texto sin querer al tocar botones rápido. */
+button {
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+
+/* Foco bien visible para quien use teclado. */
+:focus-visible {
+  outline: 4px solid #1d4ed8;
+  outline-offset: 2px;
+}
+
+/* "wide": tablet o celular acostado. En Vender, el ticket pasa a la derecha. */
+@custom-variant wide {
+  @media (min-width: 768px), (orientation: landscape) and (min-width: 600px) {
+    @slot;
+  }
+}
+
+/* "short": pantalla bajita (celular acostado): todo un poco más compacto, igual ≥ 56px. */
+@custom-variant short {
+  @media (max-height: 500px) {
+    @slot;
+  }
+}

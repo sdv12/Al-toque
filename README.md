@@ -30,7 +30,25 @@ Demos: `/l/demo-barberia`, `/l/demo-consultorio`, `/l/demo-casas`, `/l/demo-port
 Son estimados de referencia y viven en un solo lugar: [`src/core/lib/precios.ts`](src/core/lib/precios.ts).
 Cambiarlos ahí actualiza la calculadora del configurador y la sección de precios de la home.
 Las reseñas de la home son de muestra mientras `RESENAS_DE_MUESTRA` (en
-`src/app/(kit)/_home/contenido.ts`) sea `true`.
+`src/app/(sitio)/(kit)/_home/contenido.ts`) sea `true`.
+
+## Caja al toque
+
+Además de landings, el kit arma **cajas** para negocios de barrio (verdulería, almacén, kiosco,
+dietética): vender por kilo o por unidad, precios, fiado, caja del día y, en verdulería, cajones y
+lista del mercado. Es la caja de Verdulería Lorenzo hecha configurable.
+
+- `/caja`: el cliente elige rubro, nombre, color y módulos, la prueba en vivo (`/c/prueba`, lee la
+  configuración del `localStorage` de ese navegador) y la pide por WhatsApp con un código `CJ1.`.
+- `/c/<slug>`: cada caja publicada, desde `configs/cajas/<slug>.json`. Los datos (ventas, fiado,
+  precios) quedan en IndexedDB del equipo donde se usa, sin servidor. Es instalable y anda sin
+  internet (`public/c/sw.js`).
+- Demos: `/c/demo-verduleria`, `/c/demo-almacen`, `/c/demo-kiosco`, `/c/demo-dietetica`.
+
+Se publica igual que una landing: `pnpm publicar "<mensaje con el código CJ1>"` (mismas opciones).
+El código vive en `src/cajas/` (`rubros.ts` = productos de arranque por rubro, `config.ts` =
+schema). Las rutas de las cajas usan su propio root layout (`src/app/(caja)`) y su propia hoja de
+Tailwind (`src/cajas/estilos.css`), porque el kit anula la paleta y la escala por defecto.
 
 ## Publicar la página de un cliente
 
@@ -85,7 +103,7 @@ Variables de entorno (ver `.env.example`):
 ### Capturas de la home
 
 La home muestra capturas reales de las demos (`public/muestras`) y de los proyectos ya publicados
-(`public/proyectos`, lista en `PROYECTOS` de `src/app/(kit)/_home/contenido.ts`). Si cambia una
+(`public/proyectos`, lista en `PROYECTOS` de `src/app/(sitio)/(kit)/_home/contenido.ts`). Si cambia una
 plantilla o un proyecto:
 
 ```bash
@@ -108,9 +126,11 @@ src/
   templates/   Una carpeta por plantilla, con su layout, sus secciones y sus tokens.
                Una plantilla no puede importar de otra (lo controla ESLint).
   ui/          Primitivas compartidas (placeholder de foto, raíz de tokens).
-  app/         Home, configurador y /l/[slug] (render + imagen de vista previa).
+  app/         (sitio): home, configurador, /caja y /l/[slug]. (caja): /c/[slug] y /c/prueba.
+  cajas/       Caja al toque: rubros, schema y la app de caja (simple/).
 configs/       Una landing publicada por archivo.
 scripts/       publicar y capturas.
+configs/cajas/ Una caja publicada por archivo.
 assets/og/     Fuentes TTF de las plantillas para las imágenes de vista previa (OFL).
 ```
 

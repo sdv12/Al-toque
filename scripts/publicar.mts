@@ -10,11 +10,16 @@
  *
  * Pasos: lee y valida la config → la guarda en configs/<slug>.json → commit (solo ese archivo)
  * → push a GitHub → deploy a Netlify. Si algo falla, frena y dice por qué.
+ *
+ * También publica cajas: si el mensaje trae un código CJ1 (o el JSON de una caja), la guarda en
+ * configs/cajas/<slug>.json y queda en /c/<slug>. Mismas opciones.
  */
 import { execFileSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { leerCodigoCaja, validarCaja } from "../src/cajas/config";
+import { RUBROS } from "../src/cajas/rubros";
 import { leerEntradaConfig } from "../src/core/lib/codigo";
 import { SLUG_VALIDO, slugDe } from "../src/core/lib/slug";
 import { registry } from "../src/core/registry";
@@ -58,7 +63,8 @@ async function main() {
 
   // 1. Leer lo que mandó el cliente (código LK1, JSON pegado o archivo descargado).
   const texto = o.archivo ? await readFile(path.resolve(o.archivo), "utf8") : o.entrada;
-  if (!texto?.trim()) salir('Pasame el mensaje con el código LK1 entre comillas, o --archivo <ruta.json>.');
+  if (!texto?.trim()) salir('Pasame el mensaje con el código LK1 (o CJ1) entre comillas, o --archivo <ruta.json>.');
+  if (esCaja(texto)) return publicarCaja(texto, o);
   const leida = await leerEntradaConfig(texto);
   if (!leida.ok) salir(leida.error);
 
@@ -89,7 +95,60 @@ async function main() {
     return;
   }
 
-  // 4. Guardar y commitear solo ese archivo, firmado con la identidad del repo.
+  await guardarYPublicar(o, { destino, contenido: config, nombre: config.negocio.nombre, url, existe });
+}
+
+/** ¿Es el pedido de una caja? (código CJ1, o JSON con "tipo": "simple"). */
+function esCaja(texto: string): boolean {
+  if (/CJ1\.[A-Za-z0-9_-]/.test(texto)) return true;
+  try {
+    return (JSON.parse(texto.trim()) as { tipo?: unknown }).tipo === "simple";
+  } catch {
+    return false;
+  }
+}
+
+async function publicarCaja(texto: string, o: Opciones) {
+  let valor: unknown;
+  try {
+    valor = await leerCodigoCaja(texto);
+  } catch {
+    salir("No se pudo leer el código de la caja: el texto está incompleto o dañado.");
+  }
+  const r = validarCaja(valor);
+  if (!r.ok) salir(`La caja tiene errores:\n${r.errores.map((e) => `  · ${e.ruta || "(general)"}: ${e.mensaje}`).join("\n")}`);
+  const config = { ...r.config };
+  if (config.demo) {
+    delete config.demo;
+    console.warn("! La caja venía marcada como demo: se publica sin datos de ejemplo.");
+  }
+
+  const slug = o.slug ?? slugDe(config.negocio.nombre);
+  if (!SLUG_VALIDO.test(slug)) salir(`El slug "${slug}" no sirve: minúsculas, números y guiones.`);
+  if (slug.startsWith("demo-") || slug === "prueba") salir(`"${slug}" está reservado para las demos de la caja.`);
+  const destino = path.join(RAIZ, "configs", "cajas", `${slug}.json`);
+  const existe = existsSync(destino);
+  if (existe && !o.reemplazar) salir(`Ya existe configs/cajas/${slug}.json. Usá --reemplazar para actualizarla o --slug para otra URL.`);
+
+  const url = `${SITIO.replace(/\/$/, "")}/c/${slug}`;
+  const modulos = [config.modulos.fiado && "fiado", config.modulos.cajones && "cajones y mercado"].filter(Boolean).join(", ") || "solo lo básico";
+  console.log(`\n✓ Caja válida`);
+  console.log(`  Negocio: ${config.negocio.nombre}`);
+  console.log(`  Rubro:   ${RUBROS[config.rubro].nombre} (${modulos})`);
+  console.log(`  URL:     ${url}${existe ? "  (actualización)" : ""}`);
+  if (o.probar) {
+    console.log("\n(--probar: no se guardó nada)\n");
+    return;
+  }
+  await guardarYPublicar(o, { destino, contenido: config, nombre: config.negocio.nombre, url, existe, caja: true });
+  console.log("  Para instalarla: abrir el link en el celular del local → menú → «Agregar a la pantalla de inicio».\n");
+}
+
+async function guardarYPublicar(
+  o: Opciones,
+  { destino, contenido, nombre, url, existe, caja = false }: { destino: string; contenido: unknown; nombre: string; url: string; existe: boolean; caja?: boolean },
+) {
+  // Guardar y commitear solo ese archivo, firmado con la identidad del repo.
   // Proyecto personal: nunca con la cuenta del trabajo (la identidad global de git de esta máquina).
   const email = leer("git", ["config", "user.email"]);
   if (/@teco\.com\.ar$/i.test(email)) {
@@ -99,13 +158,14 @@ async function main() {
     );
   }
   if (leer("git", ["diff", "--cached", "--name-only"])) salir("Hay cambios en staging que no son de esta publicación. Commitealos o sacalos antes.");
-  await writeFile(destino, `${JSON.stringify(config, null, 2)}\n`);
+  await writeFile(destino, `${JSON.stringify(contenido, null, 2)}\n`);
   const archivoRel = path.relative(RAIZ, destino);
+  const ruta = new URL(url).pathname;
   correr("git", ["add", archivoRel]);
-  correr("git", ["commit", "--quiet", "-m", `${existe ? "Actualizar" : "Publicar"} ${config.negocio.nombre} (/l/${slug})`, "--", archivoRel]);
+  correr("git", ["commit", "--quiet", "-m", `${existe ? "Actualizar" : "Publicar"} ${caja ? "caja de " : ""}${nombre} (${ruta})`, "--", archivoRel]);
   console.log(`✓ Commit: ${leer("git", ["log", "-1", "--format=%h %an <%ae>"])}`);
 
-  // 5. Subir a GitHub (si hay remoto) y desplegar.
+  // Subir a GitHub (si hay remoto) y desplegar.
   if (leer("git", ["remote"]).includes("origin")) {
     correr("git", ["push", "--quiet", "origin", "HEAD"]);
     console.log("✓ Subido a GitHub");
@@ -114,8 +174,8 @@ async function main() {
     console.log(`\nListo sin deploy. Cuando quieras: netlify deploy --build --prod\nVa a quedar en ${url}\n`);
     return;
   }
-  correr("netlify", ["deploy", "--build", "--prod", "--message", `Publicar ${config.negocio.nombre}`]);
-  console.log(`\n✓ Publicada: ${url}\n  Mandale ese link a ${config.negocio.nombre}.\n`);
+  correr("netlify", ["deploy", "--build", "--prod", "--message", `Publicar ${caja ? "caja de " : ""}${nombre}`]);
+  console.log(`\n✓ Publicada: ${url}\n  Mandale ese link a ${nombre}.\n`);
 }
 
 main().catch((e: unknown) => salir(e instanceof Error ? e.message : String(e)));

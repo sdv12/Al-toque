@@ -1,4 +1,7 @@
 @import "tailwindcss";
+/* Las cajas (src/cajas) tienen su propia instancia de Tailwind: ver src/cajas/estilos.css. */
+@source not "../cajas";
+@source not "./(caja)";
 
 @import "./kit-tokens.css";
 @import "../templates/barberia/tokens.css";

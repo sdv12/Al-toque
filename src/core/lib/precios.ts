@@ -140,3 +140,43 @@ export function planes() {
 export function esBloqueConSistema(plantilla: Plantilla, tipo: string): boolean {
   return !!seccionesDe(plantilla)[tipo]?.sistema;
 }
+
+/* ───────────── Caja al toque ───────────── */
+
+/**
+ * Caja simple: app para el celular, la tablet o la compu del local. Los datos quedan en ese equipo
+ * (no hay servidor), por eso el mensual es bajo: cubre el hosting y las actualizaciones.
+ * Incluye la carga inicial de productos y precios y una explicación en el local.
+ */
+const CAJA_SIMPLE = { unico: 90_000, mensual: 6_000 };
+
+export const MODULOS_CAJA = {
+  fiado: {
+    nombre: "Fiado",
+    descripcion: "Clientes con cuenta: anotar, cobrar y mandarles el saldo por WhatsApp.",
+    unico: 20_000,
+    mensual: 0,
+  },
+  cajones: {
+    nombre: "Cajones y mercado",
+    descripcion: "Cuánto queda de cada cosa, compras del mercado, merma y lista de compras.",
+    unico: 25_000,
+    mensual: 0,
+  },
+} as const satisfies Record<string, { nombre: string; descripcion: string; unico: number; mensual: number }>;
+
+export type IdModuloCaja = keyof typeof MODULOS_CAJA;
+
+/** Presupuesto estimado de una caja (recibe solo los módulos: el core no conoce el formato de la caja). */
+export function cotizarCaja(caja: { modulos: Record<IdModuloCaja, boolean> }): Cotizacion {
+  const lineas: LineaPrecio[] = [{ concepto: "Caja simple (vender, precios y caja del día)", ...CAJA_SIMPLE, sistema: false }];
+  for (const id of Object.keys(MODULOS_CAJA) as IdModuloCaja[]) {
+    if (caja.modulos[id]) lineas.push({ concepto: MODULOS_CAJA[id].nombre, unico: MODULOS_CAJA[id].unico, mensual: MODULOS_CAJA[id].mensual, sistema: false });
+  }
+  return { lineas, total: sumar(lineas), usaSistema: false };
+}
+
+/** Plan de la caja simple para la home (desde: sin módulos). */
+export function planCaja() {
+  return { ...CAJA_SIMPLE, modulos: MODULOS_CAJA };
+}

@@ -4,6 +4,13 @@ Versionado semántico: PATCH = arreglos y ajustes; MINOR = funcionalidad nueva v
 MAJOR = cambios que rompen algo existente (formato de configs, flujo, backend).
 La versión se muestra en el footer de la home y en el configurador.
 
+## 1.6.0 · 2026-11-11
+- **Caja al toque** (`/caja`): caja para verdulerías, almacenes, kioscos y dietéticas, basada en la de Verdulería Lorenzo. El cliente elige rubro, nombre, color y módulos (fiado; cajones y mercado solo en verdulería), la prueba en vivo con sus productos de rubro y la pide por WhatsApp con un código `CJ1.`. Precio estimado en la misma página.
+- Cajas publicadas en `/c/<slug>` (configs en `configs/cajas/`): instalables en el celular y funcionan sin internet. `pnpm publicar` acepta también códigos CJ1.
+- Demos: `/c/demo-verduleria`, `/c/demo-almacen`, `/c/demo-kiosco` y `/c/demo-dietetica`, con ventas y fiado de ejemplo y botón «Empezar de cero».
+- Home: sección «¿Tenés un local? También la caja.» y link a Caja en el menú (reemplaza a «Cómo funciona», que sigue en la página).
+- Por dentro: las rutas pasan a dos layouts raíz, `(sitio)` y `(caja)`, cada uno con su propia hoja de Tailwind.
+
 ## 1.5.0 · 2026-10-24
 - Home: nueva sección **Proyectos** ("Ya están online") con capturas y links a sitios que hicimos: Cuervo Peluquería, 1918 Peluquería, Lunagui Viajes, Casas de Sierra y For her. Los proyectos se editan en `PROYECTOS` (`src/app/(kit)/_home/contenido.ts`).
 - `pnpm capturas` también saca las capturas de los proyectos (`public/proyectos`, sin el cartel de Netlify); `SOLO=proyectos` saca solo esas.

@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "tipo": "simple",
+  "negocio": {
+    "nombre": "Verdulería Don Pepe"
+  },
+  "rubro": "verduleria",
+  "color": "verde",
+  "modulos": {
+    "fiado": true,
+    "cajones": true
+  },
+  "demo": true
+}

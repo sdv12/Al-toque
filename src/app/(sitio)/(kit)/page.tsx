@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { fuentesHome } from "./_home/fuentes";
-import { Beneficios, Cierre, ComoFunciona, Encabezado, Hero, Pie, Plantillas, Precios, Preguntas, Proyectos, Resenas, Rubros } from "./_home/Secciones";
+import { Beneficios, CajaDelLocal, Cierre, ComoFunciona, Encabezado, Hero, Pie, Plantillas, Precios, Preguntas, Proyectos, Resenas, Rubros } from "./_home/Secciones";
 
 export const metadata: Metadata = {
   title: "Landing al toque · Tu página para tu negocio",
@@ -32,6 +32,7 @@ export default function Inicio() {
         <Rubros />
         <Proyectos />
         <Plantillas />
+        <CajaDelLocal />
         <ComoFunciona />
         <Precios />
         <Resenas />

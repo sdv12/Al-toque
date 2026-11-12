@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "tipo": "simple",
+  "negocio": {
+    "nombre": "Kiosco El Paso"
+  },
+  "rubro": "kiosco",
+  "color": "naranja",
+  "modulos": {
+    "fiado": true,
+    "cajones": false
+  },
+  "demo": true
+}
