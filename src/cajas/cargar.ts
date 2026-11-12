@@ -7,8 +7,8 @@ import { validarCaja, type CajaConfig } from "./config";
 const DIRECTORIO = path.join(process.cwd(), "configs", "cajas");
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
-/** "prueba" es la caja del configurador de /caja: tiene su propia página. */
-export const SLUGS_RESERVADOS = ["prueba"];
+/** "prueba" (la caja del configurador de /caja) y "pro" (la demo pro) tienen su propia página. */
+export const SLUGS_RESERVADOS = ["prueba", "pro"];
 
 export async function listarCajas(): Promise<string[]> {
   const archivos = await readdir(DIRECTORIO).catch(() => []);

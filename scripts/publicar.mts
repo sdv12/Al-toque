@@ -125,7 +125,7 @@ async function publicarCaja(texto: string, o: Opciones) {
 
   const slug = o.slug ?? slugDe(config.negocio.nombre);
   if (!SLUG_VALIDO.test(slug)) salir(`El slug "${slug}" no sirve: minúsculas, números y guiones.`);
-  if (slug.startsWith("demo-") || slug === "prueba") salir(`"${slug}" está reservado para las demos de la caja.`);
+  if (slug.startsWith("demo-") || slug === "prueba" || slug === "pro") salir(`"${slug}" está reservado para las demos de la caja.`);
   const destino = path.join(RAIZ, "configs", "cajas", `${slug}.json`);
   const existe = existsSync(destino);
   if (existe && !o.reemplazar) salir(`Ya existe configs/cajas/${slug}.json. Usá --reemplazar para actualizarla o --slug para otra URL.`);

@@ -44,6 +44,11 @@ lista del mercado. Es la caja de Verdulería Lorenzo hecha configurable.
   precios) quedan en IndexedDB del equipo donde se usa, sin servidor. Es instalable y anda sin
   internet (`public/c/sw.js`).
 - Demos: `/c/demo-verduleria`, `/c/demo-almacen`, `/c/demo-kiosco`, `/c/demo-dietetica`.
+- `/c/pro`: demo de la **caja pro** (sucursales, permisos, factura, QR, stock, cuentas corrientes,
+  auditoría) con una ferretería inventada. Vive en `src/cajas/pro/`: `lib/logica.ts` son las reglas
+  (funciones puras, con tests), `lib/semilla.ts` arma la semana de ejemplo pasando por esas mismas
+  reglas y `lib/estado.ts` la guarda en `localStorage`. La factura (CAE) y el QR son simulados; la
+  versión real necesita backend (Supabase + ARCA + Mercado Pago).
 
 Se publica igual que una landing: `pnpm publicar "<mensaje con el código CJ1>"` (mismas opciones).
 El código vive en `src/cajas/` (`rubros.ts` = productos de arranque por rubro, `config.ts` =

@@ -33,6 +33,11 @@ export default function PruebaCliente() {
     return () => window.removeEventListener("storage", alCambiar);
   }, [rubro]);
 
-  if (!config) return <p className="p-4 text-xl">Cargando…</p>;
+  if (!config)
+    return (
+      <p data-caja="simple" className="p-4 text-xl">
+        Cargando…
+      </p>
+    );
   return <CajaCliente config={config} base={`caja-prueba-${config.rubro}`} />;
 }

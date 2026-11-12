@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { formatearPesos } from "@/core/lib/mensajes";
-import { planCaja } from "@/core/lib/precios";
+import { planCaja, planCajaPro } from "@/core/lib/precios";
 import { RUBROS, RUBROS_CAJA } from "@/cajas/rubros";
 import { fuentesHome } from "../_home/fuentes";
 import { Encabezado, Pie, afiche, boton, margen } from "../_home/Secciones";
@@ -49,6 +49,7 @@ const PREGUNTAS_CAJA = [
 
 export default function CajaPagina() {
   const plan = planCaja();
+  const pro = planCajaPro();
   return (
     <div data-kit="home" className={fuentesHome}>
       <a
@@ -79,7 +80,7 @@ export default function CajaPagina() {
 
         <ConfiguradorCaja whatsapp={process.env.NEXT_PUBLIC_OWNER_WHATSAPP} />
 
-        <section aria-labelledby="pro-titulo" className={`${margen} py-24`}>
+        <section id="pro" aria-labelledby="pro-titulo" className={`${margen} scroll-mt-4 py-24`}>
           <div className="grid gap-8 rounded-base border-2 border-tinta bg-superficie p-7 @4xl:grid-cols-12 @4xl:p-12">
             <div className="@4xl:col-span-7">
               <p className="text-chico font-semibold">Para negocios más grandes</p>
@@ -89,6 +90,13 @@ export default function CajaPagina() {
               <p className="mt-4 max-w-medida text-subtitulo">
                 Como la que usa un comercio con empleados y sucursales: todo guardado en la nube y a la vista desde cualquier lado.
               </p>
+              <p className="mt-6">
+                <span className="block text-chico">desde</span>
+                <span className={`${afiche} text-[clamp(2.5rem,1.6rem+3cqi,3.5rem)] leading-none tabular-nums`}>{formatearPesos(pro.unico)}</span>
+                <span className="ml-2 text-chico">
+                  + {formatearPesos(pro.mensual)} por mes · {formatearPesos(pro.sucursalExtra)} por mes cada sucursal extra
+                </span>
+              </p>
             </div>
             <ul className="space-y-2.5 text-chico @4xl:col-span-5 @4xl:self-center">
               {[
@@ -96,7 +104,7 @@ export default function CajaPagina() {
                 "Empleados con usuario y permisos, y registro de quién hizo qué",
                 "Stock con lector de código de barras y categorías",
                 "Factura electrónica (ARCA) y QR de Mercado Pago",
-                "Cuenta corriente de clientes, remitos y reportes",
+                "Cuenta corriente de clientes, reportes y auditoría",
               ].map((i) => (
                 <li key={i} className="flex gap-2.5">
                   <span aria-hidden className="mt-[0.5em] h-1.5 w-3 shrink-0 bg-acento" />
@@ -104,7 +112,10 @@ export default function CajaPagina() {
                 </li>
               ))}
             </ul>
-            <div className="@4xl:col-span-12">
+            <div className="flex flex-wrap gap-3 @4xl:col-span-12">
+              <Link href="/c/pro" className={boton.tinta}>
+                Probar la demo pro
+              </Link>
               {process.env.NEXT_PUBLIC_OWNER_WHATSAPP ? (
                 <a
                   href={`https://wa.me/${process.env.NEXT_PUBLIC_OWNER_WHATSAPP}?text=${encodeURIComponent("Hola! Quiero saber más de la caja pro.")}`}
@@ -119,6 +130,10 @@ export default function CajaPagina() {
                   Ver preguntas
                 </Link>
               )}
+              <p className="w-full text-chico text-tinta-suave">
+                La demo es una ferretería inventada con dos sucursales: entrá como la dueña o como una vendedora y mirá qué ve cada una. La factura y el QR son
+                simulados.
+              </p>
             </div>
           </div>
         </section>

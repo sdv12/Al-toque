@@ -361,6 +361,13 @@ export function CajaDelLocal() {
               Ver una demo
             </Link>
           </div>
+          <p className="mt-6 max-w-medida text-chico opacity-80">
+            ¿Con empleados, varias sucursales o factura electrónica?{" "}
+            <Link href="/c/pro" className="font-semibold underline underline-offset-4">
+              Probá la caja pro
+            </Link>
+            .
+          </p>
         </div>
         <div className="relative mx-auto grid w-full max-w-md grid-cols-2 items-start gap-4 @4xl:col-span-5">
           <Telefono src="/muestras/caja-vender.jpg" alt="La caja de una verdulería: buscador y botones grandes con cada producto y su precio por kilo" sizes="(min-width: 896px) 210px, 45vw" />
@@ -618,6 +625,11 @@ export function Pie() {
             <li>
               <Link href="/c/demo-verduleria" className="underline-offset-4 hover:underline">
                 Demo caja
+              </Link>
+            </li>
+            <li>
+              <Link href="/c/pro" className="underline-offset-4 hover:underline">
+                Demo caja pro
               </Link>
             </li>
             <li>

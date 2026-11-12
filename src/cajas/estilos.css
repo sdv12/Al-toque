@@ -32,10 +32,14 @@
 }
 
 html {
-  /* 18px de base: todo lo que está en rem escala con esto. */
-  font-size: 112.5%;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
+}
+
+/* Caja simple: 18px de base (la usan personas mayores); todo lo que está en rem escala con esto.
+   La caja pro es un panel de gestión y se queda en 16px. */
+html:has([data-caja="simple"]) {
+  font-size: 112.5%;
 }
 
 body {
@@ -70,5 +74,21 @@ button {
 @custom-variant short {
   @media (max-height: 500px) {
     @slot;
+  }
+}
+
+/* Comprobantes: al imprimir sale solo lo marcado con data-imprimir. */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  [data-imprimir],
+  [data-imprimir] * {
+    visibility: visible;
+  }
+  [data-imprimir] {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 100%;
   }
 }

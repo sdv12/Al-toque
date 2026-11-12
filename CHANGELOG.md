@@ -4,6 +4,13 @@ Versionado semántico: PATCH = arreglos y ajustes; MINOR = funcionalidad nueva v
 MAJOR = cambios que rompen algo existente (formato de configs, flujo, backend).
 La versión se muestra en el footer de la home y en el configurador.
 
+## 1.7.0 · 2026-11-12
+- **Demo de la caja pro** (`/c/pro`), inspirada en el backoffice de un cliente: una ferretería inventada con dos sucursales y una semana de movimiento. Se entra eligiendo a una persona (dueña, encargado, vendedores) y cada una ve solo lo que le permiten.
+- Venta con lector de código de barras (el código + Enter), factura A o B según el cliente con CAE de demostración e impresión, cobro con QR de Mercado Pago simulado y venta a cuenta corriente con límite de crédito.
+- Caja por sucursal: apertura con fondo, ingresos y egresos, cierre con arqueo y motivo obligatorio si hay diferencia, historial de cierres.
+- Stock por sucursal con mínimo y alerta, alta y edición de productos, ajustes con motivo. Clientes con cuenta corriente, cobros y saldo por WhatsApp. Equipo con roles y permisos uno por uno. Auditoría de todo, con lo sensible marcado para revisar. Tablero con ventas de la semana, medios de pago, equipo, más vendidos y lo que hay que reponer.
+- Precio de referencia de la caja pro en `/caja` y link a la demo desde `/caja`, la home y el pie.
+
 ## 1.6.0 · 2026-11-11
 - **Caja al toque** (`/caja`): caja para verdulerías, almacenes, kioscos y dietéticas, basada en la de Verdulería Lorenzo. El cliente elige rubro, nombre, color y módulos (fiado; cajones y mercado solo en verdulería), la prueba en vivo con sus productos de rubro y la pide por WhatsApp con un código `CJ1.`. Precio estimado en la misma página.
 - Cajas publicadas en `/c/<slug>` (configs en `configs/cajas/`): instalables en el celular y funcionan sin internet. `pnpm publicar` acepta también códigos CJ1.

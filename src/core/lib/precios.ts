@@ -180,3 +180,14 @@ export function cotizarCaja(caja: { modulos: Record<IdModuloCaja, boolean> }): C
 export function planCaja() {
   return { ...CAJA_SIMPLE, modulos: MODULOS_CAJA };
 }
+
+/**
+ * Caja pro: varias cajas y sucursales, usuarios con permisos, factura electrónica (ARCA), QR de
+ * Mercado Pago, stock con lector, cuentas corrientes y auditoría. Necesita servidor y base de
+ * datos: el mensual cubre eso, el mantenimiento y las actualizaciones. Cada sucursal extra suma.
+ */
+const CAJA_PRO = { unico: 350_000, mensual: 45_000, sucursalExtra: 15_000 };
+
+export function planCajaPro() {
+  return CAJA_PRO;
+}

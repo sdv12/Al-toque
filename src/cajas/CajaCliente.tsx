@@ -19,7 +19,7 @@ export default function CajaCliente({ config, base }: { config: CajaConfig; base
   // Se fija antes de dibujar: el guardado, los productos de arranque y los mensajes la leen.
   usarCaja(activaDesde(config, base));
   return (
-    <div style={estiloDeColor(config.color)}>
+    <div data-caja="simple" style={estiloDeColor(config.color)}>
       <App key={base} />
     </div>
   );
