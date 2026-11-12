@@ -7,16 +7,19 @@ import type { LandingConfig } from "../schema/landing-config";
  */
 
 /** Página con una plantilla de rubro (barbería, consultorio, casas, portfolio). */
-const PLANTILLA = { unico: 150_000, mensual: 12_000 };
+const PLANTILLA = { unico: 190_000, mensual: 15_000 };
 
 /** Página "a tu medida": incluye cierta cantidad de bloques; los demás se cobran aparte. */
-const A_MEDIDA = { unico: 190_000, mensual: 12_000, bloquesIncluidos: 6, bloqueExtra: 15_000 };
+const A_MEDIDA = { unico: 250_000, mensual: 15_000, bloquesIncluidos: 6, bloqueExtra: 15_000 };
 
-/** Si hay al menos un componente con sistema: base de datos, servidor y su mantenimiento. */
-const SISTEMA_BASE = { unico: 120_000, mensual: 25_000 };
+/**
+ * Si hay al menos un componente con sistema: base de datos, servidor y su mantenimiento.
+ * Plantilla + sistema + un componente = el plan "Con sistema" (desde $350.000 + $75.000/mes).
+ */
+const SISTEMA_BASE = { unico: 100_000, mensual: 50_000 };
 
 /** Cada componente con sistema (agenda real, calendario real, formulario con panel, pagos). */
-const COMPONENTE_SISTEMA = { unico: 60_000, mensual: 5_000 };
+const COMPONENTE_SISTEMA = { unico: 60_000, mensual: 10_000 };
 
 /** Funciones que no son bloques de la página pero se pueden sumar. */
 export const EXTRAS = {
@@ -24,7 +27,7 @@ export const EXTRAS = {
     nombre: "Agenda con base de datos",
     descripcion: "Los turnos de la plantilla se guardan y no se superponen (hoy se confirman por WhatsApp).",
     unico: 60_000,
-    mensual: 5_000,
+    mensual: 10_000,
     sistema: true,
   },
   recordatorios: {
@@ -96,7 +99,7 @@ export function planes() {
       id: "vidriera",
       nombre: "Vidriera",
       bajada: "Una plantilla pensada para tu rubro, con tus textos, colores y precios.",
-      desde: false,
+      desde: true,
       ...PLANTILLA,
       incluye: [
         "Plantilla de barbería, consultorio, casas de campo o portfolio",
@@ -145,22 +148,23 @@ export function esBloqueConSistema(plantilla: Plantilla, tipo: string): boolean 
 
 /**
  * Caja simple: app para el celular, la tablet o la compu del local. Los datos quedan en ese equipo
- * (no hay servidor), por eso el mensual es bajo: cubre el hosting y las actualizaciones.
- * Incluye la carga inicial de productos y precios y una explicación en el local.
+ * (todavía no hay servidor): el mensual cubre hosting, soporte y actualizaciones (y, cuando exista,
+ * el respaldo en la nube). Incluye el fiado, la carga inicial de productos y la explicación en el local.
  */
-const CAJA_SIMPLE = { unico: 90_000, mensual: 6_000 };
+const CAJA_SIMPLE = { unico: 99_000, mensual: 15_000 };
 
 export const MODULOS_CAJA = {
   fiado: {
     nombre: "Fiado",
     descripcion: "Clientes con cuenta: anotar, cobrar y mandarles el saldo por WhatsApp.",
-    unico: 20_000,
+    /** Incluido en la caja simple: casi todas las cajas del mercado lo traen. */
+    unico: 0,
     mensual: 0,
   },
   cajones: {
     nombre: "Cajones y mercado",
     descripcion: "Cuánto queda de cada cosa, compras del mercado, merma y lista de compras.",
-    unico: 25_000,
+    unico: 20_000,
     mensual: 0,
   },
 } as const satisfies Record<string, { nombre: string; descripcion: string; unico: number; mensual: number }>;
@@ -171,7 +175,8 @@ export type IdModuloCaja = keyof typeof MODULOS_CAJA;
 export function cotizarCaja(caja: { modulos: Record<IdModuloCaja, boolean> }): Cotizacion {
   const lineas: LineaPrecio[] = [{ concepto: "Caja simple (vender, precios y caja del día)", ...CAJA_SIMPLE, sistema: false }];
   for (const id of Object.keys(MODULOS_CAJA) as IdModuloCaja[]) {
-    if (caja.modulos[id]) lineas.push({ concepto: MODULOS_CAJA[id].nombre, unico: MODULOS_CAJA[id].unico, mensual: MODULOS_CAJA[id].mensual, sistema: false });
+    // Los módulos incluidos (sin costo) no suman renglón.
+    if (caja.modulos[id] && (MODULOS_CAJA[id].unico || MODULOS_CAJA[id].mensual)) lineas.push({ concepto: MODULOS_CAJA[id].nombre, unico: MODULOS_CAJA[id].unico, mensual: MODULOS_CAJA[id].mensual, sistema: false });
   }
   return { lineas, total: sumar(lineas), usaSistema: false };
 }
@@ -184,9 +189,11 @@ export function planCaja() {
 /**
  * Caja pro: varias cajas y sucursales, usuarios con permisos, factura electrónica (ARCA), QR de
  * Mercado Pago, stock con lector, cuentas corrientes y auditoría. Necesita servidor y base de
- * datos: el mensual cubre eso, el mantenimiento y las actualizaciones. Cada sucursal extra suma.
+ * datos. El mensual incluye 1 sucursal y hasta 1.000 facturas por mes: cubre la base de datos, el
+ * servicio de facturación (~$35.000/mes por cliente si es vía TusFacturasAPP), soporte y
+ * actualizaciones. Cada sucursal extra suma.
  */
-const CAJA_PRO = { unico: 350_000, mensual: 45_000, sucursalExtra: 15_000 };
+const CAJA_PRO = { unico: 450_000, mensual: 75_000, sucursalExtra: 25_000, facturasIncluidas: 1_000 };
 
 export function planCajaPro() {
   return CAJA_PRO;

@@ -96,6 +96,9 @@ export default function CajaPagina() {
                 <span className="ml-2 text-chico">
                   + {formatearPesos(pro.mensual)} por mes · {formatearPesos(pro.sucursalExtra)} por mes cada sucursal extra
                 </span>
+                <span className="mt-1 block text-chico text-tinta-suave">
+                  El mensual incluye una sucursal, hasta {pro.facturasIncluidas.toLocaleString("es-AR")} facturas por mes, base de datos, soporte y actualizaciones.
+                </span>
               </p>
             </div>
             <ul className="space-y-2.5 text-chico @4xl:col-span-5 @4xl:self-center">

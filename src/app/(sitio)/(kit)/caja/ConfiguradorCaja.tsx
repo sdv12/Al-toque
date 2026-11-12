@@ -160,7 +160,7 @@ export function ConfiguradorCaja({ whatsapp }: { whatsapp: string | undefined })
                     <span className="flex-1">
                       <span className="flex flex-wrap items-baseline justify-between gap-x-4">
                         <span className="font-semibold">{MODULOS_CAJA[m].nombre}</span>
-                        <span className="text-chico tabular-nums">+ {formatearPesos(MODULOS_CAJA[m].unico)}</span>
+                        <span className="text-chico tabular-nums">{MODULOS_CAJA[m].unico ? `+ ${formatearPesos(MODULOS_CAJA[m].unico)}` : "Incluido"}</span>
                       </span>
                       <span className="block text-chico opacity-80">
                         {noDisponible ? `Por ahora, solo para verdulería.` : MODULOS_CAJA[m].descripcion}

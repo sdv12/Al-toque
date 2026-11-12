@@ -4,6 +4,9 @@ Versionado semántico: PATCH = arreglos y ajustes; MINOR = funcionalidad nueva v
 MAJOR = cambios que rompen algo existente (formato de configs, flujo, backend).
 La versión se muestra en el footer de la home y en el configurador.
 
+## 1.7.1 · 2026-11-12
+- Precios nuevos (después de comparar con el mercado y los costos): Vidriera desde $190.000 + $15.000/mes; A tu medida desde $250.000 + $15.000/mes; Con sistema desde $350.000 + $75.000/mes (cada componente con sistema, como la agenda real, $60.000 + $10.000/mes); Caja simple $99.000 + $15.000/mes con el fiado incluido y cajones +$20.000; Caja pro $450.000 + $75.000/mes (incluye una sucursal y hasta 1.000 facturas por mes) y $25.000/mes por sucursal extra.
+
 ## 1.7.0 · 2026-11-12
 - **Demo de la caja pro** (`/c/pro`), inspirada en el backoffice de un cliente: una ferretería inventada con dos sucursales y una semana de movimiento. Se entra eligiendo a una persona (dueña, encargado, vendedores) y cada una ve solo lo que le permiten.
 - Venta con lector de código de barras (el código + Enter), factura A o B según el cliente con CAE de demostración e impresión, cobro con QR de Mercado Pago simulado y venta a cuenta corriente con límite de crédito.
