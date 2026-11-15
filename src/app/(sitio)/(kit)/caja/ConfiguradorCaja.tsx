@@ -5,7 +5,7 @@ import { COLORES_CAJA, cajaPorDefecto, codificarCaja, validarCaja, type CajaConf
 import { CLAVE_PRUEBA } from "@/cajas/prueba";
 import { RUBROS, RUBROS_CAJA, type RubroCaja } from "@/cajas/rubros";
 import { formatearPesos } from "@/core/lib/mensajes";
-import { MODULOS_CAJA, cotizarCaja, type IdModuloCaja } from "@/core/lib/precios";
+import { MODULOS_CAJA, cotizarCaja, preciosVigentesHasta, type IdModuloCaja } from "@/core/lib/precios";
 import { claseControl } from "../configurador/campos";
 import { slugDe } from "../configurador/estado";
 import { afiche, boton, margen } from "../_home/Secciones";
@@ -190,7 +190,7 @@ export function ConfiguradorCaja({ whatsapp }: { whatsapp: string | undefined })
             <p className="mt-3 text-chico text-tinta-suave">Vender, precios y la caja del día (apertura, ventas por medio de pago y cierre) vienen siempre.</p>
           </Paso>
 
-          <div className="rounded-base border-2 border-tinta bg-superficie p-6">
+          <div className="rounded-base border-2 border-tinta bg-superficie p-6" data-precios>
             <ul className="space-y-1.5 text-chico">
               {cotizacion.lineas.map((l) => (
                 <li key={l.concepto} className="flex justify-between gap-4">
@@ -243,7 +243,9 @@ export function ConfiguradorCaja({ whatsapp }: { whatsapp: string | undefined })
             )}
             {!validacion.ok && <p className="mt-3 text-chico text-[#b3261e]">Completá el nombre del negocio para pedirla.</p>}
             {!whatsapp && <p className="mt-3 text-chico text-tinta-suave">Falta configurar NEXT_PUBLIC_OWNER_WHATSAPP.</p>}
-            <p className="mt-3 text-mini text-tinta-suave">Precios de referencia en pesos argentinos. El valor final se confirma al charlar tu caja.</p>
+            <p className="mt-3 text-mini text-tinta-suave">
+              Precios de referencia en pesos argentinos, vigentes hasta el {preciosVigentesHasta()} (se actualizan cada tres meses). El valor final se confirma al charlar tu caja.
+            </p>
           </div>
         </form>
 

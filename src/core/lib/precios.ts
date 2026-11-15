@@ -6,6 +6,24 @@ import type { LandingConfig } from "../schema/landing-config";
  * calculadora del configurador y la sección de precios de la home.
  */
 
+/**
+ * Los precios se actualizan cada tres meses (1/1, 1/4, 1/7 y 1/10). Al actualizarlos, cambiar
+ * `proxima` por la fecha de la siguiente: el aviso de la web y los textos de vigencia la toman de acá.
+ */
+export const ACTUALIZACION_PRECIOS = { cadaMeses: 3, proxima: "2027-01-01" } as const;
+
+const LARGA = new Intl.DateTimeFormat("es-AR", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
+
+/** "1 de enero de 2027": cuándo cambian los precios. */
+export function proximaActualizacion(): string {
+  return LARGA.format(new Date(`${ACTUALIZACION_PRECIOS.proxima}T00:00:00Z`));
+}
+
+/** "31 de diciembre de 2026": hasta cuándo valen los precios publicados (el día anterior). */
+export function preciosVigentesHasta(): string {
+  return LARGA.format(new Date(Date.parse(`${ACTUALIZACION_PRECIOS.proxima}T00:00:00Z`) - 86_400_000));
+}
+
 /** Página con una plantilla de rubro (barbería, consultorio, casas, portfolio). */
 const PLANTILLA = { unico: 190_000, mensual: 15_000 };
 

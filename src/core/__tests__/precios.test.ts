@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { configsPorDefecto } from "../defaults";
 import { libreEjemplo } from "../defaults/libre";
-import { EXTRAS, cotizar, esBloqueConSistema, planes } from "../lib/precios";
+import { EXTRAS, cotizar, esBloqueConSistema, planes, ACTUALIZACION_PRECIOS, preciosVigentesHasta, proximaActualizacion } from "../lib/precios";
 
 describe("precios", () => {
   it("una plantilla de rubro cuesta el precio de plantilla", () => {
@@ -55,5 +55,19 @@ describe("precios", () => {
     expect(esBloqueConSistema("libre", "turnos")).toBe(true);
     expect(esBloqueConSistema("libre", "texto")).toBe(false);
     expect(esBloqueConSistema("barberia", "servicios")).toBe(false);
+  });
+});
+
+describe("vigencia de los precios", () => {
+  it("la próxima actualización es un primer día de trimestre", () => {
+    const [, mes, dia] = ACTUALIZACION_PRECIOS.proxima.split("-").map(Number);
+    expect(dia).toBe(1);
+    expect([1, 4, 7, 10]).toContain(mes);
+  });
+
+  it("los precios valen hasta el día anterior, con fechas en castellano", () => {
+    expect(ACTUALIZACION_PRECIOS.proxima).toBe("2027-01-01");
+    expect(proximaActualizacion()).toBe("1 de enero de 2027");
+    expect(preciosVigentesHasta()).toBe("31 de diciembre de 2026");
   });
 });

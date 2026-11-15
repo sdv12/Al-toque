@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { formatearPesos } from "@/core/lib/mensajes";
-import { planCaja, planCajaPro } from "@/core/lib/precios";
+import { planCaja, planCajaPro, proximaActualizacion } from "@/core/lib/precios";
 import { RUBROS, RUBROS_CAJA } from "@/cajas/rubros";
+import { AvisoPrecios } from "../_home/AvisoPrecios";
 import { fuentesHome } from "../_home/fuentes";
 import { Encabezado, Pie, afiche, boton, margen } from "../_home/Secciones";
 import { ConfiguradorCaja } from "./ConfiguradorCaja";
@@ -70,10 +71,11 @@ export default function CajaPagina() {
               Vender, precios, fiado y el cierre del día, con botones grandes y en el celular que ya tenés. Armala acá abajo y probala con tus cosas: es
               gratis y no pide registrarse.
             </p>
-            <p className="@4xl:col-span-5 @4xl:text-right">
+            <p className="@4xl:col-span-5 @4xl:text-right" data-precios>
               <span className="block text-chico">desde</span>
               <span className={`${afiche} block text-[clamp(2.5rem,1.6rem+3cqi,3.5rem)] leading-none tabular-nums`}>{formatearPesos(plan.unico)}</span>
               <span className="mt-1 block text-chico">pago único + {formatearPesos(plan.mensual)} por mes</span>
+              <span className="mt-1 block text-mini text-tinta-suave">Precios actualizados cada tres meses · próxima actualización: {proximaActualizacion()}</span>
             </p>
           </div>
         </section>
@@ -90,7 +92,7 @@ export default function CajaPagina() {
               <p className="mt-4 max-w-medida text-subtitulo">
                 Como la que usa un comercio con empleados y sucursales: todo guardado en la nube y a la vista desde cualquier lado.
               </p>
-              <p className="mt-6">
+              <p className="mt-6" data-precios>
                 <span className="block text-chico">desde</span>
                 <span className={`${afiche} text-[clamp(2.5rem,1.6rem+3cqi,3.5rem)] leading-none tabular-nums`}>{formatearPesos(pro.unico)}</span>
                 <span className="ml-2 text-chico">
@@ -163,6 +165,7 @@ export default function CajaPagina() {
         </section>
       </main>
       <Pie />
+      <AvisoPrecios />
     </div>
   );
 }

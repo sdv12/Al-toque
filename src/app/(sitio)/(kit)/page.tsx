@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AvisoPrecios } from "./_home/AvisoPrecios";
 import { fuentesHome } from "./_home/fuentes";
 import { Beneficios, CajaDelLocal, Cierre, ComoFunciona, Encabezado, Hero, Pie, Plantillas, Precios, Preguntas, Proyectos, Resenas, Rubros } from "./_home/Secciones";
 
@@ -41,6 +42,7 @@ export default function Inicio() {
         <Cierre whatsapp={process.env.NEXT_PUBLIC_OWNER_WHATSAPP} />
       </main>
       <Pie />
+      <AvisoPrecios />
     </div>
   );
 }

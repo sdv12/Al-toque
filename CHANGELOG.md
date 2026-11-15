@@ -4,6 +4,10 @@ Versionado semántico: PATCH = arreglos y ajustes; MINOR = funcionalidad nueva v
 MAJOR = cambios que rompen algo existente (formato de configs, flujo, backend).
 La versión se muestra en el footer de la home y en el configurador.
 
+## 1.9.0 · 2026-11-15
+- Aviso de **actualización trimestral de precios**: una tarjeta chica abajo a la izquierda que aparece cuando hay precios en pantalla (home y `/caja`), sin bloquear ni tomar el foco. Dice hasta cuándo valen los precios y que la próxima actualización es el 1 de enero de 2027. Una vez cerrada no vuelve hasta la siguiente actualización.
+- La vigencia también queda escrita junto a los precios (nota de la sección Precios, `/caja` y la calculadora de la caja). La fecha se cambia en un solo lugar: `ACTUALIZACION_PRECIOS` en `src/core/lib/precios.ts`.
+
 ## 1.8.0 · 2026-11-15
 - **Número de pedido** (`#00015`): al enviar una landing desde el configurador o pedir una caja en `/caja`, el cliente recibe un número correlativo y WhatsApp se abre con un mensaje corto (número + resumen), sin el código largo. El número sale de `/api/pedidos`, con el contador en Netlify Blobs (escritura condicional: dos pedidos a la vez no repiten número).
 - La configuración completa llega por mail vía Netlify Forms (`configuraciones`) con el asunto «Pedido #00015 · Landing/Caja · Negocio»: JSON legible y el código `LK1.`/`CJ1.` para `pnpm publicar`. Si no se consigue número, el WhatsApp lleva el código completo como antes.

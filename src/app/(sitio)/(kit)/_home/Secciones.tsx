@@ -8,7 +8,7 @@ import { fuentes as fuentesBarberia } from "@/templates/barberia";
 import { fuentes as fuentesConsultorio } from "@/templates/consultorio";
 import { fuentes as fuentesGenerico } from "@/templates/generico";
 import { formatearPesos } from "@/core/lib/mensajes";
-import { planCaja, planes } from "@/core/lib/precios";
+import { planCaja, planes, preciosVigentesHasta, proximaActualizacion } from "@/core/lib/precios";
 import { BENEFICIOS, FICHAS, PASOS, PREGUNTAS, PROYECTOS, RESENAS, RESENAS_DE_MUESTRA, RUBROS } from "./contenido";
 import { Navegador, Telefono } from "./Marcos";
 
@@ -345,7 +345,7 @@ export function CajaDelLocal() {
               </li>
             ))}
           </ul>
-          <p className="mt-8">
+          <p className="mt-8" data-precios>
             <span className="block text-chico opacity-80">desde</span>
             <span className={`${afiche} text-[clamp(2.5rem,1.6rem+3cqi,3.5rem)] leading-none tabular-nums`}>{formatearPesos(plan.unico)}</span>
             <span className="ml-2 text-chico opacity-80">+ {formatearPesos(plan.mensual)} por mes</span>
@@ -432,7 +432,7 @@ const DESTINO_PLAN: Record<string, { href: string; texto: string }> = {
 
 export function Precios() {
   return (
-    <section id="precios" aria-labelledby="precios-titulo" className={`${diferida} ${margen} scroll-mt-4 py-24`}>
+    <section id="precios" data-precios aria-labelledby="precios-titulo" className={`${diferida} ${margen} scroll-mt-4 py-24`}>
       <div className="grid gap-6 @5xl:grid-cols-12 @5xl:items-end">
         <h2 id="precios-titulo" className={`${afiche} text-titulo @5xl:col-span-7`}>
           Precios <span className="resaltado">claros</span>
@@ -475,7 +475,8 @@ export function Precios() {
         })}
       </ul>
       <p className="mt-6 text-pretty text-chico text-tinta-suave">
-        * Precios de referencia en pesos argentinos. El valor final se confirma al ver tu proyecto. Los componentes con sistema (agenda real, pagos online,
+        * Precios de referencia en pesos argentinos, vigentes hasta el {preciosVigentesHasta()}: se actualizan cada tres meses y la próxima actualización
+        es el {proximaActualizacion()}. El valor final se confirma al ver tu proyecto. Los componentes con sistema (agenda real, pagos online,
         recordatorios, panel) suman instalación y mensual porque necesitan base de datos y servidor.
       </p>
     </section>
