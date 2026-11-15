@@ -1,0 +1,137 @@
+import { readFile } from "node:fs/promises";
+import path from "node:path";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { PLANTILLAS_DE_RUBRO, registry } from "@/core/registry";
+import { RUBROS, RUBROS_CAJA } from "@/cajas/rubros";
+import { FICHAS, PROYECTOS } from "../_home/contenido";
+import { fuentesHome } from "../_home/fuentes";
+import { Marca, margen } from "../_home/Secciones";
+import { Adm, type GrupoDemos } from "./Adm";
+import { leerChangelog } from "./changelog";
+
+/*
+ * /adm: panel interno del equipo (no está enlazado desde el sitio y no se indexa). Junta todas las
+ * demos para mostrarle a un cliente y las novedades de cada versión, que salen de CHANGELOG.md.
+ * No tiene datos privados: todo lo que muestra ya es público.
+ */
+export const metadata: Metadata = {
+  title: "Panel · Al toque",
+  robots: { index: false, follow: false },
+};
+
+const NETLIFY = "https://app.netlify.com/projects/landing-al-toque";
+
+function demos(): GrupoDemos[] {
+  return [
+    {
+      id: "landings",
+      titulo: "Landings",
+      bajada: "Una demo por plantilla, con datos de ejemplo. Mostralas en el celular: es donde las van a ver sus clientes.",
+      items: [
+        ...PLANTILLAS_DE_RUBRO.map((p) => ({
+          titulo: registry[p].meta.nombre,
+          etiqueta: registry[p].meta.rubro,
+          texto: FICHAS[p].bajada,
+          consejo: FICHAS[p].destacados[0],
+          href: `/l/${FICHAS[p].slug}`,
+          imagen: `/muestras/${p}-escritorio.jpg`,
+        })),
+        {
+          titulo: "A tu medida",
+          etiqueta: "Cualquier negocio",
+          texto: "Hoja en blanco armada con bloques. Incluye bloques con sistema (agenda, consultas, seña).",
+          consejo: "Mostrá el cartel de costo de los bloques con sistema.",
+          href: "/l/demo-a-medida",
+        },
+      ],
+    },
+    {
+      id: "venta",
+      titulo: "Para vender",
+      bajada: "Lo que ve el cliente antes de pedir.",
+      items: [
+        { titulo: "Home", etiqueta: "Sitio", texto: "Plantillas, proyectos, caja, precios y preguntas.", href: "/" },
+        {
+          titulo: "Configurador",
+          etiqueta: "Landings",
+          texto: "El cliente elige plantilla, edita en vivo, ve el precio y la manda.",
+          consejo: "Con ?admin aparecen «Copiar JSON», «Descargar JSON» e «Importar».",
+          href: "/configurador",
+          imagen: "/muestras/configurador.jpg",
+        },
+        { titulo: "Configurador (admin)", etiqueta: "Interno", texto: "Para cargar o revisar la configuración que mandó un cliente.", href: "/configurador?admin" },
+        { titulo: "Armá tu caja", etiqueta: "Cajas", texto: "Rubro, nombre, color y módulos, con la caja de prueba al lado y el pedido.", href: "/caja" },
+      ],
+    },
+    {
+      id: "cajas",
+      titulo: "Cajas",
+      bajada: "Las simples guardan en el navegador; «Empezar de cero» vuelve a los datos de ejemplo.",
+      items: [
+        ...RUBROS_CAJA.map((r) => ({
+          titulo: `Caja ${RUBROS[r].nombre.toLowerCase()}`,
+          etiqueta: "Caja simple",
+          texto: RUBROS[r].bajada,
+          href: `/c/demo-${r}`,
+          imagen: r === "verduleria" ? "/muestras/caja-vender.jpg" : r === "almacen" ? "/muestras/caja-cierre.jpg" : undefined,
+        })),
+        {
+          titulo: "Caja pro",
+          etiqueta: "Pro",
+          texto: "Ferretería inventada con dos sucursales: factura, QR, stock, cuentas corrientes, permisos y auditoría.",
+          consejo: "Entrá como Graciela (dueña) y después como Sofía (vendedora) para mostrar los permisos.",
+          href: "/c/pro",
+        },
+      ],
+    },
+    {
+      id: "proyectos",
+      titulo: "Proyectos reales",
+      bajada: "Sitios que hicimos y están online (los de la sección «Ya están online»).",
+      items: PROYECTOS.map((p) => ({
+        titulo: p.nombre,
+        etiqueta: p.rubro,
+        texto: p.texto,
+        href: p.url,
+        imagen: `/proyectos/${p.id}.jpg`,
+        externo: true,
+      })),
+    },
+    {
+      id: "accesos",
+      titulo: "Accesos del equipo",
+      bajada: "Piden iniciar sesión con la cuenta correspondiente.",
+      items: [
+        { titulo: "Pedidos (Netlify Forms)", etiqueta: "Netlify", texto: "Cada pedido con su número, el JSON y el código para publicar.", href: `${NETLIFY}/forms`, externo: true },
+        { titulo: "Deploys", etiqueta: "Netlify", texto: "Cada push o merge a master se publica solo; acá se ve si salió bien.", href: `${NETLIFY}/deploys`, externo: true },
+        { titulo: "Repositorio", etiqueta: "GitHub", texto: "sdv12/Al-toque: código, PRs y el CHANGELOG.", href: "https://github.com/sdv12/Al-toque", externo: true },
+      ],
+    },
+  ];
+}
+
+export default async function AdmPagina() {
+  const versiones = leerChangelog(await readFile(path.join(process.cwd(), "CHANGELOG.md"), "utf8"));
+  const ultima = versiones[0];
+  const fecha = ultima ? new Date(`${ultima.fecha}T12:00:00Z`).toLocaleDateString("es-AR", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }) : "";
+  return (
+    <div data-kit="home" className={fuentesHome}>
+      <Adm
+        versiones={versiones}
+        grupos={demos()}
+        encabezado={
+          <header className={`${margen} flex flex-wrap items-center justify-between gap-4 border-b-2 border-tinta py-4`}>
+            <Link href="/" className="text-[1.4rem]" aria-label="Ir al sitio">
+              <Marca />
+            </Link>
+            <p className="text-chico text-tinta-suave">
+              Panel del equipo · en producción <strong className="text-tinta">v{process.env.NEXT_PUBLIC_VERSION}</strong>
+              {fecha && ` · ${fecha}`}
+            </p>
+          </header>
+        }
+      />
+    </div>
+  );
+}

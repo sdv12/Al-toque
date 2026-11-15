@@ -4,6 +4,11 @@ Versionado semántico: PATCH = arreglos y ajustes; MINOR = funcionalidad nueva v
 MAJOR = cambios que rompen algo existente (formato de configs, flujo, backend).
 La versión se muestra en el footer de la home y en el configurador.
 
+## 1.10.0 · 2026-11-15
+- **Panel del equipo en `/adm`** (no está enlazado desde el sitio y no aparece en Google). Tiene dos pestañas:
+- **Demos**: todo lo que se le puede mostrar a un cliente, con capturas y un consejo de qué mostrar: las 5 landings, la home, el configurador (también en modo admin), `/caja`, las 4 cajas simples, la caja pro, los proyectos reales y los accesos del equipo (pedidos en Netlify Forms, deploys y el repo).
+- **Novedades**: cada versión publicada, contada en simple, con un contador rojo y la marca «Nuevo» para lo que todavía no viste en ese navegador. Sale de este mismo `CHANGELOG.md`: para sumar una novedad se escribe acá, en el PR que sube la versión.
+
 ## 1.9.1 · 2026-11-15
 - **Deploy automático**: Netlify quedó conectado al repo `sdv12/Al-toque`. Cada push o merge a `master` se publica solo y cada PR tiene vista previa. La versión del footer se sube en el mismo PR.
 - `pnpm publicar` ya no despliega desde la máquina (solo commit + push; lo publica Netlify). `--deploy` lo fuerza si hace falta; `--sin-deploy` queda aceptado pero ya no hace falta.

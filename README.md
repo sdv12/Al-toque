@@ -55,6 +55,14 @@ El código vive en `src/cajas/` (`rubros.ts` = productos de arranque por rubro, 
 schema). Las rutas de las cajas usan su propio root layout (`src/app/(caja)`) y su propia hoja de
 Tailwind (`src/cajas/estilos.css`), porque el kit anula la paleta y la escala por defecto.
 
+## Panel del equipo (`/adm`)
+
+`/adm` junta las demos para mostrar (landings, configurador, cajas, caja pro, proyectos reales y
+accesos a Netlify y GitHub) y las **Novedades** de cada versión, que se leen de este mismo
+`CHANGELOG.md` al compilar. Para que una versión aparezca: subir `version` en `package.json` y
+agregar su entrada arriba del CHANGELOG (`## x.y.z · AAAA-MM-DD` + viñetas) en el mismo PR. No está
+enlazado desde el sitio ni se indexa, pero tampoco tiene clave: no poner nada privado ahí.
+
 ## Publicar la página de un cliente
 
 El cliente toca **Enviar** en el configurador (o **Pedir mi caja por WhatsApp** en `/caja`): recibe

@@ -25,8 +25,8 @@ const DOMINIO = "altoque-cba.com.ar";
  * Video de demo para "Tres pasos y listo" (mp4 en public/). Si no hay o no carga, se ve la captura.
  */
 const VIDEO_CONFIGURADOR: string | undefined = "/Demo/Demo_plantillas.mp4";
-export const margen = "px-4 @3xl:px-8 @6xl:px-12";
-export const afiche = "font-display font-extrabold uppercase [font-stretch:68%]";
+import { afiche, margen } from "./estilos";
+export { afiche, margen };
 
 /**
  * Secciones debajo del primer pantallazo: el navegador no las maqueta hasta que se acercan,
