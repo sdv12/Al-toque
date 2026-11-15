@@ -23,6 +23,11 @@ export default function PruebaCliente() {
   const config = useMemo(() => (texto === undefined ? null : configDePrueba(texto)), [texto]);
   const rubro = config?.rubro;
 
+  // Dentro del marco de /caja (?marco=1) la caja se dibuja más compacta (ver estilos.css).
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).has("marco")) document.documentElement.dataset.marco = "";
+  }, []);
+
   // Cambiar de rubro es cambiar de caja (otros productos, otra base): se recarga la página.
   useEffect(() => {
     if (!rubro) return;

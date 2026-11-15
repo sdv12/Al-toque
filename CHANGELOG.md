@@ -4,6 +4,13 @@ Versionado semántico: PATCH = arreglos y ajustes; MINOR = funcionalidad nueva v
 MAJOR = cambios que rompen algo existente (formato de configs, flujo, backend).
 La versión se muestra en el footer de la home y en el configurador.
 
+## 1.8.0 · 2026-11-15
+- **Número de pedido** (`#00015`): al enviar una landing desde el configurador o pedir una caja en `/caja`, el cliente recibe un número correlativo y WhatsApp se abre con un mensaje corto (número + resumen), sin el código largo. El número sale de `/api/pedidos`, con el contador en Netlify Blobs (escritura condicional: dos pedidos a la vez no repiten número).
+- La configuración completa llega por mail vía Netlify Forms (`configuraciones`) con el asunto «Pedido #00015 · Landing/Caja · Negocio»: JSON legible y el código `LK1.`/`CJ1.` para `pnpm publicar`. Si no se consigue número, el WhatsApp lleva el código completo como antes.
+- `/caja`: el pedido pasa de link a botón con confirmación y número en pantalla (y link a WhatsApp si el navegador bloquea la pestaña). Antes no dejaba respaldo; ahora sí.
+- `/caja`: el celular de prueba tiene proporción de teléfono real y la caja se ve en escala (letras y botones más chicos) gracias a un modo compacto (`/c/prueba?marco=1`) que no afecta a la caja real.
+- Desarrollo: sin el indicador «N» de Next (`devIndicators: false`).
+
 ## 1.7.1 · 2026-11-12
 - Precios nuevos (después de comparar con el mercado y los costos): Vidriera desde $190.000 + $15.000/mes; A tu medida desde $250.000 + $15.000/mes; Con sistema desde $350.000 + $75.000/mes (cada componente con sistema, como la agenda real, $60.000 + $10.000/mes); Caja simple $99.000 + $15.000/mes con el fiado incluido y cajones +$20.000; Caja pro $450.000 + $75.000/mes (incluye una sucursal y hasta 1.000 facturas por mes) y $25.000/mes por sucursal extra.
 

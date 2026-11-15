@@ -4,10 +4,14 @@ import { useEffect, useId, useState, type ReactNode } from "react";
 import { COLORES_CAJA, cajaPorDefecto, codificarCaja, validarCaja, type CajaConfig, type ColorCaja } from "@/cajas/config";
 import { CLAVE_PRUEBA } from "@/cajas/prueba";
 import { RUBROS, RUBROS_CAJA, type RubroCaja } from "@/cajas/rubros";
-import { formatearPesos, linkWhatsApp } from "@/core/lib/mensajes";
+import { formatearPesos } from "@/core/lib/mensajes";
 import { MODULOS_CAJA, cotizarCaja, type IdModuloCaja } from "@/core/lib/precios";
 import { claseControl } from "../configurador/campos";
+import { slugDe } from "../configurador/estado";
 import { afiche, boton, margen } from "../_home/Secciones";
+import { enviarPedido, type ResultadoPedido } from "../pedido";
+
+type Envio = { estado: "enviando" } | ({ estado: "listo" } & ResultadoPedido) | { estado: "error" };
 
 const tarjeta =
   "flex cursor-pointer gap-3 rounded-base border-2 border-tinta/25 bg-superficie p-4 transition-colors hover:border-tinta has-checked:border-tinta has-checked:bg-acento-relleno has-checked:text-sobre-acento has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-foco has-disabled:cursor-not-allowed has-disabled:opacity-50";
@@ -63,19 +67,32 @@ export function ConfiguradorCaja({ whatsapp }: { whatsapp: string | undefined })
 
   const modulosElegidos = (Object.keys(MODULOS_CAJA) as IdModuloCaja[]).filter((m) => config.modulos[m]);
   const estimado = `${formatearPesos(cotizacion.total.unico)} + ${formatearPesos(cotizacion.total.mensual)}/mes`;
-  const mensaje =
-    codigo &&
-    [
-      "Hola! Quiero la caja para mi negocio.",
-      "",
-      `Negocio: ${config.negocio.nombre.trim()}`,
-      `Rubro: ${RUBROS[config.rubro].nombre}`,
-      `Con: ${modulosElegidos.length ? modulosElegidos.map((m) => MODULOS_CAJA[m].nombre).join(", ") : "solo lo básico"}`,
-      `Estimado: ${estimado}`,
-      "",
-      "Código (no lo edites):",
-      codigo,
-    ].join("\n");
+  const [envio, setEnvio] = useState<Envio | null>(null);
+
+  async function pedir() {
+    if (!whatsapp || !codigo) return;
+    const nombre = config.negocio.nombre.trim();
+    const rubro = RUBROS[config.rubro].nombre;
+    const con = modulosElegidos.length ? modulosElegidos.map((m) => MODULOS_CAJA[m].nombre).join(", ") : "solo lo básico";
+    // Sin await antes de enviarPedido: abre la pestaña de WhatsApp en este mismo clic.
+    const pedido = enviarPedido(
+      {
+        tipo: "Caja",
+        negocio: nombre,
+        detalle: `${rubro} · ${con}`,
+        estimado,
+        slug: slugDe(nombre),
+        saludo: "Hola! Quiero la caja para mi negocio.",
+        resumen: [`Negocio: ${nombre}`, `Rubro: ${rubro}`, `Con: ${con}`, `Estimado: ${estimado}`],
+        configuracion: config,
+        codigo,
+      },
+      whatsapp,
+    );
+    setEnvio({ estado: "enviando" });
+    const r = await pedido;
+    setEnvio(r.porWhatsapp || r.respaldada || r.link ? { estado: "listo", ...r } : { estado: "error" });
+  }
 
   return (
     <section id="armala" aria-labelledby="armala-titulo" className={`${margen} scroll-mt-4 pb-10`}>
@@ -190,19 +207,40 @@ export function ConfiguradorCaja({ whatsapp }: { whatsapp: string | undefined })
               </span>
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              {whatsapp && mensaje ? (
-                <a href={linkWhatsApp(whatsapp, mensaje)} target="_blank" rel="noopener noreferrer" className={boton.tinta}>
-                  Pedir mi caja por WhatsApp
-                </a>
-              ) : (
-                <button type="button" disabled className={`${boton.tinta} cursor-not-allowed opacity-40`}>
-                  Pedir mi caja por WhatsApp
-                </button>
-              )}
+              <button
+                type="button"
+                onClick={pedir}
+                disabled={!whatsapp || !codigo || envio?.estado === "enviando"}
+                className={`${boton.tinta} disabled:cursor-not-allowed disabled:opacity-40`}
+              >
+                {envio?.estado === "enviando" ? "Enviando…" : "Pedir mi caja por WhatsApp"}
+              </button>
               <a href="/c/prueba" target="_blank" rel="noopener" className={boton.contorno}>
                 Probarla en pantalla completa
               </a>
             </div>
+            {envio?.estado === "listo" && (
+              <p role="status" className="mt-3 text-chico">
+                <span className="font-semibold">
+                  ¡Listo! Recibimos tu pedido{envio.numero && <span className="tabular-nums"> {envio.numero}</span>}.
+                </span>{" "}
+                {envio.porWhatsapp ? (
+                  "Se abrió WhatsApp con el mensaje: si todavía no lo mandaste, solo falta tocar enviar."
+                ) : envio.link ? (
+                  <>
+                    <a href={envio.link} target="_blank" rel="noopener noreferrer" className="font-semibold underline underline-offset-2">
+                      Abrí WhatsApp
+                    </a>{" "}
+                    y mandanos el mensaje con tu número de pedido.
+                  </>
+                ) : null}
+              </p>
+            )}
+            {envio?.estado === "error" && (
+              <p role="alert" className="mt-3 text-chico text-[#b3261e]">
+                No pudimos enviarlo. Probá de nuevo en un rato.
+              </p>
+            )}
             {!validacion.ok && <p className="mt-3 text-chico text-[#b3261e]">Completá el nombre del negocio para pedirla.</p>}
             {!whatsapp && <p className="mt-3 text-chico text-tinta-suave">Falta configurar NEXT_PUBLIC_OWNER_WHATSAPP.</p>}
             <p className="mt-3 text-mini text-tinta-suave">Precios de referencia en pesos argentinos. El valor final se confirma al charlar tu caja.</p>
@@ -214,15 +252,19 @@ export function ConfiguradorCaja({ whatsapp }: { whatsapp: string | undefined })
         <div className="hidden @3xl:block @5xl:col-span-5">
           <div className="@5xl:sticky @5xl:top-6">
             <p className="mb-3 text-center text-chico font-semibold">Probala acá: vendé, cambiá precios, anotá un fiado.</p>
-            <div className="mx-auto w-full max-w-[24rem] rounded-[2.6rem] bg-tinta p-3 shadow-[0_30px_60px_-25px_rgb(23_21_15/0.55)]">
-              {/* lazy: si el marco está oculto (celular), no se carga. */}
-              <iframe
-                key={config.rubro}
-                src="/c/prueba"
-                loading="lazy"
-                title={`Prueba de la caja de ${RUBROS[config.rubro].nombre.toLowerCase()}`}
-                className="block h-[min(80svh,46rem)] w-full rounded-[2rem] bg-[#fffdf7]"
-              />
+            <div className="mx-auto w-fit rounded-[2.4rem] bg-tinta p-2.5 shadow-[0_30px_60px_-25px_rgb(23_21_15/0.55)]">
+              {/* Pantalla con la proporción de un celular real. La caja se dibuja en un viewport 25% más
+                  grande y se achica al 80%: así letras y botones quedan en escala con el marco. */}
+              <div className="relative aspect-[390/844] h-[min(78svh,42rem)] overflow-hidden rounded-[1.9rem] bg-[#fffdf7]">
+                {/* lazy: si el marco está oculto (celular), no se carga. */}
+                <iframe
+                  key={config.rubro}
+                  src="/c/prueba?marco=1"
+                  loading="lazy"
+                  title={`Prueba de la caja de ${RUBROS[config.rubro].nombre.toLowerCase()}`}
+                  className="absolute top-0 left-0 block h-[125%] w-[125%] origin-top-left scale-[0.8] border-0 bg-[#fffdf7]"
+                />
+              </div>
             </div>
             <p className="mt-3 text-center text-mini text-tinta-suave">Lo que cargues en la prueba queda solo en este navegador.</p>
           </div>
