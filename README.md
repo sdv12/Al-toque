@@ -57,14 +57,16 @@ Tailwind (`src/cajas/estilos.css`), porque el kit anula la paleta y la escala po
 
 ## Publicar la página de un cliente
 
-El cliente toca **Enviar** en el configurador: se le abre WhatsApp con un mensaje armado que trae
-un código que empieza con `LK1.` y, al mismo tiempo, la configuración queda de respaldo en
-**Netlify Forms** (formulario `configuraciones`, declarado en `public/__forms.html`; llega por mail
-y queda en el panel de Netlify aunque el cliente no termine de mandar el WhatsApp). Con el
-mensaje, o con el código del respaldo:
+El cliente toca **Enviar** en el configurador (o **Pedir mi caja por WhatsApp** en `/caja`): recibe
+un número de pedido correlativo (`#00015`, contador en Netlify Blobs vía `/api/pedidos`) y se le
+abre WhatsApp con un mensaje corto con ese número y un resumen. La configuración completa va a
+**Netlify Forms** (formulario `configuraciones`, declarado en `public/__forms.html`) con el asunto
+«Pedido #00015 · Landing · Negocio»: trae el JSON legible y el código `LK1.`/`CJ1.` para publicar,
+y queda en el panel de Netlify aunque el cliente no termine de mandar el WhatsApp. Si no se pudo
+sacar número, el WhatsApp lleva el código completo como respaldo. Con el código del mail:
 
 ```bash
-pnpm publicar "<mensaje completo que llegó por WhatsApp>"
+pnpm publicar "<código LK1. o CJ1. del mail>"
 ```
 
 El comando valida la configuración, la guarda en `configs/<slug>.json`, hace el commit (solo ese
@@ -83,8 +85,10 @@ Para ver el JSON o cargar una configuración en el configurador, abrilo como `/c
 aparecen «Copiar JSON», «Descargar JSON» e «Importar» (el cliente no los ve). Queda activo mientras
 dure esa pestaña del navegador.
 
-Para que el respaldo funcione, en Netlify hay que activar una vez **Forms › Enable form detection**
-y, si querés aviso por mail, sumar la notificación del formulario `configuraciones`.
+Para que el mail llegue, en Netlify hay que activar una vez **Forms › Enable form detection** y
+sumar en el formulario `configuraciones` la notificación por mail a altoque.landing@gmail.com.
+Netlify Blobs no necesita configuración. En `pnpm dev` el número sale de un contador en memoria y
+no hay Netlify Forms.
 
 Los commits salen con la identidad de git configurada **en este repo** (cuenta sdv12). Si git
 fuera a firmar con el mail del trabajo, el comando frena y explica cómo configurarlo.

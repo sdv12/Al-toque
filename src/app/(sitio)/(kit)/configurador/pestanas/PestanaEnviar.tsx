@@ -6,6 +6,7 @@ import { linkWhatsApp } from "@/core/lib/mensajes";
 import { registry } from "@/core/registry";
 import type { LandingConfig } from "@/core/schema/landing-config";
 import { migrateConfig, type ErrorConfig } from "@/core/schema/migrate";
+import { enviarPedido, type ResultadoPedido } from "../../pedido";
 import { Bloque, botonKit, claseControl } from "../campos";
 import { totalCorto } from "./PestanaPrecio";
 import { pestanaDeRuta, rutaLegible, slugDe, useCodigoConfig, type Pestana } from "../estado";
@@ -21,22 +22,7 @@ type Props = {
 
 const DUENO = process.env.NEXT_PUBLIC_OWNER_WHATSAPP;
 
-/** Respaldo en Netlify Forms (declarado en public/__forms.html). En local no existe: devuelve false. */
-async function respaldar(campos: Record<string, string>): Promise<boolean> {
-  try {
-    const r = await fetch("/__forms.html", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({ "form-name": "configuraciones", ...campos }).toString(),
-      keepalive: true,
-    });
-    return r.ok;
-  } catch {
-    return false;
-  }
-}
-
-type Envio = { estado: "enviando" } | { estado: "listo"; porWhatsapp: boolean } | { estado: "error" };
+type Envio = { estado: "enviando" } | ({ estado: "listo" } & ResultadoPedido) | { estado: "error" };
 
 export function PestanaEnviar({ config, errores, reemplazar, irA, admin }: Props) {
   const codigo = useCodigoConfig(config);
@@ -45,34 +31,26 @@ export function PestanaEnviar({ config, errores, reemplazar, irA, admin }: Props
   const slug = slugDe(config.negocio.nombre);
   const plantilla = registry[config.plantilla].meta.nombre;
 
-  const mensaje =
-    codigo &&
-    [
-      `Hola! Te mando la configuración de mi landing.`,
-      ``,
-      `Negocio: ${config.negocio.nombre}`,
-      `Plantilla: ${plantilla}`,
-      `Estimado: ${totalCorto(config)}`,
-      ``,
-      `Código (no lo edites):`,
-      codigo,
-    ].join("\n");
-
   async function enviar() {
-    if (!lista || !codigo || !mensaje) return;
-    // WhatsApp se abre en el mismo clic: si se abre después de un await, el navegador lo bloquea como ventana emergente.
-    let porWhatsapp = false;
-    if (DUENO) {
-      const ventana = window.open(linkWhatsApp(DUENO, mensaje), "_blank");
-      if (ventana) {
-        ventana.opener = null;
-        porWhatsapp = true;
-      }
-    }
+    if (!lista || !codigo) return;
+    // Sin await antes de enviarPedido: abre la pestaña de WhatsApp en este mismo clic.
+    const pedido = enviarPedido(
+      {
+        tipo: "Landing",
+        negocio: config.negocio.nombre,
+        detalle: plantilla,
+        estimado: totalCorto(config),
+        slug,
+        saludo: "Hola! Te mando la configuración de mi landing.",
+        resumen: [`Negocio: ${config.negocio.nombre}`, `Plantilla: ${plantilla}`, `Estimado: ${totalCorto(config)}`],
+        configuracion: config,
+        codigo,
+      },
+      DUENO,
+    );
     setEnvio({ estado: "enviando" });
-    // El respaldo llega aunque la persona no termine de mandar el WhatsApp.
-    const respaldada = await respaldar({ negocio: config.negocio.nombre, plantilla, estimado: totalCorto(config), slug, codigo });
-    setEnvio(porWhatsapp || respaldada ? { estado: "listo", porWhatsapp } : { estado: "error" });
+    const r = await pedido;
+    setEnvio(r.porWhatsapp || r.respaldada || r.link ? { estado: "listo", ...r } : { estado: "error" });
   }
 
   return (
@@ -99,8 +77,28 @@ export function PestanaEnviar({ config, errores, reemplazar, irA, admin }: Props
       <Bloque titulo="Enviar" descripcion="Una vez lista tu configuración, ya podés enviarla para que la revisemos.">
         {envio?.estado === "listo" ? (
           <div role="status" className="space-y-2 rounded-base border border-borde bg-superficie p-4 text-chico">
-            <p className="font-semibold">¡Listo! Recibimos tu configuración.</p>
-            {envio.porWhatsapp && <p>Se abrió WhatsApp con el mensaje armado: si todavía no lo mandaste, solo falta tocar enviar.</p>}
+            <p className="font-semibold">
+              ¡Listo! Recibimos tu configuración
+              {envio.numero && (
+                <>
+                  {" "}
+                  (pedido <span className="tabular-nums">{envio.numero}</span>)
+                </>
+              )}
+              .
+            </p>
+            {envio.porWhatsapp ? (
+              <p>Se abrió WhatsApp con el mensaje armado: si todavía no lo mandaste, solo falta tocar enviar.</p>
+            ) : (
+              envio.link && (
+                <p>
+                  <a href={envio.link} target="_blank" rel="noopener noreferrer" className="font-semibold underline underline-offset-2">
+                    Abrí WhatsApp
+                  </a>{" "}
+                  y mandanos el mensaje con tu número de pedido.
+                </p>
+              )
+            )}
             <p>Te escribimos por WhatsApp cuando esté lista tu página.</p>
             <p className="text-tinta-suave">
               En caso de querer modificar algo, no dudes en contactarte

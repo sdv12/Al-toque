@@ -42,6 +42,19 @@ html:has([data-caja="simple"]) {
   font-size: 112.5%;
 }
 
+/* Dentro del marco de demo de /caja (?marco=1): base más chica para que se vea en escala con el
+   teléfono dibujado, y sin barra de scroll (en un celular real no se ve). */
+html[data-marco]:has([data-caja="simple"]) {
+  font-size: 93.75%;
+}
+html[data-marco],
+html[data-marco] * {
+  scrollbar-width: none;
+}
+html[data-marco] ::-webkit-scrollbar {
+  display: none;
+}
+
 body {
   background: var(--color-papel);
   color: var(--color-tinta);
