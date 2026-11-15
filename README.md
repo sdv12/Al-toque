@@ -70,8 +70,8 @@ pnpm publicar "<código LK1. o CJ1. del mail>"
 ```
 
 El comando valida la configuración, la guarda en `configs/<slug>.json`, hace el commit (solo ese
-archivo), lo sube a GitHub y despliega en Netlify. Al final muestra el link para mandarle al
-cliente. Opciones:
+archivo) y lo sube a GitHub; Netlify lo publica solo en unos minutos. Al final muestra el link
+para mandarle al cliente. Opciones:
 
 | Opción | Para qué |
 |---|---|
@@ -79,7 +79,7 @@ cliente. Opciones:
 | `--slug nombre-a-eleccion` | Otra URL que la que sale del nombre del negocio |
 | `--probar` | Solo valida y muestra la URL; no guarda ni publica nada |
 | `--reemplazar` | Actualizar una página ya publicada |
-| `--sin-deploy` | Guarda, commitea y sube, pero no despliega |
+| `--deploy` | Además de subirlo, despliega desde esta máquina (por si el deploy automático falla) |
 
 Para ver el JSON o cargar una configuración en el configurador, abrilo como `/configurador?admin`:
 aparecen «Copiar JSON», «Descargar JSON» e «Importar» (el cliente no los ve). Queda activo mientras
@@ -120,7 +120,11 @@ pnpm build && pnpm start -p 3124     # en otra terminal
 pnpm capturas
 ```
 
-### Deploy manual
+### Deploy
+
+Netlify está conectado al repo (`sdv12/Al-toque`): **cada push o merge a `master` se publica solo**,
+y cada PR tiene su vista previa con URL propia. Por eso la versión del footer (`package.json` +
+`CHANGELOG.md`) se sube en el mismo PR, antes de mergear. Para desplegar a mano (emergencias):
 
 ```bash
 netlify deploy --build --prod

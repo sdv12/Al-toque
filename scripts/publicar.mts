@@ -5,11 +5,12 @@
  *   pnpm publicar --archivo descargas/mi-negocio.json
  *   pnpm publicar "<…>" --slug barberia-don-mario       (URL a elección)
  *   pnpm publicar "<…>" --probar                         (solo valida, no toca nada)
- *   pnpm publicar "<…>" --sin-deploy                     (guarda y commitea; deploy después)
+ *   pnpm publicar "<…>" --deploy                         (además despliega desde esta máquina)
  *   pnpm publicar "<…>" --reemplazar                     (actualiza una landing existente)
  *
  * Pasos: lee y valida la config → la guarda en configs/<slug>.json → commit (solo ese archivo)
- * → push a GitHub → deploy a Netlify. Si algo falla, frena y dice por qué.
+ * → push a GitHub. Netlify está conectado al repo: el push a master se publica solo (~3 min).
+ * Con --deploy (o si no hay remoto) despliega además desde acá. Si algo falla, frena y dice por qué.
  *
  * También publica cajas: si el mensaje trae un código CJ1 (o el JSON de una caja), la guarda en
  * configs/cajas/<slug>.json y queda en /c/<slug>. Mismas opciones.
@@ -28,16 +29,18 @@ import { migrateConfig } from "../src/core/schema/migrate";
 const RAIZ = path.resolve(import.meta.dirname, "..");
 const SITIO = process.env.NEXT_PUBLIC_SITE_URL ?? "https://altoque-cba.com.ar";
 
-type Opciones = { entrada?: string; archivo?: string; slug?: string; probar: boolean; sinDeploy: boolean; reemplazar: boolean };
+type Opciones = { entrada?: string; archivo?: string; slug?: string; probar: boolean; deploy: boolean; reemplazar: boolean };
 
 function leerArgumentos(argv: string[]): Opciones {
-  const o: Opciones = { probar: false, sinDeploy: false, reemplazar: false };
+  const o: Opciones = { probar: false, deploy: false, reemplazar: false };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i]!;
     if (a === "--archivo") o.archivo = argv[++i];
     else if (a === "--slug") o.slug = argv[++i];
     else if (a === "--probar") o.probar = true;
-    else if (a === "--sin-deploy") o.sinDeploy = true;
+    else if (a === "--deploy") o.deploy = true;
+    // Opción vieja: ahora sin deploy es lo normal (lo publica Netlify al recibir el push).
+    else if (a === "--sin-deploy") continue;
     else if (a === "--reemplazar") o.reemplazar = true;
     else if (a.startsWith("--")) salir(`Opción desconocida: ${a}`);
     else o.entrada = o.entrada ? `${o.entrada} ${a}` : a;
@@ -165,13 +168,14 @@ async function guardarYPublicar(
   correr("git", ["commit", "--quiet", "-m", `${existe ? "Actualizar" : "Publicar"} ${caja ? "caja de " : ""}${nombre} (${ruta})`, "--", archivoRel]);
   console.log(`✓ Commit: ${leer("git", ["log", "-1", "--format=%h %an <%ae>"])}`);
 
-  // Subir a GitHub (si hay remoto) y desplegar.
-  if (leer("git", ["remote"]).includes("origin")) {
+  // Subir a GitHub: Netlify está conectado al repo y publica solo cada push a master.
+  const hayRemoto = leer("git", ["remote"]).includes("origin");
+  if (hayRemoto) {
     correr("git", ["push", "--quiet", "origin", "HEAD"]);
     console.log("✓ Subido a GitHub");
   }
-  if (o.sinDeploy) {
-    console.log(`\nListo sin deploy. Cuando quieras: netlify deploy --build --prod\nVa a quedar en ${url}\n`);
+  if (hayRemoto && !o.deploy) {
+    console.log(`\n✓ Netlify la publica solo en unos 3 minutos: ${url}\n  Mandale ese link a ${nombre} cuando abra.\n`);
     return;
   }
   correr("netlify", ["deploy", "--build", "--prod", "--message", `Publicar ${caja ? "caja de " : ""}${nombre}`]);
