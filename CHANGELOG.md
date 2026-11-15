@@ -4,6 +4,12 @@ Versionado semántico: PATCH = arreglos y ajustes; MINOR = funcionalidad nueva v
 MAJOR = cambios que rompen algo existente (formato de configs, flujo, backend).
 La versión se muestra en el footer de la home y en el configurador.
 
+## 1.10.1 · 2026-11-15
+- **Actualización de seguridad**: Next.js, React, Zod y las herramientas de desarrollo pasan a sus últimas versiones, con los arreglos de seguridad publicados. `pnpm audit` queda sin vulnerabilidades conocidas.
+- Cabeceras de seguridad en todo el sitio: ninguna página nuestra se puede meter en un iframe de otro sitio, y se limitan el referer y los permisos del navegador (la cámara queda solo para las fotos de la caja). `/adm` también avisa por cabecera que no se indexa.
+- El número de pedido solo se entrega a pedidos que salen de nuestras páginas.
+- Las fotos de las configuraciones aceptan URLs `https` o rutas propias, ya no direcciones de otro dominio disfrazadas de ruta.
+
 ## 1.10.0 · 2026-11-15
 - **Panel del equipo en `/adm`** (no está enlazado desde el sitio y no aparece en Google). Tiene dos pestañas:
 - **Demos**: todo lo que se le puede mostrar a un cliente, con capturas y un consejo de qué mostrar: las 5 landings, la home, el configurador (también en modo admin), `/caja`, las 4 cajas simples, la caja pro, los proyectos reales y los accesos del equipo (pedidos en Netlify Forms, deploys y el repo).

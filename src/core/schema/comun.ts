@@ -30,7 +30,8 @@ export const redSocialSchema = z
 export const imagenSchema = z.object({
   src: z
     .string()
-    .regex(/^(https:\/\/|\/)/, "La imagen tiene que ser una URL https o una ruta local")
+    // "/foto.jpg" sí; "//otro-sitio.com/foto.jpg" no (es una URL de otro dominio disfrazada de ruta).
+    .regex(/^(https:\/\/|\/(?!\/))/, "La imagen tiene que ser una URL https o una ruta local")
     .optional(),
   alt: z.string().trim().max(160),
 });

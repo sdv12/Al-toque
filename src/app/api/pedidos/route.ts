@@ -26,7 +26,20 @@ async function siguienteNumero(): Promise<number> {
   throw new Error("No se pudo reservar un número de pedido (demasiados envíos a la vez).");
 }
 
-export async function POST() {
+/**
+ * Solo pedidos que salen de nuestras páginas: un sitio ajeno no puede gastar números (ni
+ * invocaciones de Netlify) desde el navegador de sus visitantes. No frena un script hecho a mano,
+ * pero tampoco hay nada que robar: el endpoint solo devuelve el próximo número.
+ */
+function esDeNuestroSitio(request: Request): boolean {
+  // Lo pone el navegador y una página no lo puede cambiar. Sin la cabecera (navegador viejo,
+  // script) se deja pasar: el número no es un secreto.
+  const sitio = request.headers.get("sec-fetch-site");
+  return !sitio || sitio === "same-origin";
+}
+
+export async function POST(request: Request) {
+  if (!esDeNuestroSitio(request)) return Response.json({ error: "Origen no permitido" }, { status: 403 });
   try {
     return Response.json({ numero: await siguienteNumero() });
   } catch (error) {

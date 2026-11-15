@@ -2,3 +2,9 @@ allowBuilds:
   unrs-resolver: true
   sharp: true
   esbuild: true
+
+# Versiones mínimas con los arreglos de seguridad para dependencias internas de vitest y eslint
+# (revisar si se pueden sacar cuando vitest/eslint-config-next las traigan solas).
+overrides:
+  vite: ">=8.3.3"
+  minimatch@<11.0.1: ">=11.0.1"
