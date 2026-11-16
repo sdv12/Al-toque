@@ -25,6 +25,31 @@
   --shadow-*: initial;
 }
 
+/* Alto, el robot asistente: parpadeo, antena que late y un flotar suave (se apagan con motion-reduce). */
+@theme {
+  --animate-alto-parpadeo: alto-parpadeo 5s ease-in-out infinite;
+  --animate-alto-antena: alto-antena 1.8s ease-in-out infinite;
+  --animate-alto-flota: alto-flota 3.2s ease-in-out infinite;
+  --animate-alto-aparece: alto-aparece 0.35s ease-out both;
+
+  @keyframes alto-parpadeo {
+    0%, 92%, 100% { transform: scaleY(1); }
+    95% { transform: scaleY(0.1); }
+  }
+  @keyframes alto-antena {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.55; transform: scale(0.75); }
+  }
+  @keyframes alto-flota {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+  @keyframes alto-aparece {
+    from { opacity: 0; transform: translateY(8px) scale(0.97); }
+    to { opacity: 1; transform: none; }
+  }
+}
+
 @theme inline {
   --color-fondo: var(--lk-fondo);
   --color-superficie: var(--lk-superficie);

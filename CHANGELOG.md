@@ -4,6 +4,12 @@ Versionado semántico: PATCH = arreglos y ajustes; MINOR = funcionalidad nueva v
 MAJOR = cambios que rompen algo existente (formato de configs, flujo, backend).
 La versión se muestra en el footer de la home y en el configurador.
 
+## 1.12.0 · 2026-11-16
+- **Alto, más completo**: ahora es un robot con los colores de la marca (parpadea y su antena late) y saluda con la viñeta «¡Bienvenido/a! Soy Alto, el asistente virtual. ¿Te ayudo a armar tu página?».
+- Más fácil de usar: barra de progreso, «Volver» para corregir la respuesta anterior, «Saltear» en lo opcional y «Otro» para escribir el rubro.
+- Pedidos más completos: según lo que elige, pregunta dónde lo encuentran hoy, cuántas personas trabajan, cuántos servicios o productos tiene, cómo le pagan, cuántas sucursales, si tiene logo, fotos y dominio, para cuándo lo necesita, su nombre, su WhatsApp (validado) y un comentario libre. Todo eso llega en el pedido.
+- La recomendación usa esos detalles: suma las sucursales extra de la caja pro, no cobra el dominio si ya tiene uno y avisa lo que se cotiza aparte (logo, fotos, carga de muchos productos). Al final muestra un resumen de lo que contó y se puede mandar por WhatsApp o pedir que le escriban.
+
 ## 1.11.0 · 2026-11-16
 - **Agenda al toque** (`/agenda` y `/turnos`): el sistema de turnos de Agenda Rápida, ahora dentro del sitio. Tiene 9 diseños de reserva (Base, Ticket, Bruto, Agenda, Kiosco, Mes, Historias, Reloj y Pila; el de chat quedó afuera), 19 rubros con sus servicios y el panel del negocio: hoy, agenda, caja, números, clientes, servicios y ajustes. «Probalo con tus datos» termina en el pedido con número, como las cajas y las landings.
 - **Alto, el asistente**: un chat de preguntas rápidas en la home, `/caja` y `/agenda`. Pregunta el nombre, el rubro, qué le complica, qué resolver primero, qué zona cubrir, los colores y qué le gustaría tener. Al final recomienda qué armar, con el porqué y los precios de referencia, y deja probarlo ya cargado (configurador, agenda o caja) o hablarlo por WhatsApp.
