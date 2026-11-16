@@ -55,6 +55,23 @@ El código vive en `src/cajas/` (`rubros.ts` = productos de arranque por rubro, 
 schema). Las rutas de las cajas usan su propio root layout (`src/app/(caja)`) y su propia hoja de
 Tailwind (`src/cajas/estilos.css`), porque el kit anula la paleta y la escala por defecto.
 
+## Agenda al toque (turnos)
+
+`/agenda` presenta el sistema de turnos y `/turnos` es la app (portada de Agenda Rápida): la reserva
+en `#/` (con 9 diseños, se elige con `?d=base|ticket|bruto|agenda|kiosco|mes|historias|reloj|pila`),
+el panel del negocio en `#/admin` (PIN de la demo: 1234) y «Probalo con tus datos» en `#/probar`.
+`?demo=…` carga una demo con los datos de alguien (lo arma `src/agendas/lib/demo.ts`). El código vive
+en `src/agendas/` con su propio root layout (`src/app/(agenda)`) y sus CSS originales, sin Tailwind.
+Guarda todo en el navegador (`localStorage`): para clientes reales hace falta base de datos.
+
+## Alto (asistente)
+
+Chat de preguntas rápidas en la home, `/caja` y `/agenda` (`src/app/(sitio)/(kit)/_alto/`). Las
+reglas y opciones están en `alto.ts` (funciones puras, con tests): rubro → plantilla, rubro de
+caja o de agenda; lo que le complica y lo que marca → productos; precios de `precios.ts`. Sin IA.
+Al final deja el borrador del configurador armado (guarda el anterior en
+`landing-kit:borrador-anterior`) o abre la agenda o la caja precargadas.
+
 ## Panel del equipo (`/adm`)
 
 `/adm` junta las demos para mostrar (landings, configurador, cajas, caja pro, proyectos reales y

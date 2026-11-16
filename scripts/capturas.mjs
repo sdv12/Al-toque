@@ -6,6 +6,7 @@
  *   pnpm capturas                        # BASE=http://localhost:3124 por defecto
  *   SOLO=proyectos pnpm capturas         # solo los proyectos reales (sitios en vivo, sin servidor local)
  *   SOLO=cajas pnpm capturas             # solo las capturas de la caja
+ *   SOLO=agenda pnpm capturas            # solo las de la agenda de turnos (/turnos)
  *
  * Usa el Chromium de Playwright; si no lo encuentra, indicá CHROME_PATH=/ruta/a/chrome.
  */
@@ -15,6 +16,8 @@ import { chromium } from "playwright-core";
 const BASE = process.env.BASE ?? "http://localhost:3124";
 const SOLO_PROYECTOS = process.env.SOLO === "proyectos";
 const SOLO_CAJAS = process.env.SOLO === "cajas";
+const SOLO_AGENDA = process.env.SOLO === "agenda";
+const DISENOS_AGENDA = ["base", "ticket", "bruto", "agenda", "kiosco", "mes", "historias", "reloj", "pila"];
 const SALIDA = new URL("../public/muestras/", import.meta.url);
 
 const DEMOS = [
@@ -70,20 +73,28 @@ async function capturar(navegador, url, vista, archivo, preparar, carpeta = SALI
 await mkdir(SALIDA, { recursive: true });
 const navegador = await lanzar();
 try {
-  for (const demo of SOLO_PROYECTOS || SOLO_CAJAS ? [] : DEMOS) {
+  for (const demo of SOLO_PROYECTOS || SOLO_CAJAS || SOLO_AGENDA ? [] : DEMOS) {
     for (const vista of VISTAS) {
       await capturar(navegador, `${BASE}/l/${demo.slug}`, vista, `${demo.plantilla}-${vista.nombre}.jpg`);
     }
   }
   // Las cajas: la demo de verdulería en Vender y en Caja del día (con los datos de ejemplo).
-  if (!SOLO_PROYECTOS) {
+  if (!SOLO_PROYECTOS && !SOLO_AGENDA) {
     // Sin el cartel de "Prueba" de las demos: en la home se muestra la caja como la usa el negocio.
     const sinAviso = (p) => p.addStyleTag({ content: "[data-aviso-prueba]{display:none!important}" });
     await capturar(navegador, `${BASE}/c/demo-verduleria`, VISTAS[1], "caja-vender.jpg", sinAviso);
     await capturar(navegador, `${BASE}/c/demo-almacen#caja`, VISTAS[1], "caja-cierre.jpg", sinAviso);
   }
   // El configurador, con el borrador limpio y una plantilla elegida para que se vea el preview.
-  if (!SOLO_PROYECTOS && !SOLO_CAJAS) await capturar(navegador, `${BASE}/configurador`, VISTAS[0], "configurador.jpg", async (p) => {
+  // Agenda de turnos: cada diseño en celular (sin el selector de diseños flotante, ?embed) y el panel.
+  if (!SOLO_PROYECTOS && !SOLO_CAJAS) {
+    for (const d of DISENOS_AGENDA) await capturar(navegador, `${BASE}/turnos?d=${d}&embed=1#/`, VISTAS[1], `agenda-${d}.jpg`);
+    await capturar(navegador, `${BASE}/turnos#/admin/numeros`, VISTAS[0], "agenda-panel.jpg", async (p) => {
+      await p.evaluate(() => sessionStorage.setItem("ar-admin", "1"));
+      await p.reload({ waitUntil: "networkidle" });
+    });
+  }
+  if (!SOLO_PROYECTOS && !SOLO_CAJAS && !SOLO_AGENDA) await capturar(navegador, `${BASE}/configurador`, VISTAS[0], "configurador.jpg", async (p) => {
     await p.evaluate(() => localStorage.clear());
     await p.reload({ waitUntil: "networkidle" });
     await p.getByRole("tab", { name: "Estilo" }).click();
@@ -92,7 +103,7 @@ try {
   // Proyectos reales (sitios en vivo, no dependen de BASE).
   const carpetaProyectos = new URL("../public/proyectos/", import.meta.url);
   await mkdir(carpetaProyectos, { recursive: true });
-  for (const proyecto of SOLO_CAJAS ? [] : PROYECTOS) {
+  for (const proyecto of SOLO_CAJAS || SOLO_AGENDA ? [] : PROYECTOS) {
     await capturar(navegador, proyecto.url, VISTAS[0], `${proyecto.id}.jpg`, sinCartelNetlify, carpetaProyectos);
   }
 } finally {

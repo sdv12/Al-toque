@@ -3,6 +3,7 @@ import Link from "next/link";
 import { formatearPesos } from "@/core/lib/mensajes";
 import { planCaja, planCajaPro, proximaActualizacion } from "@/core/lib/precios";
 import { RUBROS, RUBROS_CAJA } from "@/cajas/rubros";
+import { Alto } from "../_alto/Alto";
 import { AvisoPrecios } from "../_home/AvisoPrecios";
 import { fuentesHome } from "../_home/fuentes";
 import { Encabezado, Pie, afiche, boton, margen } from "../_home/Secciones";
@@ -59,7 +60,7 @@ export default function CajaPagina() {
       >
         Saltar al contenido
       </a>
-      <Encabezado desde="/" />
+      <Encabezado desde="/" actual="/caja" />
       <main id="contenido">
         <section aria-labelledby="caja-titulo" className={`${margen} pb-14 pt-10 @3xl:pt-16`}>
           <p className="text-chico font-semibold">Para {RUBROS_CAJA.map((r) => RUBROS[r].nombre.toLowerCase()).join(", ").replace(/, ([^,]*)$/, " y $1")}</p>
@@ -166,6 +167,7 @@ export default function CajaPagina() {
       </main>
       <Pie />
       <AvisoPrecios />
+      <Alto whatsapp={process.env.NEXT_PUBLIC_OWNER_WHATSAPP} />
     </div>
   );
 }

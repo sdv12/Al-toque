@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useId, useState, type ReactNode } from "react";
-import { COLORES_CAJA, cajaPorDefecto, codificarCaja, validarCaja, type CajaConfig, type ColorCaja } from "@/cajas/config";
+import { useEffect, useId, useState, type ReactNode, useSyncExternalStore } from "react";
+import { COLORES_CAJA, cajaDesdeQuery, cajaPorDefecto, codificarCaja, validarCaja, type CajaConfig, type ColorCaja } from "@/cajas/config";
 import { CLAVE_PRUEBA } from "@/cajas/prueba";
 import { RUBROS, RUBROS_CAJA, type RubroCaja } from "@/cajas/rubros";
 import { formatearPesos } from "@/core/lib/mensajes";
@@ -43,8 +43,19 @@ function useCodigo(config: CajaConfig, valida: boolean): string | null {
   return valida ? codigo : null;
 }
 
+const sinSuscripcion = () => () => {};
+
+/**
+ * Llegando desde Alto la URL trae rubro, nombre y color (?rubro=…). En el servidor se dibuja la
+ * caja por defecto; en el navegador, si hay datos en la URL, el formulario se vuelve a montar con ellos.
+ */
 export function ConfiguradorCaja({ whatsapp }: { whatsapp: string | undefined }) {
-  const [config, setConfig] = useState<CajaConfig>(() => cajaPorDefecto());
+  const busqueda = useSyncExternalStore(sinSuscripcion, () => window.location.search, () => "");
+  return <Formulario key={busqueda} inicial={busqueda ? cajaDesdeQuery(busqueda) : cajaPorDefecto()} whatsapp={whatsapp} />;
+}
+
+function Formulario({ whatsapp, inicial }: { whatsapp: string | undefined; inicial: CajaConfig }) {
+  const [config, setConfig] = useState<CajaConfig>(inicial);
   const idNombre = useId();
   const validacion = validarCaja(config);
   const errorNombre = validacion.ok ? undefined : validacion.errores.find((e) => e.ruta === "negocio.nombre")?.mensaje;

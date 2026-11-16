@@ -3,6 +3,7 @@ import path from "node:path";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PLANTILLAS_DE_RUBRO, registry } from "@/core/registry";
+import { DISENOS } from "@/agendas/lib/disenos";
 import { RUBROS, RUBROS_CAJA } from "@/cajas/rubros";
 import { FICHAS, PROYECTOS } from "../_home/contenido";
 import { fuentesHome } from "../_home/fuentes";
@@ -51,7 +52,14 @@ function demos(): GrupoDemos[] {
       titulo: "Para vender",
       bajada: "Lo que ve el cliente antes de pedir.",
       items: [
-        { titulo: "Home", etiqueta: "Sitio", texto: "Plantillas, proyectos, caja, precios y preguntas.", href: "/" },
+        { titulo: "Home", etiqueta: "Sitio", texto: "Plantillas, proyectos, turnos, caja, precios y preguntas.", href: "/" },
+        {
+          titulo: "Alto, el asistente",
+          etiqueta: "Asistente",
+          texto: "Preguntas rápidas (rubro, qué le complica, zona, colores, qué quiere) y una recomendación con precios y botones para probar.",
+          consejo: "Está en la home, /caja y /agenda: «Preguntale a Alto», abajo a la derecha. Al final, «Armar mi página» abre el configurador ya cargado.",
+          href: "/",
+        },
         {
           titulo: "Configurador",
           etiqueta: "Landings",
@@ -62,6 +70,30 @@ function demos(): GrupoDemos[] {
         },
         { titulo: "Configurador (admin)", etiqueta: "Interno", texto: "Para cargar o revisar la configuración que mandó un cliente.", href: "/configurador?admin" },
         { titulo: "Armá tu caja", etiqueta: "Cajas", texto: "Rubro, nombre, color y módulos, con la caja de prueba al lado y el pedido.", href: "/caja" },
+      ],
+    },
+    {
+      id: "turnos",
+      titulo: "Turnos",
+      bajada: "La agenda de turnos (ex Agenda Rápida): guarda todo en el navegador; el selector de abajo a la derecha cambia de diseño y de rubro.",
+      items: [
+        { titulo: "Agenda al toque", etiqueta: "Presentación", texto: "Los nueve diseños, el panel, los rubros y el precio.", href: "/agenda" },
+        {
+          titulo: "Probalo con tus datos",
+          etiqueta: "Asistente",
+          texto: "Rubro, servicios, horarios, contacto y diseño, con la vista previa en vivo. Termina en el pedido.",
+          consejo: "Hacelo con el rubro del cliente: al final ve su página y su panel con turnos de ejemplo.",
+          href: "/turnos#/probar",
+        },
+        ...DISENOS.map((d) => ({ titulo: `Diseño ${d.nombre}`, etiqueta: "Reserva", texto: d.bajada, href: `/turnos?d=${d.id}#/`, imagen: `/muestras/agenda-${d.id}.jpg` })),
+        {
+          titulo: "Panel del negocio",
+          etiqueta: "Panel",
+          texto: "Hoy, agenda, caja, números, clientes, servicios y ajustes.",
+          consejo: "PIN de la demo: 1234. Mostrá «Números»: es lo que más vende.",
+          href: "/turnos#/admin/hoy",
+          imagen: "/muestras/agenda-panel.jpg",
+        },
       ],
     },
     {

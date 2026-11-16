@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import { Alto } from "./_alto/Alto";
 import { AvisoPrecios } from "./_home/AvisoPrecios";
 import { fuentesHome } from "./_home/fuentes";
-import { Beneficios, CajaDelLocal, Cierre, ComoFunciona, Encabezado, Hero, Pie, Plantillas, Precios, Preguntas, Proyectos, Resenas, Rubros } from "./_home/Secciones";
+import { Beneficios, CajaDelLocal, TurnosOnline, Cierre, ComoFunciona, Encabezado, Hero, Pie, Plantillas, Precios, Preguntas, Proyectos, Resenas, Rubros } from "./_home/Secciones";
 
 export const metadata: Metadata = {
   title: "Landing al toque · Tu página para tu negocio",
@@ -33,6 +34,7 @@ export default function Inicio() {
         <Rubros />
         <Proyectos />
         <Plantillas />
+        <TurnosOnline />
         <CajaDelLocal />
         <ComoFunciona />
         <Precios />
@@ -43,6 +45,7 @@ export default function Inicio() {
       </main>
       <Pie />
       <AvisoPrecios />
+      <Alto whatsapp={process.env.NEXT_PUBLIC_OWNER_WHATSAPP} />
     </div>
   );
 }

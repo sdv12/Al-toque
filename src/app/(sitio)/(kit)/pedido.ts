@@ -1,7 +1,7 @@
 import { linkWhatsApp } from "@/core/lib/mensajes";
 
 /**
- * Envío de un pedido (landing del configurador o caja de /caja):
+ * Envío de un pedido (landing del configurador, caja de /caja, agenda de /turnos o consulta de Alto):
  * - WhatsApp lleva un mensaje corto con el número de pedido (#00015) y un resumen.
  * - La configuración completa (JSON legible + código para `pnpm publicar`) va a Netlify Forms,
  *   formulario `configuraciones` (declarado en public/__forms.html), que avisa por mail.
@@ -10,7 +10,7 @@ import { linkWhatsApp } from "@/core/lib/mensajes";
  */
 
 export type Pedido = {
-  tipo: "Landing" | "Caja";
+  tipo: "Landing" | "Caja" | "Agenda" | "Consulta";
   negocio: string;
   /** Plantilla de la landing, o rubro y módulos de la caja. */
   detalle: string;

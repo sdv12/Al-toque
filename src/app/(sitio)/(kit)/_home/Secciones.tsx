@@ -63,7 +63,7 @@ export function Marca({ className = "", sobreOscuro = false }: { className?: str
 }
 
 /** `desde`: en otras páginas que no son la home, los links de secciones apuntan a "/#…". */
-export function Encabezado({ desde = "" }: { desde?: "" | "/" }) {
+export function Encabezado({ desde = "", actual }: { desde?: "" | "/"; actual?: "/agenda" | "/caja" }) {
   return (
     <header className={`${margen} flex h-18 items-center justify-between gap-3 py-4`}>
       <Link href="/" aria-label="Landing al toque, inicio" className="text-[1.4rem] @md:text-[1.75rem]">
@@ -74,12 +74,13 @@ export function Encabezado({ desde = "" }: { desde?: "" | "/" }) {
           {[
             [`${desde}#proyectos`, "Proyectos"],
             [`${desde}#plantillas`, "Plantillas"],
+            ["/agenda", "Turnos"],
             ["/caja", "Caja"],
             [`${desde}#precios`, "Precios"],
             [`${desde}#preguntas`, "Preguntas"],
           ].map(([href, texto]) => (
             <li key={href}>
-              <a href={href} aria-current={href === "/caja" && desde ? "page" : undefined} className="inline-flex min-h-11 items-center rounded-control px-4 text-chico font-semibold hover:bg-superficie-2">
+              <a href={href} aria-current={href === actual ? "page" : undefined} className="inline-flex min-h-11 items-center rounded-control px-4 text-chico font-semibold hover:bg-superficie-2">
                 {texto}
               </a>
             </li>
@@ -383,6 +384,40 @@ export function CajaDelLocal() {
   );
 }
 
+/* ───────────── Turnos ───────────── */
+
+export function TurnosOnline() {
+  return (
+    <section id="turnos" aria-labelledby="turnos-titulo" className={`${diferida} ${margen} scroll-mt-4 py-24`}>
+      <div className="grid items-center gap-14 @4xl:grid-cols-12">
+        <div className="relative mx-auto grid w-full max-w-md grid-cols-3 items-start gap-3 @4xl:order-2 @4xl:col-span-5">
+          {["historias", "base", "reloj"].map((d, i) => (
+            <Telefono key={d} src={`/muestras/agenda-${d}.jpg`} alt="" sizes="(min-width: 896px) 140px, 30vw" className={i === 1 ? "mt-10" : ""} />
+          ))}
+        </div>
+        <div className="@4xl:col-span-7">
+          <p className="text-chico font-semibold text-tinta-suave">Peluquerías, consultorios, clases, talleres y más</p>
+          <h2 id="turnos-titulo" className={`${afiche} mt-3 text-titulo`}>
+            Que te reserven <span className="resaltado">solos</span>
+          </h2>
+          <p className="mt-6 max-w-medida text-subtitulo">
+            Un link para que tus clientes elijan servicio, día y horario libre, a cualquier hora. Y un panel con la agenda, la caja y tus números. Nueve
+            diseños para elegir.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link href="/agenda" className={boton.tinta}>
+              Ver la agenda
+            </Link>
+            <Link href="/turnos#/probar" className={boton.contorno}>
+              Probala con tus datos
+            </Link>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ───────────── Cómo funciona ───────────── */
 
 export function ComoFunciona() {
@@ -631,6 +666,11 @@ export function Pie() {
             <li>
               <Link href="/c/pro" className="underline-offset-4 hover:underline">
                 Demo caja pro
+              </Link>
+            </li>
+            <li>
+              <Link href="/agenda" className="font-semibold underline underline-offset-4">
+                Turnos
               </Link>
             </li>
             <li>

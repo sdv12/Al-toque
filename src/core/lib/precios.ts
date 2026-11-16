@@ -25,14 +25,14 @@ export function preciosVigentesHasta(): string {
 }
 
 /** Página con una plantilla de rubro (barbería, consultorio, casas, portfolio). */
-const PLANTILLA = { unico: 190_000, mensual: 15_000 };
+const PLANTILLA = { unico: 250_000, mensual: 15_000 };
 
 /** Página "a tu medida": incluye cierta cantidad de bloques; los demás se cobran aparte. */
-const A_MEDIDA = { unico: 250_000, mensual: 15_000, bloquesIncluidos: 6, bloqueExtra: 15_000 };
+const A_MEDIDA = { unico: 320_000, mensual: 15_000, bloquesIncluidos: 6, bloqueExtra: 20_000 };
 
 /**
  * Si hay al menos un componente con sistema: base de datos, servidor y su mantenimiento.
- * Plantilla + sistema + un componente = el plan "Con sistema" (desde $350.000 + $75.000/mes).
+ * Plantilla + sistema + un componente = el plan "Con sistema" (desde $410.000 + $75.000/mes).
  */
 const SISTEMA_BASE = { unico: 100_000, mensual: 50_000 };
 
@@ -169,7 +169,7 @@ export function esBloqueConSistema(plantilla: Plantilla, tipo: string): boolean 
  * (todavía no hay servidor): el mensual cubre hosting, soporte y actualizaciones (y, cuando exista,
  * el respaldo en la nube). Incluye el fiado, la carga inicial de productos y la explicación en el local.
  */
-const CAJA_SIMPLE = { unico: 99_000, mensual: 15_000 };
+const CAJA_SIMPLE = { unico: 150_000, mensual: 15_000 };
 
 export const MODULOS_CAJA = {
   fiado: {
@@ -211,8 +211,20 @@ export function planCaja() {
  * servicio de facturación (~$35.000/mes por cliente si es vía TusFacturasAPP), soporte y
  * actualizaciones. Cada sucursal extra suma.
  */
-const CAJA_PRO = { unico: 450_000, mensual: 75_000, sucursalExtra: 25_000, facturasIncluidas: 1_000 };
+const CAJA_PRO = { unico: 520_000, mensual: 75_000, sucursalExtra: 25_000, facturasIncluidas: 1_000 };
 
 export function planCajaPro() {
   return CAJA_PRO;
+}
+
+/**
+ * Agenda al toque sola (página de reservas + panel con agenda, caja y números, sin landing): más
+ * barata que "Con sistema" porque no lleva página web, pero por encima de las apps de turnos
+ * ($15–35k/mes, sin costo inicial): incluye la puesta en marcha (servicios, horarios, diseño) y la
+ * base de datos para que varios clientes reserven sobre la misma agenda.
+ */
+const AGENDA = { unico: 280_000, mensual: 60_000 };
+
+export function planAgenda() {
+  return { ...AGENDA };
 }

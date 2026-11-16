@@ -76,3 +76,21 @@ export async function leerCodigoCaja(texto: string): Promise<unknown | undefined
   if (limpio.startsWith("{")) return JSON.parse(limpio);
   return decodificar(PREFIJO_CAJA, limpio);
 }
+
+/**
+ * Config inicial de /caja a partir de la URL (?rubro=almacen&nombre=…&color=azul), para llegar
+ * precargado desde Alto. Lo que falte o no valga queda como en la caja por defecto del rubro.
+ */
+export function cajaDesdeQuery(search: string): CajaConfig {
+  const q = new URLSearchParams(search);
+  const rubro = (RUBROS_CAJA as readonly string[]).includes(q.get("rubro") ?? "") ? (q.get("rubro") as RubroCaja) : "verduleria";
+  const base = cajaPorDefecto(rubro);
+  const nombre = q.get("nombre")?.trim().slice(0, 40);
+  const color = q.get("color");
+  const r = validarCaja({
+    ...base,
+    negocio: { nombre: nombre && nombre.length >= 2 ? nombre : base.negocio.nombre },
+    color: color && color in COLORES_CAJA ? color : base.color,
+  });
+  return r.ok ? r.config : base;
+}

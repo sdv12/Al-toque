@@ -4,6 +4,13 @@ Versionado semántico: PATCH = arreglos y ajustes; MINOR = funcionalidad nueva v
 MAJOR = cambios que rompen algo existente (formato de configs, flujo, backend).
 La versión se muestra en el footer de la home y en el configurador.
 
+## 1.11.0 · 2026-11-16
+- **Agenda al toque** (`/agenda` y `/turnos`): el sistema de turnos de Agenda Rápida, ahora dentro del sitio. Tiene 9 diseños de reserva (Base, Ticket, Bruto, Agenda, Kiosco, Mes, Historias, Reloj y Pila; el de chat quedó afuera), 19 rubros con sus servicios y el panel del negocio: hoy, agenda, caja, números, clientes, servicios y ajustes. «Probalo con tus datos» termina en el pedido con número, como las cajas y las landings.
+- **Alto, el asistente**: un chat de preguntas rápidas en la home, `/caja` y `/agenda`. Pregunta el nombre, el rubro, qué le complica, qué resolver primero, qué zona cubrir, los colores y qué le gustaría tener. Al final recomienda qué armar, con el porqué y los precios de referencia, y deja probarlo ya cargado (configurador, agenda o caja) o hablarlo por WhatsApp.
+- Home: sección «Que te reserven solos» y «Turnos» en el menú y en el pie. `/adm` suma las demos de turnos y a Alto.
+- **Precios nuevos**, revisados contra el mercado: Vidriera desde $250.000 + $15.000/mes; A tu medida $320.000 + $15.000/mes (bloque extra $20.000); Con sistema desde $410.000 + $75.000/mes; Agenda sola $280.000 + $60.000/mes; Caja simple $150.000 + $15.000/mes; Caja pro $520.000 + $75.000/mes. Los mensuales y los extras no cambian.
+- Por dentro: la agenda está en TypeScript estricto, con su propio layout y sus hojas de estilo originales. `/caja` acepta datos en la URL (`?rubro=…&nombre=…&color=…`).
+
 ## 1.10.1 · 2026-11-15
 - **Actualización de seguridad**: Next.js, React, Zod y las herramientas de desarrollo pasan a sus últimas versiones, con los arreglos de seguridad publicados. `pnpm audit` queda sin vulnerabilidades conocidas.
 - Cabeceras de seguridad en todo el sitio: ninguna página nuestra se puede meter en un iframe de otro sitio, y se limitan el referer y los permisos del navegador (la cámara queda solo para las fotos de la caja). `/adm` también avisa por cabecera que no se indexa.
