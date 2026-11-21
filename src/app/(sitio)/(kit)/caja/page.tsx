@@ -10,12 +10,12 @@ import { Encabezado, Pie, afiche, boton, margen } from "../_home/Secciones";
 import { ConfiguradorCaja } from "./ConfiguradorCaja";
 
 export const metadata: Metadata = {
-  title: "Caja al toque · Caja para tu negocio de barrio",
+  title: "Al Toque Caja · Caja para tu negocio de barrio",
   description:
     "Caja para verdulerías, almacenes, kioscos y dietéticas: vender, precios, fiado y cierre del día con botones grandes. Funciona sin internet. Probala gratis.",
   alternates: { canonical: "/caja" },
   openGraph: {
-    title: "Caja al toque",
+    title: "Al Toque Caja",
     description: "La caja de tu negocio, en el celular. Probala gratis.",
     type: "website",
     locale: "es_AR",

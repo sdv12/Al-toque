@@ -77,9 +77,16 @@ export default function App() {
     <footer className="py-6 text-center text-base text-gris">
       {caja.nombre} · Caja hecha con{" "}
       <Link href="/" className="underline">
-        Al toque
+        Al Toque
       </Link>{" "}
-      · Versión {process.env.NEXT_PUBLIC_VERSION}
+      · Versión {process.env.NEXT_PUBLIC_VERSION} ·{" "}
+      <Link href="/terminos" className="underline">
+        Términos
+      </Link>{" "}
+      ·{" "}
+      <Link href="/privacidad" className="underline">
+        Privacidad
+      </Link>
     </footer>
   );
 

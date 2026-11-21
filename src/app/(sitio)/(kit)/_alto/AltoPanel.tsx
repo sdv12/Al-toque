@@ -8,6 +8,8 @@ import { enviarPedido, type ResultadoPedido } from "../pedido";
 import { recomendar, resumenRespuestas, type Recomendacion, type Respuestas } from "./alto";
 import { preguntasPara, respuestaEnTexto, validarWhatsapp, type Opcion, type Parcial, type Pregunta } from "./preguntas";
 import { Robot } from "./Robot";
+import { AvisoDatos } from "../legales/AvisoDatos";
+import { DUDAS, SIN_RESPUESTA, buscarDuda } from "./dudas";
 
 /*
  * El chat de Alto. Recorre el guion de preguntas.ts: cada respuesta se guarda con una copia de
@@ -24,6 +26,8 @@ const botonLleno = "inline-flex min-h-11 w-full items-center justify-center gap-
 const plataMes = (unico: number, mensual: number) => `${formatearPesos(unico)} + ${formatearPesos(mensual)}/mes`;
 
 type Paso = { id: string; antes: Parcial };
+/** Una duda que hizo la persona, con el momento del guion en que la hizo (-1: antes de empezar). */
+type Charla = { n: number; despuesDe: number; pregunta: string; respuesta: string[] };
 
 export default function AltoPanel({ whatsapp, visible, onCerrar }: { whatsapp: string | undefined; visible: boolean; onCerrar: () => void }) {
   const [empezo, setEmpezo] = useState(false);
@@ -38,6 +42,9 @@ export default function AltoPanel({ whatsapp, visible, onCerrar }: { whatsapp: s
   const [escribiendoOtro, setEscribiendoOtro] = useState<Opcion | null>(null);
   const [pedido, setPedido] = useState<ResultadoPedido | "enviando" | null>(null);
   const [codigo, setCodigo] = useState("");
+  const [dudando, setDudando] = useState(false);
+  const [charla, setCharla] = useState<Charla[]>([]);
+  const [duda, setDuda] = useState("");
   const titulo = useId();
   const panel = useRef<HTMLDivElement>(null);
   const fin = useRef<HTMLDivElement>(null);
@@ -67,7 +74,7 @@ export default function AltoPanel({ whatsapp, visible, onCerrar }: { whatsapp: s
 
   useEffect(() => {
     fin.current?.scrollIntoView({ block: "end", behavior: "smooth" });
-  }, [hechos.length, vista, terminado, pedido, empezo, mirando]);
+  }, [hechos.length, vista, terminado, pedido, empezo, mirando, charla.length, dudando]);
 
   useEffect(() => {
     if (visible) panel.current?.focus();
@@ -97,6 +104,28 @@ export default function AltoPanel({ whatsapp, visible, onCerrar }: { whatsapp: s
     setVista(null);
     setPedido(null);
   }
+
+  /** Responde una duda (elegida de la lista o escrita) sin cortar el guion. */
+  function preguntar(pregunta: string, id?: string) {
+    const d = id ? DUDAS.find((x) => x.id === id) : buscarDuda(pregunta);
+    const momento = empezo ? hechos.length : -1;
+    setCharla((c) => [...c, { n: c.length, despuesDe: momento, pregunta, respuesta: d ? d.respuesta() : SIN_RESPUESTA }]);
+    setDuda("");
+  }
+
+  const charlaEn = (i: number) =>
+    charla
+      .filter((c) => (i === Infinity ? c.despuesDe >= hechos.length && c.despuesDe >= 0 : c.despuesDe === i))
+      .map((c) => (
+        <div key={c.n} className="space-y-2.5">
+          <Globo de="yo">{c.pregunta}</Globo>
+          {c.respuesta.map((t) => (
+            <Globo key={t} de="alto">
+              {t}
+            </Globo>
+          ))}
+        </div>
+      ));
 
   function reiniciar() {
     setR({});
@@ -207,11 +236,12 @@ export default function AltoPanel({ whatsapp, visible, onCerrar }: { whatsapp: s
         {mirando && !empezo && (
           <>
             <Globo de="yo">Solo estoy mirando</Globo>
-            <Globo de="alto">¡Dale! Cuando quieras, tocá «Empecemos» y en un par de minutos te digo qué te conviene.</Globo>
+            <Globo de="alto">¡Dale! Cuando quieras, tocá «Empecemos» y en un par de minutos te digo qué te conviene. Y si tenés alguna duda, preguntame.</Globo>
           </>
         )}
+        {charlaEn(-1)}
         {empezo && <Globo de="yo">¡Dale, empecemos!</Globo>}
-        {hechos.map((h) => {
+        {hechos.map((h, i) => {
           const p = aplicables.find((x) => x.id === h.id);
           if (!p) return null;
           return (
@@ -221,6 +251,7 @@ export default function AltoPanel({ whatsapp, visible, onCerrar }: { whatsapp: s
                   {t}
                 </Globo>
               ))}
+              {charlaEn(i)}
               <Globo de="yo">{respuestaEnTexto(p, r)}</Globo>
             </div>
           );
@@ -253,6 +284,8 @@ export default function AltoPanel({ whatsapp, visible, onCerrar }: { whatsapp: s
             </details>
           </>
         )}
+        {charlaEn(Infinity)}
+        {dudando && <Globo de="alto">¿Qué querés saber? Elegí una o escribila con tus palabras.</Globo>}
         {pedido && pedido !== "enviando" && (
           <Globo de="alto">
             {pedido.numero ? `¡Recibido! Tu consulta es la ${pedido.numero}. ` : "¡Recibido! "}
@@ -267,7 +300,9 @@ export default function AltoPanel({ whatsapp, visible, onCerrar }: { whatsapp: s
       </div>
 
       <div className="border-t-2 border-tinta/10 bg-superficie-2 px-4 py-3">
-        {!empezo ? (
+        {dudando ? (
+          <Dudas titulo={titulo} duda={duda} setDuda={setDuda} onPreguntar={preguntar} onVolver={() => setDudando(false)} seguir={empezo && !terminado} />
+        ) : !empezo ? (
           <div className="flex flex-wrap gap-2">
             <button type="button" className={`${chip} bg-acento-relleno text-sobre-acento`} onClick={() => setEmpezo(true)}>
               ¡Dale, empecemos!
@@ -277,6 +312,9 @@ export default function AltoPanel({ whatsapp, visible, onCerrar }: { whatsapp: s
                 Solo estoy mirando
               </button>
             )}
+            <button type="button" className={chip} onClick={() => setDudando(true)}>
+              Tengo una pregunta
+            </button>
           </div>
         ) : actual && !escribiendo ? (
           <Respuesta
@@ -294,6 +332,7 @@ export default function AltoPanel({ whatsapp, visible, onCerrar }: { whatsapp: s
             onListo={() => actual.tipo === "varias" && responder(actual, actual.guardar(marcadas))}
             onSaltear={() => saltear(actual)}
             onEnviarTexto={enviarTexto}
+            onDuda={() => setDudando(true)}
           />
         ) : terminado ? (
           <div className="flex flex-col gap-2">
@@ -307,8 +346,12 @@ export default function AltoPanel({ whatsapp, visible, onCerrar }: { whatsapp: s
                     Que me escriban ustedes
                   </button>
                 )}
+                <AvisoDatos accion="Mandarlo" />
               </>
             )}
+            <button type="button" className={`${chip} justify-center`} onClick={() => setDudando(true)}>
+              Tengo {charla.length ? "otra" : "una"} pregunta
+            </button>
             {pedido && pedido !== "enviando" && pedido.link && !pedido.porWhatsapp && whatsapp && (
               <a href={pedido.link} target="_blank" rel="noopener noreferrer" className={botonLleno}>
                 Abrir WhatsApp
@@ -316,7 +359,7 @@ export default function AltoPanel({ whatsapp, visible, onCerrar }: { whatsapp: s
             )}
           </div>
         ) : null}
-        {empezo && (
+        {empezo && !dudando && (
           <div className="mt-2.5 flex justify-between text-mini font-semibold">
             <button type="button" onClick={volver} disabled={!hechos.length} className="underline underline-offset-4 disabled:invisible">
               ← Volver
@@ -347,6 +390,7 @@ function Respuesta(props: {
   onListo: () => void;
   onSaltear: () => void;
   onEnviarTexto: (e: FormEvent) => void;
+  onDuda: () => void;
 }) {
   const { p, r, titulo, texto, setTexto, error, marcadas, escribiendoOtro } = props;
   const campo = (etiqueta: string, placeholder: string, max: number, tel = false) => (
@@ -385,7 +429,20 @@ function Respuesta(props: {
       {p.saltear}
     </button>
   );
+  const dudaLink = (
+    <button type="button" onClick={props.onDuda} className="mb-2 self-start text-mini font-semibold underline underline-offset-4">
+      ¿Tenés una duda? Preguntame
+    </button>
+  );
 
+  return (
+    <div className="flex flex-col">
+      {dudaLink}
+      {cuerpo()}
+    </div>
+  );
+
+  function cuerpo() {
   if (p.tipo === "texto")
     return (
       <div className="flex flex-col gap-2">
@@ -435,6 +492,47 @@ function Respuesta(props: {
         {marcadas.length ? `Listo (${marcadas.length})` : p.ninguna}
       </button>
     </>
+  );
+  }
+}
+
+/** Las dudas frecuentes como chips, más una caja para escribir la propia. */
+function Dudas(props: { titulo: string; duda: string; setDuda: (t: string) => void; onPreguntar: (pregunta: string, id?: string) => void; onVolver: () => void; seguir: boolean }) {
+  return (
+    <div className="flex flex-col gap-2.5">
+      <Opciones etiqueta="Preguntas frecuentes">
+        {DUDAS.map((d) => (
+          <button key={d.id} type="button" className={chip} onClick={() => props.onPreguntar(d.pregunta, d.id)}>
+            {d.pregunta}
+          </button>
+        ))}
+      </Opciones>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (props.duda.trim()) props.onPreguntar(props.duda.trim());
+        }}
+        className="flex gap-2"
+      >
+        <label className="sr-only" htmlFor={`${props.titulo}-duda`}>
+          Escribí tu pregunta
+        </label>
+        <input
+          id={`${props.titulo}-duda`}
+          value={props.duda}
+          maxLength={200}
+          onChange={(e) => props.setDuda(e.target.value)}
+          placeholder="O escribí tu pregunta…"
+          className="min-h-11 min-w-0 flex-1 rounded-full border-2 border-tinta bg-fondo px-4 text-cuerpo"
+        />
+        <button type="submit" disabled={!props.duda.trim()} className="rounded-full bg-tinta px-4 font-semibold text-fondo disabled:opacity-40">
+          Preguntar
+        </button>
+      </form>
+      <button type="button" onClick={props.onVolver} className={botonLleno}>
+        {props.seguir ? "Seguir con las preguntas" : "Listo, gracias"}
+      </button>
+    </div>
   );
 }
 

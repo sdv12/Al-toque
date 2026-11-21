@@ -12,11 +12,11 @@ import { Telefono } from "../_home/Marcos";
 import { Encabezado, Pie, afiche, boton, margen } from "../_home/Secciones";
 
 export const metadata: Metadata = {
-  title: "Agenda al toque · Turnos online para tu negocio",
+  title: "Al Toque Turnos · Turnos online para tu negocio",
   description:
     "Tus clientes reservan solos desde un link, a cualquier hora. Vos manejás la agenda, la caja y los números desde el celular. Nueve diseños para elegir. Probalo gratis.",
   alternates: { canonical: "/agenda" },
-  openGraph: { title: "Agenda al toque", description: "Turnos online para tu negocio. Probalo con tus datos.", type: "website", locale: "es_AR", url: "/agenda" },
+  openGraph: { title: "Al Toque Turnos", description: "Turnos online para tu negocio. Probalo con tus datos.", type: "website", locale: "es_AR", url: "/agenda" },
 };
 
 const PANEL = [
@@ -64,7 +64,7 @@ export default function AgendaPagina() {
       <Encabezado desde="/" actual="/agenda" />
       <main id="contenido">
         <section aria-labelledby="agenda-titulo" className={`${margen} pt-10 pb-16 @3xl:pt-16`}>
-          <p className="text-chico font-semibold">Para {rubros} rubros: salud, belleza, clases, talleres, estudios y más</p>
+          <p className="text-chico font-semibold">Para {rubros} rubros: belleza, clases, talleres, estudios, servicios y más</p>
           <h1 id="agenda-titulo" className={`${afiche} mt-3 text-[clamp(3.25rem,1.6rem+8cqi,8rem)] leading-[0.86]`}>
             Turnos online. <span className="resaltado">Al toque.</span>
           </h1>

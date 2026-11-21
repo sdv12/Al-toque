@@ -8,7 +8,7 @@ import "@/cajas/estilos.css";
  */
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
-  title: { default: "Caja al toque", template: "%s · Caja" },
+  title: { default: "Al Toque Caja", template: "%s · Caja" },
   description: "Caja para negocios de barrio: vender, precios, fiado y caja del día.",
   icons: { icon: "/c/icon-192.png", apple: "/c/apple-touch-icon.png" },
 };

@@ -11,7 +11,7 @@ import "@/agendas/estilos/disenos.css";
  */
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
-  title: { default: "Agenda al toque", template: "%s · Agenda al toque" },
+  title: { default: "Al Toque Turnos", template: "%s · Al Toque Turnos" },
   description: "Turnos online para cualquier rubro: el cliente reserva solo y vos manejás la agenda, la caja y los números desde el panel.",
 };
 

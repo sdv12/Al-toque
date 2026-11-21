@@ -67,8 +67,11 @@ export const ID_PROFESIONES = Object.keys(PROFESIONES) as IdProfesion[];
 export const voc = (negocio: { profesion: string }): Profesion => PROFESIONES[negocio.profesion as IdProfesion] || PROFESIONES.peluqueria;
 export const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 // Para elegir agrupado en <select>
+/** Grupos que Al Toque no ofrece para elegir: salud va por Sala de Espera (los rubros siguen andando). */
+export const GRUPOS_OCULTOS = ["Salud"];
+
 export const GRUPOS = Object.entries(PROFESIONES).reduce<Record<string, [IdProfesion, string][]>>(
-  (g, [k, p]) => ((g[p.grupo] ||= []).push([k as IdProfesion, p.nombre]), g),
+  (g, [k, p]) => (GRUPOS_OCULTOS.includes(p.grupo) ? g : ((g[p.grupo] ||= []).push([k as IdProfesion, p.nombre]), g)),
   {},
 );
 // Plural y género de la palabra de atención (turno/sesión/consulta/clase/reunión)

@@ -368,8 +368,14 @@ export type Plantilla = keyof Registro;
 
 export const PLANTILLAS = ["barberia", "consultorio", "alojamiento", "generico", "libre"] as const satisfies readonly Plantilla[];
 
-/** Plantillas con estructura propia y demo (las que se muestran en la home). */
-export const PLANTILLAS_DE_RUBRO = ["barberia", "consultorio", "alojamiento", "generico"] as const satisfies readonly Plantilla[];
+/** Plantillas con estructura propia y demo (las que se muestran en Al Toque Web). */
+export const PLANTILLAS_DE_RUBRO = ["barberia", "alojamiento", "generico"] as const satisfies readonly Plantilla[];
+
+/**
+ * Plantillas que Al Toque no ofrece: salud queda para Sala de Espera, la marca de ese rubro. El
+ * código sigue (las configuraciones ya hechas se siguen viendo), pero no se listan para elegir.
+ */
+export const PLANTILLAS_OCULTAS: readonly Plantilla[] = ["consultorio"];
 
 type SeccionesDe<P extends Plantilla> = Registro[P]["secciones"];
 

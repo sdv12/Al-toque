@@ -1,20 +1,21 @@
 import Link from "next/link";
-import { Fragment } from "react";
 import { PLANTILLAS_DE_RUBRO as PLANTILLAS, paletaDe, registry } from "@/core/registry";
 
 type Plantilla = (typeof PLANTILLAS)[number];
 import { fuentes as fuentesAlojamiento } from "@/templates/alojamiento";
 import { fuentes as fuentesBarberia } from "@/templates/barberia";
-import { fuentes as fuentesConsultorio } from "@/templates/consultorio";
 import { fuentes as fuentesGenerico } from "@/templates/generico";
 import { formatearPesos } from "@/core/lib/mensajes";
-import { planCaja, planes, preciosVigentesHasta, proximaActualizacion } from "@/core/lib/precios";
-import { BENEFICIOS, FICHAS, PASOS, PREGUNTAS, PROYECTOS, RESENAS, RESENAS_DE_MUESTRA, RUBROS } from "./contenido";
+import { planAgenda, planCaja, planes, preciosVigentesHasta, proximaActualizacion } from "@/core/lib/precios";
+import { AbrirAlto } from "../_alto/AbrirAlto";
+import { TITULAR } from "../legales/datos";
+import { DUDAS } from "../_alto/dudas";
+import { BENEFICIOS, CONFIANZA, FICHAS, NECESIDADES, PASOS, PASOS_WEB, PREGUNTAS_PORTADA, PROYECTOS, RUBROS } from "./contenido";
 import { Navegador, Telefono } from "./Marcos";
+import { SolucionesAcordeon, type SolucionVista } from "./SolucionesAcordeon";
 
 const FUENTES: Record<Plantilla, string> = {
   barberia: fuentesBarberia,
-  consultorio: fuentesConsultorio,
   alojamiento: fuentesAlojamiento,
   generico: fuentesGenerico,
 };
@@ -46,50 +47,49 @@ export const boton = {
 /* ───────────── Encabezado ───────────── */
 
 /**
- * Marca. Sobre papel, "al toque" lleva el resaltador (media franja). Sobre fondo oscuro la franja
+ * Marca. Sobre papel, "toque" lleva el resaltador (media franja). Sobre fondo oscuro la franja
  * dejaría la mitad de arriba de las letras contra el negro: ahí va el bloque amarillo completo.
  */
 export function Marca({ className = "", sobreOscuro = false }: { className?: string; sobreOscuro?: boolean }) {
   return (
     <span className={`${afiche} whitespace-nowrap font-extrabold leading-none ${className}`}>
-      Landing{" "}
+      Al{" "}
       {sobreOscuro ? (
-        <span className="bg-acento-relleno px-[0.12em] text-sobre-acento [box-decoration-break:clone]">al toque</span>
+        <span className="bg-acento-relleno px-[0.12em] text-sobre-acento [box-decoration-break:clone]">toque</span>
       ) : (
-        <span className="resaltado">al toque</span>
+        <span className="resaltado">toque</span>
       )}
     </span>
   );
 }
 
-/** `desde`: en otras páginas que no son la home, los links de secciones apuntan a "/#…". */
-export function Encabezado({ desde = "", actual }: { desde?: "" | "/"; actual?: "/agenda" | "/caja" }) {
+/** `desde`: en otras páginas que no son la portada, los links de secciones apuntan a "/#…". */
+export function Encabezado({ desde = "", actual }: { desde?: "" | "/"; actual?: "/web" | "/agenda" | "/caja" }) {
   return (
     <header className={`${margen} flex h-18 items-center justify-between gap-3 py-4`}>
-      <Link href="/" aria-label="Landing al toque, inicio" className="text-[1.4rem] @md:text-[1.75rem]">
+      <Link href="/" aria-label="Al Toque, inicio" className="text-[1.6rem] @md:text-[2rem]">
         <Marca />
       </Link>
       <nav aria-label="Principal" className="flex items-center gap-1">
-        <ul className="hidden items-center gap-1 @3xl:flex">
+        <ul className="hidden items-center gap-1 @4xl:flex">
           {[
+            [`${desde}#soluciones`, "Soluciones"],
+            [`${desde}#como-funciona`, "Cómo funciona"],
             [`${desde}#proyectos`, "Proyectos"],
-            [`${desde}#plantillas`, "Plantillas"],
-            ["/agenda", "Turnos"],
-            ["/caja", "Caja"],
-            [`${desde}#precios`, "Precios"],
-            [`${desde}#preguntas`, "Preguntas"],
+            ["/web#precios", "Precios"],
+            [`${desde}#contacto`, "Contacto"],
           ].map(([href, texto]) => (
             <li key={href}>
-              <a href={href} aria-current={href === actual ? "page" : undefined} className="inline-flex min-h-11 items-center rounded-control px-4 text-chico font-semibold hover:bg-superficie-2">
+              <a href={href} aria-current={href === actual ? "page" : undefined} className="inline-flex min-h-11 items-center rounded-control px-3.5 text-chico font-semibold hover:bg-superficie-2">
                 {texto}
               </a>
             </li>
           ))}
         </ul>
-        <Link href="/configurador" className={`${boton.tinta} min-h-11 whitespace-nowrap px-5 text-chico`}>
-          <span className="@md:hidden">Mi página</span>
-          <span className="hidden @md:inline">Armar mi página</span>
-        </Link>
+        <AbrirAlto className={`${boton.tinta} min-h-11 whitespace-nowrap px-5 text-chico`}>
+          <span className="@md:hidden">Mi solución</span>
+          <span className="hidden @md:inline">Encontrar mi solución</span>
+        </AbrirAlto>
       </nav>
     </header>
   );
@@ -97,21 +97,21 @@ export function Encabezado({ desde = "", actual }: { desde?: "" | "/"; actual?: 
 
 /* ───────────── Hero ───────────── */
 
-/** Abanico de teléfonos con las cuatro plantillas reales. */
+/** Abanico de celulares con los tres productos: una página, la agenda de turnos y la caja. */
 function Abanico() {
   const disposicion = [
-    { p: "barberia", clase: "left-[1%] top-[12%] -rotate-[9deg] z-10" },
-    { p: "consultorio", clase: "left-[21%] top-[2%] -rotate-[3deg] z-30" },
-    { p: "alojamiento", clase: "left-[42%] top-[6%] rotate-[3.5deg] z-20" },
-    { p: "generico", clase: "left-[62%] top-[14%] rotate-[9deg] z-10" },
-  ] as const;
+    { src: "/muestras/barberia-celular.jpg", alt: "Una página de barbería en un celular", clase: "left-[1%] top-[12%] -rotate-[9deg] z-10" },
+    { src: "/muestras/agenda-base.jpg", alt: "La agenda de turnos: elegir servicio, día y horario", clase: "left-[21%] top-[2%] -rotate-[3deg] z-30" },
+    { src: "/muestras/caja-vender.jpg", alt: "La caja de una verdulería con botones grandes por producto", clase: "left-[42%] top-[6%] rotate-[3.5deg] z-20" },
+    { src: "/muestras/alojamiento-celular.jpg", alt: "Una página de casas de campo en un celular", clase: "left-[62%] top-[14%] rotate-[9deg] z-10" },
+  ];
   return (
-    <div className="relative mx-auto aspect-[10/8] w-full max-w-[38rem] @7xl:-mt-18 @7xl:-translate-y-[3%]">
-      {disposicion.map(({ p, clase }) => (
+    <div className="relative mx-auto aspect-[10/8] w-full max-w-[40rem]">
+      {disposicion.map(({ src, alt, clase }) => (
         <Telefono
-          key={p}
-          src={`/muestras/${p}-celular.jpg`}
-          alt={`La plantilla ${registry[p].meta.nombre} en un celular`}
+          key={src}
+          src={src}
+          alt={alt}
           sizes="(min-width: 1024px) 15vw, 34vw"
           className={`absolute w-[36%] transition-transform duration-300 hover:-translate-y-3 ${clase}`}
           prioridad
@@ -123,25 +123,23 @@ function Abanico() {
 
 export function Hero() {
   return (
-    <section aria-labelledby="hero-titulo" className={`${margen} pb-20 pt-4 @5xl:pt-8`}>
-      <h1 id="hero-titulo" className={`${afiche} max-w-[14ch] text-[clamp(3.25rem,0.9rem+8.5cqi,8rem)] leading-[0.84] @5xl:max-w-none`}>
-        Tu negocio, con página propia. <span className="resaltado whitespace-nowrap">Al toque.</span>
-      </h1>
-      <div className="mt-10 grid items-start gap-12 @5xl:mt-8 @5xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1fr)] @5xl:gap-10">
+    <section aria-labelledby="hero-titulo" className={`${margen} pb-20 pt-4 @5xl:pt-10`}>
+      <div className="grid items-center gap-12 @5xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] @5xl:gap-10">
         <div>
-          <p className="max-w-[36ch] text-subtitulo">
-            Elegí una plantilla pensada para tu rubro, cambiale textos, colores y precios, y mirá cómo queda mientras la armás. Me la
-            mandás y la publico.
+          <h1 id="hero-titulo" className={`${afiche} max-w-[13ch] text-[clamp(3.25rem,0.9rem+8.5cqi,8rem)] leading-[0.86] @5xl:text-[clamp(4rem,6.4cqi,7.5rem)]`}>
+            La solución para tu negocio, <span className="resaltado whitespace-nowrap">al toque.</span>
+          </h1>
+          <p className="mt-8 max-w-[38ch] text-subtitulo">
+            Páginas web, turnos y herramientas de gestión. Soluciones simples, pensadas para negocios reales: peluquerías, comercios, alojamientos y
+            oficios.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
-            <Link href="/configurador" className={boton.tinta}>
-              Armar mi página
-            </Link>
-            <a href="#plantillas" className={boton.contorno}>
-              Ver las plantillas
+            <AbrirAlto className={boton.tinta}>Encontrar mi solución</AbrirAlto>
+            <a href="#soluciones" className={boton.contorno}>
+              Ver demos
             </a>
           </div>
-          <p className="mt-5 text-chico text-tinta-suave">Probar el configurador no cuesta nada y no pide registrarse.</p>
+          <p className="mt-5 text-chico text-tinta-suave">Todas las demos se prueban gratis y sin registrarse.</p>
         </div>
         <Abanico />
       </div>
@@ -149,35 +147,62 @@ export function Hero() {
   );
 }
 
+/* ───────────── Selector de necesidades ───────────── */
+
+export function Necesidades() {
+  return (
+    <section aria-labelledby="necesidades-titulo" className={`${margen} py-20`}>
+      <h2 id="necesidades-titulo" className={`${afiche} text-titulo`}>
+        ¿Qué necesitás <span className="resaltado">hoy?</span>
+      </h2>
+      <ul className="mt-10 grid gap-3 @3xl:grid-cols-2 @6xl:grid-cols-4">
+        {NECESIDADES.map((n) => (
+          <li key={n.href}>
+            <a
+              href={n.href}
+              className="group flex h-full min-h-28 flex-col justify-between gap-4 rounded-base border-2 border-tinta bg-superficie p-5 transition-colors hover:bg-acento-relleno hover:text-sobre-acento"
+            >
+              <span className={`${afiche} text-[clamp(1.6rem,1.2rem+1.4cqi,2.1rem)] leading-none`}>{n.texto}</span>
+              <span className="flex items-center justify-between gap-3 text-chico">
+                {n.detalle}
+                <span aria-hidden className="grid size-9 shrink-0 place-items-center rounded-full border-2 border-current">
+                  →
+                </span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <p className="mt-5 text-chico">
+        ¿No sabés por dónde empezar?{" "}
+        <AbrirAlto className="font-semibold underline underline-offset-4">Contale a Alto de tu negocio y te recomienda</AbrirAlto>.
+      </p>
+    </section>
+  );
+}
+
 /* ───────────── Rubros ───────────── */
 
-/** Desde acá la lista va en dos renglones parejos: corta a la mitad y el tamaño escala con el ancho. */
-const MITAD_RUBROS = Math.ceil(RUBROS.length / 2);
-
+/** Los rubros pasan solos en una sola línea; la lista va dos veces (la copia, oculta al lector). */
 export function Rubros() {
+  const lista = (copia: boolean) => (
+    <ul aria-hidden={copia || undefined} className={`flex shrink-0 items-center ${afiche} text-[clamp(1.75rem,2.4cqi,3rem)] leading-none`}>
+      {RUBROS.map((r) => (
+        <li key={r} className="flex items-center gap-6 whitespace-nowrap pr-6">
+          {r}
+          <span aria-hidden className="text-acento">
+            ✳
+          </span>
+        </li>
+      ))}
+    </ul>
+  );
   return (
-    <section aria-label="Para qué rubros" className="bg-tinta py-10 text-fondo @4xl:py-14">
-      <ul
-        className={`${margen} flex flex-wrap items-center justify-center gap-x-5 gap-y-1 text-center ${afiche} text-[clamp(1.75rem,2.8cqi,3.75rem)] leading-[0.95]`}
-      >
-        {RUBROS.map((r, i) => {
-          const finDeRenglon = i === MITAD_RUBROS - 1;
-          return (
-            <Fragment key={r}>
-              <li className="flex items-center gap-5">
-                {r}
-                {i < RUBROS.length - 1 && (
-                  // En pantallas anchas el fin del primer renglón no lleva separador colgando.
-                  <span aria-hidden className={`text-acento ${finDeRenglon ? "@3xl:hidden" : ""}`}>
-                    ✳
-                  </span>
-                )}
-              </li>
-              {finDeRenglon && <li aria-hidden className="hidden basis-full @3xl:block" />}
-            </Fragment>
-          );
-        })}
-      </ul>
+    <section aria-label="Para qué rubros" className="overflow-hidden bg-tinta py-8 text-fondo @4xl:py-10">
+      <div className="marquesina">
+        {lista(false)}
+        {lista(true)}
+      </div>
     </section>
   );
 }
@@ -322,97 +347,81 @@ function FichaPlantilla({ plantilla, indice }: { plantilla: Plantilla; indice: n
   );
 }
 
-/* ───────────── Caja ───────────── */
+/* ───────────── Soluciones ───────────── */
 
-export function CajaDelLocal() {
-  const plan = planCaja();
-  return (
-    <section id="caja" aria-labelledby="caja-titulo" className={`${diferida} ${margen} scroll-mt-4 bg-tinta py-24 text-fondo`}>
-      <div className="grid items-center gap-14 @4xl:grid-cols-12">
-        <div className="@4xl:col-span-7">
-          <p className="text-chico font-semibold opacity-80">Verdulerías, almacenes, kioscos y dietéticas</p>
-          <h2 id="caja-titulo" className={`${afiche} mt-3 text-titulo`}>
-            ¿Tenés un local? <span className="bg-acento-relleno px-[0.12em] text-sobre-acento [box-decoration-break:clone]">También la caja.</span>
-          </h2>
-          <p className="mt-6 max-w-medida text-subtitulo">
-            Vender por kilo o por unidad, precios, fiado y el cierre del día, en el celular que ya tenés. Botones grandes, anda sin internet y la probás
-            antes de pedirla.
-          </p>
-          <ul className="mt-8 grid max-w-medida gap-2.5 text-chico @xl:grid-cols-2">
-            {["Productos de tu rubro ya cargados", "Vuelto y medios de pago", "Fiado con saldo por WhatsApp", "Apertura, arqueo y cierre"].map((i) => (
-              <li key={i} className="flex gap-2.5">
-                <span aria-hidden className="mt-[0.5em] h-1.5 w-3 shrink-0 bg-acento-relleno" />
-                {i}
-              </li>
-            ))}
-          </ul>
-          <p className="mt-8" data-precios>
-            <span className="block text-chico opacity-80">desde</span>
-            <span className={`${afiche} text-[clamp(2.5rem,1.6rem+3cqi,3.5rem)] leading-none tabular-nums`}>{formatearPesos(plan.unico)}</span>
-            <span className="ml-2 text-chico opacity-80">+ {formatearPesos(plan.mensual)} por mes</span>
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/caja" className={boton.amarillo}>
-              Armar mi caja
-            </Link>
-            <Link
-              href="/c/demo-verduleria"
-              className="inline-flex min-h-12 items-center justify-center rounded-control border-2 border-fondo px-7 text-cuerpo font-semibold text-fondo transition-colors hover:bg-fondo hover:text-tinta"
-            >
-              Ver una demo
-            </Link>
-          </div>
-          <p className="mt-6 max-w-medida text-chico opacity-80">
-            ¿Con empleados, varias sucursales o factura electrónica?{" "}
-            <Link href="/c/pro" className="font-semibold underline underline-offset-4">
-              Probá la caja pro
-            </Link>
-            .
-          </p>
-        </div>
-        <div className="relative mx-auto grid w-full max-w-md grid-cols-2 items-start gap-4 @4xl:col-span-5">
-          <Telefono src="/muestras/caja-vender.jpg" alt="La caja de una verdulería: buscador y botones grandes con cada producto y su precio por kilo" sizes="(min-width: 896px) 210px, 45vw" />
-          <Telefono
-            src="/muestras/caja-cierre.jpg"
-            alt="Caja del día de un almacén: lo vendido en efectivo, transferencia, QR y fiado"
-            sizes="(min-width: 896px) 210px, 45vw"
-            className="mt-14"
-          />
-        </div>
-      </div>
-    </section>
-  );
+const precio = (p: { unico: number; mensual: number }, desde: boolean) => ({ unico: formatearPesos(p.unico), mensual: formatearPesos(p.mensual), desde });
+
+function soluciones(): SolucionVista[] {
+  const [vidriera] = planes();
+  return [
+    {
+      id: "web",
+      nombre: "Al Toque Web",
+      para: "Peluquerías, alojamientos, oficios y profesionales",
+      titulo: "Tu página, lista para que te encuentren",
+      texto: "Plantillas pensadas para tu rubro que cambiás a tu gusto, mirando cómo queda.",
+      incluye: ["Tus servicios, precios y horarios", "Consultas y reservas por WhatsApp", "Lista para Google y para compartir"],
+      precio: precio(vidriera!, true),
+      ver: { href: "/web", texto: "Conocer Al Toque Web" },
+      demo: { href: `/l/${FICHAS.barberia.slug}`, texto: "Ver una demo" },
+      imagen: { src: "/muestras/barberia-escritorio.jpg", alt: "Una página de barbería hecha con Al Toque Web", marco: "navegador", url: `${DOMINIO}/l/${FICHAS.barberia.slug}` },
+    },
+    {
+      id: "turnos",
+      nombre: "Al Toque Turnos",
+      para: "Peluquerías, estética, clases, talleres y estudios",
+      titulo: "Que te reserven solos",
+      texto: "Tus clientes eligen servicio, día y horario libre, a cualquier hora. Con o sin página web.",
+      incluye: ["Agenda con horarios libres", "Panel con la agenda, la caja y tus números", "Nueve diseños para elegir"],
+      precio: precio(planAgenda(), false),
+      ver: { href: "/agenda", texto: "Conocer Al Toque Turnos" },
+      demo: { href: "/turnos#/probar", texto: "Probala con tus datos" },
+      imagen: { src: "/muestras/agenda-base.jpg", alt: "La agenda de turnos en un celular", marco: "telefono" },
+    },
+    {
+      id: "caja",
+      nombre: "Al Toque Caja",
+      para: "Verdulerías, almacenes, kioscos y dietéticas",
+      titulo: "Tu comercio, en orden",
+      texto: "Vender por kilo o por unidad, el vuelto, el fiado y el cierre del día, en el celular que ya tenés.",
+      incluye: ["Productos de tu rubro ya cargados", "Efectivo, transferencia, QR y fiado", "Apertura, arqueo y cierre"],
+      precio: precio(planCaja(), true),
+      ver: { href: "/caja", texto: "Conocer Al Toque Caja" },
+      demo: { href: "/c/demo-verduleria", texto: "Ver una demo" },
+      imagen: { src: "/muestras/caja-vender.jpg", alt: "La caja de una verdulería en un celular", marco: "telefono" },
+    },
+    {
+      id: "tienda",
+      nombre: "Al Toque Tienda",
+      para: "Para vender por internet",
+      titulo: "Próximamente",
+      texto:
+        "Una tienda con catálogo, carrito y pedidos online. La estamos preparando: mientras tanto, tu página puede mostrar tu catálogo y recibir pedidos por WhatsApp.",
+      incluye: [],
+      ver: { href: "/web", texto: "Ver el catálogo con pedidos" },
+      avisame: "¡Hola! Quiero que me avisen cuando esté Al Toque Tienda.",
+    },
+  ];
 }
 
-/* ───────────── Turnos ───────────── */
-
-export function TurnosOnline() {
+export function Soluciones({ whatsapp }: { whatsapp: string | undefined }) {
   return (
-    <section id="turnos" aria-labelledby="turnos-titulo" className={`${diferida} ${margen} scroll-mt-4 py-24`}>
-      <div className="grid items-center gap-14 @4xl:grid-cols-12">
-        <div className="relative mx-auto grid w-full max-w-md grid-cols-3 items-start gap-3 @4xl:order-2 @4xl:col-span-5">
-          {["historias", "base", "reloj"].map((d, i) => (
-            <Telefono key={d} src={`/muestras/agenda-${d}.jpg`} alt="" sizes="(min-width: 896px) 140px, 30vw" className={i === 1 ? "mt-10" : ""} />
-          ))}
-        </div>
-        <div className="@4xl:col-span-7">
-          <p className="text-chico font-semibold text-tinta-suave">Peluquerías, consultorios, clases, talleres y más</p>
-          <h2 id="turnos-titulo" className={`${afiche} mt-3 text-titulo`}>
-            Que te reserven <span className="resaltado">solos</span>
-          </h2>
-          <p className="mt-6 max-w-medida text-subtitulo">
-            Un link para que tus clientes elijan servicio, día y horario libre, a cualquier hora. Y un panel con la agenda, la caja y tus números. Nueve
-            diseños para elegir.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/agenda" className={boton.tinta}>
-              Ver la agenda
-            </Link>
-            <Link href="/turnos#/probar" className={boton.contorno}>
-              Probala con tus datos
-            </Link>
-          </div>
-        </div>
+    <section id="soluciones" aria-labelledby="soluciones-titulo" className={`${diferida} ${margen} scroll-mt-4 py-24`}>
+      <div className="grid gap-6 @5xl:grid-cols-12 @5xl:items-end">
+        <h2 id="soluciones-titulo" className={`${afiche} text-titulo @5xl:col-span-7`}>
+          Una solución para <span className="resaltado">cada necesidad</span>
+        </h2>
+        <p className="max-w-medida text-subtitulo @5xl:col-span-5">Empezá por la que más te urge y sumá las otras cuando las necesites: funcionan juntas.</p>
+      </div>
+      <SolucionesAcordeon items={soluciones()} whatsapp={whatsapp} />
+      <div className="mt-5 flex flex-wrap items-center justify-between gap-4 rounded-base bg-tinta p-6 text-fondo @3xl:p-7">
+        <p className="max-w-[60ch]">
+          <strong className="font-semibold">¿Necesitás algo más grande?</strong> Sistemas, integraciones y automatizaciones a medida: lo presupuestamos
+          según lo que tu negocio necesite.
+        </p>
+        <a href="#contacto" className={boton.amarillo}>
+          Contanos tu proyecto
+        </a>
       </div>
     </section>
   );
@@ -420,24 +429,45 @@ export function TurnosOnline() {
 
 /* ───────────── Cómo funciona ───────────── */
 
+/** Pasos numerados (portada y /web). */
+function ListaPasos({ pasos }: { pasos: readonly { titulo: string; texto: string }[] }) {
+  return (
+    <ol className="mt-14 grid gap-10 @4xl:grid-cols-3 @4xl:gap-8">
+      {pasos.map((paso, i) => (
+        <li key={paso.titulo} className="border-t-2 border-tinta pt-6">
+          <span aria-hidden className={`${afiche} block text-[clamp(4.5rem,3rem+6cqi,8rem)] leading-[0.8]`}>
+            {i + 1}
+          </span>
+          <h3 className="mt-5 text-subtitulo font-semibold">{paso.titulo}</h3>
+          <p className="mt-2 text-tinta-suave">{paso.texto}</p>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
 export function ComoFunciona() {
+  return (
+    <section id="como-funciona" aria-labelledby="como-titulo" className={`${diferida} scroll-mt-4 bg-superficie-2 py-24`}>
+      <div className={margen}>
+        <h2 id="como-titulo" className={`${afiche} text-titulo`}>
+          Elegí, personalizá <span className="resaltado">y publicá</span>
+        </h2>
+        <ListaPasos pasos={PASOS} />
+      </div>
+    </section>
+  );
+}
+
+/** Cómo se arma una página con el configurador (en /web), con el video. */
+export function ComoFuncionaWeb() {
   return (
     <section id="como-funciona" aria-labelledby="como-titulo" className={`${diferida} scroll-mt-4 bg-superficie-2 py-24`}>
       <div className={margen}>
         <h2 id="como-titulo" className={`${afiche} text-titulo`}>
           Tres pasos <span className="resaltado">y listo</span>
         </h2>
-        <ol className="mt-14 grid gap-10 @4xl:grid-cols-3 @4xl:gap-8">
-          {PASOS.map((paso, i) => (
-            <li key={paso.titulo} className="border-t-2 border-tinta pt-6">
-              <span aria-hidden className={`${afiche} block text-[clamp(4.5rem,3rem+6cqi,8rem)] leading-[0.8]`}>
-                {i + 1}
-              </span>
-              <h3 className="mt-5 text-subtitulo font-semibold">{paso.titulo}</h3>
-              <p className="mt-2 text-tinta-suave">{paso.texto}</p>
-            </li>
-          ))}
-        </ol>
+        <ListaPasos pasos={PASOS_WEB} />
         {/* Visor de video: 16:9, a lo sumo 1000 px de ancho (≈ 600 px de alto con la barra); en angosto, todo el ancho. */}
         <figure className="mx-auto mt-16 max-w-[1000px]">
           <Navegador
@@ -518,46 +548,6 @@ export function Precios() {
   );
 }
 
-/* ───────────── Reseñas ───────────── */
-
-export function Resenas() {
-  return (
-    <section aria-labelledby="resenas-titulo" className={`${diferida} bg-superficie-2 py-24`}>
-      <div className={margen}>
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <h2 id="resenas-titulo" className={`${afiche} text-titulo`}>
-            Lo que <span className="resaltado">dicen</span>
-          </h2>
-          {RESENAS_DE_MUESTRA && (
-            <p className="rounded-control border-2 border-tinta bg-fondo px-4 py-2 text-chico font-semibold">
-              Reseñas de muestra mientras sumamos las de nuestros primeros clientes.
-            </p>
-          )}
-        </div>
-        <ul className="mt-12 columns-1 gap-4 @3xl:columns-2 @5xl:columns-3">
-          {RESENAS.map((r) => (
-            <li key={r.autor} className="mb-4 break-inside-avoid">
-              <figure className="rounded-base border-2 border-tinta bg-superficie p-6">
-                <p role="img" className="text-acento-relleno [text-shadow:0_0_1px_var(--lk-texto)]" aria-label={`${r.estrellas} de 5 estrellas`}>
-                  <span aria-hidden>{"★".repeat(r.estrellas)}</span>
-                  <span aria-hidden className="text-borde [text-shadow:none]">
-                    {"★".repeat(5 - r.estrellas)}
-                  </span>
-                </p>
-                <blockquote className="mt-3 text-subtitulo leading-snug">“{r.texto}”</blockquote>
-                <figcaption className="mt-4 text-chico">
-                  <span className="font-semibold">{r.autor}</span>
-                  <span className="text-tinta-suave"> · {r.negocio}</span>
-                </figcaption>
-              </figure>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
-  );
-}
-
 /* ───────────── Beneficios ───────────── */
 
 export function Beneficios() {
@@ -583,9 +573,38 @@ export function Beneficios() {
   );
 }
 
+/* ───────────── Confianza ───────────── */
+
+export function Confianza() {
+  return (
+    <section aria-labelledby="confianza-titulo" className={`${diferida} ${margen} py-24`}>
+      <h2 id="confianza-titulo" className={`${afiche} max-w-5xl text-titulo`}>
+        Lo que te <span className="resaltado">aseguramos</span>
+      </h2>
+      <ul className="mt-14 grid gap-x-12 @4xl:grid-cols-2 @6xl:grid-cols-3">
+        {CONFIANZA.map((b) => (
+          <li key={b.titulo} className="border-t-2 border-tinta py-7">
+            <h3 className={`${afiche} text-[clamp(1.6rem,1.1rem+1.8cqi,2.2rem)] leading-none`}>{b.titulo}</h3>
+            <p className="mt-3 max-w-medida text-tinta-suave">{b.texto}</p>
+          </li>
+        ))}
+      </ul>
+      <p className="mt-4 text-chico text-tinta-suave">
+        Está todo por escrito en los{" "}
+        <Link href="/terminos" className="font-semibold underline underline-offset-4">
+          Términos y condiciones
+        </Link>
+        .
+      </p>
+    </section>
+  );
+}
+
 /* ───────────── Preguntas ───────────── */
 
-export function Preguntas() {
+/** Preguntas frecuentes: salen de las dudas de Alto, así el chat y la página dicen lo mismo. */
+export function Preguntas({ ids = PREGUNTAS_PORTADA }: { ids?: readonly string[] }) {
+  const lista = ids.map((id) => DUDAS.find((d) => d.id === id)).filter((d) => d !== undefined);
   return (
     <section id="preguntas" aria-labelledby="preguntas-titulo" className={`${diferida} ${margen} scroll-mt-4 bg-superficie-2 py-24`}>
       {/* Título arriba y la lista centrada, en una columna que no se estira de punta a punta. */}
@@ -594,18 +613,25 @@ export function Preguntas() {
           Preguntas frecuentes
         </h2>
         <div className="mt-10 border-b-2 border-tinta">
-          {PREGUNTAS.map((f) => (
-            <details key={f.pregunta} className="group border-t-2 border-tinta">
+          {lista.map((f) => (
+            <details key={f.id} className="group border-t-2 border-tinta">
               <summary className="flex min-h-16 cursor-pointer list-none items-center justify-between gap-6 py-5 text-subtitulo font-semibold [&::-webkit-details-marker]:hidden">
                 {f.pregunta}
                 <span aria-hidden className="grid size-10 shrink-0 place-items-center rounded-full border-2 border-tinta text-cuerpo transition-colors group-open:bg-acento-relleno">
                   <span className="transition-transform group-open:rotate-45">+</span>
                 </span>
               </summary>
-              <p className="max-w-medida pb-6 text-tinta-suave">{f.respuesta}</p>
+              <div className="max-w-medida space-y-2 pb-6 text-tinta-suave">
+                {f.respuesta().map((t) => (
+                  <p key={t}>{t}</p>
+                ))}
+              </div>
             </details>
           ))}
         </div>
+        <p className="mt-6 text-center text-chico">
+          ¿Te quedó otra duda? <AbrirAlto className="font-semibold underline underline-offset-4">Preguntale a Alto</AbrirAlto>.
+        </p>
       </div>
     </section>
   );
@@ -615,20 +641,18 @@ export function Preguntas() {
 
 export function Cierre({ whatsapp }: { whatsapp: string | undefined }) {
   return (
-    <section aria-labelledby="cierre-titulo" className="bg-acento-relleno py-24 text-sobre-acento @5xl:py-20">
+    <section id="contacto" aria-labelledby="cierre-titulo" className="scroll-mt-4 bg-acento-relleno py-24 text-sobre-acento @5xl:py-20">
       <div className={margen}>
-        <h2 id="cierre-titulo" className={`${afiche} text-[clamp(2.5rem,12.5cqi,7rem)] leading-[0.84]`}>
-          ¿Arrancamos?
+        <h2 id="cierre-titulo" className={`${afiche} max-w-[16ch] text-[clamp(2.5rem,8cqi,6rem)] leading-[0.88]`}>
+          Contanos qué necesita tu negocio
         </h2>
         <div className="mt-10 flex flex-wrap items-center justify-between gap-6 border-t-2 border-tinta pt-8">
-          <p className="max-w-[30ch] text-subtitulo">Armala ahora; si algo no te cierra, lo charlamos.</p>
+          <p className="max-w-[34ch] text-subtitulo">Te respondemos personas, con una propuesta para lo tuyo. Sin compromiso.</p>
           <div className="flex flex-wrap gap-3">
-            <Link href="/configurador" className={boton.tinta}>
-              Armar mi página
-            </Link>
+            <AbrirAlto className={boton.tinta}>Encontrar mi solución</AbrirAlto>
             {whatsapp && (
               <a href={`https://wa.me/${whatsapp}`} target="_blank" rel="noopener noreferrer" className={boton.contorno}>
-                Escribime
+                Escribinos por WhatsApp
               </a>
             )}
           </div>
@@ -649,43 +673,62 @@ export function Pie() {
           <p className="mt-3 text-chico opacity-80">Producto cordobés. Hecho por sdv12 y jrd9 - 2026</p>
           <p className="mt-1 text-mini tabular-nums opacity-60">v{process.env.NEXT_PUBLIC_VERSION}</p>
         </div>
-        <nav aria-label="Demos">
-          <ul className="flex flex-wrap gap-x-6 gap-y-2 text-chico">
-            {PLANTILLAS.map((p) => (
-              <li key={p}>
-                <Link href={`/l/${FICHAS[p].slug}`} className="underline-offset-4 hover:underline">
-                  Demo {registry[p].meta.rubro.toLowerCase()}
-                </Link>
-              </li>
-            ))}
-            <li>
-              <Link href="/c/demo-verduleria" className="underline-offset-4 hover:underline">
-                Demo caja
-              </Link>
-            </li>
-            <li>
-              <Link href="/c/pro" className="underline-offset-4 hover:underline">
-                Demo caja pro
-              </Link>
-            </li>
-            <li>
-              <Link href="/agenda" className="font-semibold underline underline-offset-4">
-                Turnos
-              </Link>
-            </li>
-            <li>
-              <Link href="/caja" className="font-semibold underline underline-offset-4">
-                Caja
-              </Link>
-            </li>
-            <li>
-              <Link href="/configurador" className="font-semibold underline underline-offset-4">
-                Configurador
-              </Link>
-            </li>
-          </ul>
-        </nav>
+        <div className="grid gap-8 text-chico @xl:grid-cols-3">
+          <nav aria-label="Soluciones">
+            <p className="font-semibold opacity-70">Soluciones</p>
+            <ul className="mt-3 space-y-2">
+              <li><Link href="/web" className="underline-offset-4 hover:underline">Al Toque Web</Link></li>
+              <li><Link href="/agenda" className="underline-offset-4 hover:underline">Al Toque Turnos</Link></li>
+              <li><Link href="/caja" className="underline-offset-4 hover:underline">Al Toque Caja</Link></li>
+              <li><Link href="/#tienda" className="underline-offset-4 hover:underline">Al Toque Tienda (próximamente)</Link></li>
+            </ul>
+          </nav>
+          <nav aria-label="Demos">
+            <p className="font-semibold opacity-70">Demos</p>
+            <ul className="mt-3 space-y-2">
+              {PLANTILLAS.map((p) => (
+                <li key={p}>
+                  <Link href={`/l/${FICHAS[p].slug}`} className="underline-offset-4 hover:underline">
+                    Página de {registry[p].meta.rubro.toLowerCase()}
+                  </Link>
+                </li>
+              ))}
+              <li><Link href="/turnos" className="underline-offset-4 hover:underline">Agenda de turnos</Link></li>
+              <li><Link href="/c/demo-verduleria" className="underline-offset-4 hover:underline">Caja simple</Link></li>
+              <li><Link href="/c/pro" className="underline-offset-4 hover:underline">Caja pro</Link></li>
+            </ul>
+          </nav>
+          <nav aria-label="Contacto">
+            <p className="font-semibold opacity-70">Contacto</p>
+            <ul className="mt-3 space-y-2">
+              <li><Link href="/#contacto" className="underline-offset-4 hover:underline">Contanos qué necesitás</Link></li>
+              <li><a href={`mailto:${TITULAR.email}`} className="underline-offset-4 hover:underline">{TITULAR.email}</a></li>
+              <li><Link href="/configurador" className="underline-offset-4 hover:underline">Configurador de páginas</Link></li>
+            </ul>
+          </nav>
+        </div>
       </div>
+      {/* Legales: el botón de arrepentimiento destacado (Res. SCI 424/2020) y el link de reclamos (Res. SCI 274/2021). */}
+      <nav aria-label="Legales" className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-fondo/20 pt-6 text-chico">
+        <Link href="/arrepentimiento" className="inline-flex min-h-10 items-center rounded-control border-2 border-fondo px-4 font-semibold hover:bg-fondo hover:text-tinta">
+          Botón de arrepentimiento
+        </Link>
+        <Link href="/terminos" className="underline-offset-4 hover:underline">
+          Términos y condiciones (contrato de adhesión)
+        </Link>
+        <Link href="/privacidad" className="underline-offset-4 hover:underline">
+          Política de privacidad
+        </Link>
+        <Link href="/baja" className="underline-offset-4 hover:underline">
+          Botón de baja
+        </Link>
+        <Link href="/legales" className="underline-offset-4 hover:underline">
+          Información legal
+        </Link>
+        <a href="https://www.argentina.gob.ar/produccion/defensadelconsumidor/formulario" target="_blank" rel="noopener noreferrer" className="underline-offset-4 hover:underline">
+          Defensa de las y los Consumidores. Para reclamos ingrese aquí
+        </a>
+      </nav>
     </footer>
   );
 }

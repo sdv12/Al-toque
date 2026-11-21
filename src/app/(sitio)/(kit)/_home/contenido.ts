@@ -4,16 +4,8 @@ type Plantilla = (typeof PLANTILLAS_DE_RUBRO)[number];
 
 /** Textos de la home pública. Solo afirmaciones que el producto cumple hoy. */
 
-export const RUBROS = [
-  "Barberías",
-  "Consultorios",
-  "Estética",
-  "Casas de campo",
-  "Carpinterías",
-  "Talleres",
-  "Profes particulares",
-  "Lo que tengas",
-];
+/** Rubros de Al Toque. Salud no va: es de Sala de Espera, la marca de ese rubro. */
+export const RUBROS = ["Peluquerías", "Estética", "Alojamientos", "Comercios", "Oficios", "Talleres", "Clases", "Lo que tengas"];
 
 type Ficha = {
   slug: string;
@@ -32,16 +24,6 @@ export const FICHAS: Record<Plantilla, Ficha> = {
       "El cliente reserva con el barbero que elige, en cinco pasos cortos.",
       "Precios en formato pizarra, como la carta de un bar.",
       "En el celular, el botón de reservar siempre a mano.",
-    ],
-  },
-  consultorio: {
-    slug: "demo-consultorio",
-    fuenteDisplay: "var(--fuente-consultorio)",
-    bajada: "Clara y confiable: primero el turno, después la información.",
-    destacados: [
-      "El pedido de turno se ve apenas se abre la página.",
-      "Prestaciones comparables: duración, modalidad y cobertura.",
-      "Obras sociales con buscador y matrículas a la vista.",
     ],
   },
   alojamiento: {
@@ -66,10 +48,11 @@ export const FICHAS: Record<Plantilla, Ficha> = {
   },
 };
 
-export const PASOS = [
+/** Cómo funciona Al Toque Web (configurador). */
+export const PASOS_WEB = [
   {
     titulo: "Elegí la plantilla de tu rubro",
-    texto: "Barbería, consultorio, casas de campo o una general para cualquier oficio. Cada una está armada distinto.",
+    texto: "Barbería y estética, casas de campo o una general para cualquier oficio. Cada una está armada distinto.",
   },
   {
     titulo: "Modificá a tu gusto y mirá cómo queda",
@@ -106,45 +89,6 @@ export const BENEFICIOS = [
     titulo: "La cambiás cuando quieras",
     texto: "Volvés al configurador, ajustás lo que haga falta y me mandás la nueva versión.",
   },
-];
-
-export const PREGUNTAS = [
-  {
-    pregunta: "¿Tengo que saber de diseño o de programación?",
-    respuesta: "No. Elegís opciones y escribís tus textos; el diseño ya está resuelto para tu rubro.",
-  },
-  {
-    pregunta: "¿Cómo me llegan los turnos o las consultas?",
-    respuesta:
-      "Por WhatsApp, con el mensaje ya armado: qué servicio o qué casa, qué día, a qué hora y a nombre de quién. Vos confirmás respondiendo.",
-  },
-  {
-    pregunta: "¿Y si todavía no tengo fotos?",
-    respuesta: "Se publica igual. Donde va cada foto aparece un recuadro que dice qué foto corresponde. Cuando las tengas, las sumamos.",
-  },
-  {
-    pregunta: "¿Puedo cambiar cosas después?",
-    respuesta: "Sí. Volvés al configurador, cambiás lo que quieras y me mandás la versión nueva.",
-  },
-  {
-    pregunta: "¿Se guarda lo que voy armando?",
-    respuesta: "Sí, en tu navegador. Si cerrás y volvés desde el mismo dispositivo, lo encontrás donde lo dejaste.",
-  },
-];
-
-/**
- * RESEÑAS DE MUESTRA. Mientras sea true, la home muestra una aclaración visible de que son de
- * ejemplo. Cuando haya reseñas reales: reemplazar la lista y pasarlo a false.
- */
-export const RESENAS_DE_MUESTRA = true;
-
-export const RESENAS = [
-  { autor: "Mariano R.", negocio: "Barbería en Alberdi", texto: "En una tarde tenía la página andando. Ahora los turnos me llegan por WhatsApp con todo armado y no pierdo tiempo preguntando.", estrellas: 5 },
-  { autor: "Lucía F.", negocio: "Consultorio de nutrición", texto: "Me gustó poder ver cómo quedaba mientras cambiaba los textos. Mis pacientes encuentran la lista de obras sociales sin preguntarme.", estrellas: 5 },
-  { autor: "Carla y Matías", negocio: "Cabañas en Calamuchita", texto: "El calendario con el estimado nos ahorra un montón de mensajes. La gente llega preguntando por fechas concretas.", estrellas: 5 },
-  { autor: "Gustavo P.", negocio: "Carpintería a medida", texto: "Subí los trabajos con antes y después y la diferencia se nota: los presupuestos llegan más claros.", estrellas: 4 },
-  { autor: "Romina D.", negocio: "Centro de estética", texto: "Elegí mis colores y el fondo, y quedó con la identidad de mi marca. Se ve muy bien en el celular.", estrellas: 5 },
-  { autor: "Diego A.", negocio: "Profe particular", texto: "Arranqué con la hoja en blanco y sumé solo lo que necesitaba. Simple y rápido.", estrellas: 5 },
 ];
 
 /**
@@ -189,3 +133,45 @@ export const PROYECTOS = [
     url: "https://for-her-estudio.netlify.app",
   },
 ];
+
+/* ───────────── Portada ───────────── */
+
+/** Cómo funciona, para cualquier producto. */
+export const PASOS = [
+  {
+    titulo: "Elegí",
+    texto: "Mirá las soluciones y elegí la tuya. Si no sabés por dónde empezar, Alto te hace unas preguntas y te recomienda.",
+  },
+  {
+    titulo: "Personalizá",
+    texto: "Probala con tus datos antes de pagar nada: tu página en el configurador, tu agenda o tu caja con tus productos.",
+  },
+  {
+    titulo: "Publicá",
+    texto: "Nos llega tu pedido, lo dejamos andando y te acompañamos: los cambios chicos de todos los meses ya están incluidos.",
+  },
+];
+
+/** Selector de necesidades: cada una lleva a su solución. */
+export const NECESIDADES = [
+  { texto: "Quiero una página web", detalle: "Que me encuentren y me escriban", href: "/web" },
+  { texto: "Quiero organizar mis turnos", detalle: "Que reserven solos, sin mensajes", href: "/agenda" },
+  { texto: "Quiero controlar mi comercio", detalle: "Ventas, caja y fiado en orden", href: "/caja" },
+  { texto: "Quiero vender por internet", detalle: "Catálogo y pedidos online", href: "#tienda" },
+] as const;
+
+/**
+ * Confianza: solo lo que el servicio cumple hoy y está en los Términos y condiciones.
+ * Nada de números de clientes ni testimonios hasta tenerlos de verdad.
+ */
+export const CONFIANZA = [
+  { titulo: "La probás antes de pagar", texto: "Todas las demos se usan sin registrarse y sin dar datos. Pagás cuando sabés qué te llevás." },
+  { titulo: "Personas que te responden", texto: "Soporte por WhatsApp o correo con respuesta dentro de las 48 horas hábiles. Hablás con quien lo hizo." },
+  { titulo: "Pensado para el celular", texto: "Se diseña y se prueba en pantallas de celular, que es donde te miran tus clientes y donde vas a usarlo vos." },
+  { titulo: "Tu dominio, a tu nombre", texto: "La dirección de tu página se registra a tu nombre: es tuya aunque algún día te vayas." },
+  { titulo: "Sin permanencia", texto: "Te das de baja cuando quieras, sin penalidad, y te llevás tu contenido y tus datos. Y tenés 10 días para arrepentirte." },
+  { titulo: "Seguro y al día", texto: "Conexión cifrada, proveedores reconocidos y actualizaciones de seguridad incluidas en el mensual." },
+];
+
+/** Las preguntas frecuentes de la portada salen de las dudas de Alto (una sola fuente). */
+export const PREGUNTAS_PORTADA = ["precio", "mensual", "tiempo", "pago", "cambios", "dominio", "datos", "baja", "saber", "fotos"];

@@ -1,14 +1,20 @@
 import { normalizarWhatsappAR } from "@/core/lib/whatsapp";
 import {
   COBROS,
+  COMENTARIO_RUBRO,
+  CONOCIO,
+  CONSEJO,
   DIFICULTADES,
   DOMINIO,
   EQUIPO,
   FOTOS,
   FUNCIONES,
+  HORARIO,
   LOGO,
+  MODALIDAD,
   PLAZO,
   PRESENCIA,
+  PRESUPUESTO,
   PRIORIDADES,
   PRODUCTOS,
   RUBROS,
@@ -74,12 +80,50 @@ export const PREGUNTAS: Pregunta[] = [
     guardar: (v, _r, escrito) => ({ rubro: RUBROS.find((x) => x.id === v) ?? RUBROS[RUBROS.length - 1]!, rubroOtro: v === "otro" ? escrito?.trim() || undefined : undefined }),
   },
   {
+    id: "modalidad",
+    tipo: "una",
+    texto: (r) => [...(r.rubro && COMENTARIO_RUBRO[r.rubro.id] ? [COMENTARIO_RUBRO[r.rubro.id]!] : []), "¿Dónde atendés a tus clientes?"],
+    opciones: () => desde(MODALIDAD),
+    guardar: (v) => ({ modalidad: v as Respuestas["modalidad"] }),
+  },
+  {
+    id: "horario",
+    tipo: "una",
+    texto: () => ["¿En qué horario trabajás, más o menos?"],
+    opciones: () => desde(HORARIO),
+    saltear: "Prefiero no decirlo",
+    guardar: (v) => ({ horario: (v ?? undefined) as Respuestas["horario"] }),
+  },
+  {
     id: "presencia",
     tipo: "varias",
     texto: () => ["¿Dónde te encuentran hoy tus clientes? Marcá todas las que correspondan."],
     opciones: () => desde(PRESENCIA),
     ninguna: "Todavía en ningún lado",
     guardar: (v) => ({ presencia: v as Respuestas["presencia"] }),
+  },
+  {
+    id: "instagram",
+    tipo: "texto",
+    texto: () => ["¿Cuál es tu usuario de Instagram? Así vemos tu estilo y lo sumamos a la página."],
+    aplica: (r) => !!r.presencia?.includes("instagram"),
+    placeholder: "@tunegocio",
+    max: 60,
+    saltear: "Prefiero no pasarlo",
+    guardar: (t) => {
+      const u = t?.trim().replace(/^https?:\/\/(www\.)?instagram\.com\//i, "").replace(/^@/, "").replace(/\/.*$/, "");
+      return { instagram: u ? `@${u}` : undefined };
+    },
+  },
+  {
+    id: "webActual",
+    tipo: "texto",
+    texto: () => ["¿Cuál es la dirección de tu página actual? La miramos para mejorarla."],
+    aplica: (r) => !!r.presencia?.includes("web"),
+    placeholder: "tunegocio.com.ar",
+    max: 120,
+    saltear: "Prefiero no pasarla",
+    guardar: (t) => ({ webActual: t?.trim() || undefined }),
   },
   {
     id: "dificultades",
@@ -92,7 +136,10 @@ export const PREGUNTAS: Pregunta[] = [
   {
     id: "prioridad",
     tipo: "una",
-    texto: (r) => [r.dificultades?.length ? "Entendido, eso tiene solución." : "Mejor así 🙌", "¿Qué querés resolver primero?"],
+    texto: (r) => {
+      const primera = r.dificultades?.[0];
+      return [primera ? `Entendido, eso tiene solución. ${CONSEJO[primera]}` : "Mejor así 🙌", "¿Qué querés resolver primero?"];
+    },
     opciones: () => desde(PRIORIDADES),
     guardar: (v) => ({ prioridad: v as Respuestas["prioridad"] }),
   },
@@ -187,6 +234,14 @@ export const PREGUNTAS: Pregunta[] = [
     guardar: (v, r) => ({ color: (r.rubro && coloresPara(r.rubro).find((c) => c.hex === v)) || null }),
   },
   {
+    id: "presupuesto",
+    tipo: "una",
+    texto: () => ["¿Cuánto pensás invertir para arrancar? Es para proponerte algo que te cierre."],
+    opciones: () => desde(PRESUPUESTO),
+    saltear: "Prefiero no decirlo",
+    guardar: (v) => ({ presupuesto: (v ?? undefined) as Respuestas["presupuesto"] }),
+  },
+  {
     id: "plazo",
     tipo: "una",
     texto: () => ["¿Para cuándo lo necesitás?"],
@@ -194,9 +249,17 @@ export const PREGUNTAS: Pregunta[] = [
     guardar: (v) => ({ plazo: v as Respuestas["plazo"] }),
   },
   {
+    id: "conocio",
+    tipo: "una",
+    texto: () => ["¿Cómo nos conociste?"],
+    opciones: () => desde(CONOCIO),
+    saltear: "Saltear",
+    guardar: (v) => ({ conocio: (v ?? undefined) as Respuestas["conocio"] }),
+  },
+  {
     id: "contacto",
     tipo: "texto",
-    texto: () => ["Ya casi. ¿Cómo te llamás?"],
+    texto: () => ["Ya casi. Para responderte necesito un par de datos: los usamos solo para eso (está todo en la Política de privacidad).", "¿Cómo te llamás?"],
     placeholder: "Tu nombre…",
     max: 60,
     saltear: "Prefiero no decirlo",
@@ -248,6 +311,17 @@ export function respuestaEnTexto(p: Pregunta, r: Parcial): string {
       return r.whatsapp ? `+${r.whatsapp}` : "Prefiero que no";
     case "comentario":
       return r.comentario ?? "Nada más";
+    case "instagram":
+      return r.instagram ?? "Prefiero no pasarlo";
+    case "webActual":
+      return r.webActual ?? "Prefiero no pasarla";
+    case "horario":
+    case "presupuesto":
+      if (!(r as Record<string, unknown>)[p.id]) return "Prefiero no decirlo";
+      break;
+    case "conocio":
+      if (!r.conocio) return "Saltear";
+      break;
   }
   const valor = (r as Record<string, unknown>)[p.id];
   if (Array.isArray(valor)) return valor.length ? valor.map((v: string) => opcion(v)).join(" · ") : p.tipo === "varias" ? p.ninguna : "—";

@@ -17,7 +17,7 @@ import { leerChangelog } from "./changelog";
  * No tiene datos privados: todo lo que muestra ya es público.
  */
 export const metadata: Metadata = {
-  title: "Panel · Al toque",
+  title: "Panel · Al Toque",
   robots: { index: false, follow: false },
 };
 
@@ -77,7 +77,7 @@ function demos(): GrupoDemos[] {
       titulo: "Turnos",
       bajada: "La agenda de turnos (ex Agenda Rápida): guarda todo en el navegador; el selector de abajo a la derecha cambia de diseño y de rubro.",
       items: [
-        { titulo: "Agenda al toque", etiqueta: "Presentación", texto: "Los nueve diseños, el panel, los rubros y el precio.", href: "/agenda" },
+        { titulo: "Al Toque Turnos", etiqueta: "Presentación", texto: "Los nueve diseños, el panel, los rubros y el precio.", href: "/agenda" },
         {
           titulo: "Probalo con tus datos",
           etiqueta: "Asistente",

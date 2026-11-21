@@ -4,6 +4,21 @@ Versionado semántico: PATCH = arreglos y ajustes; MINOR = funcionalidad nueva v
 MAJOR = cambios que rompen algo existente (formato de configs, flujo, backend).
 La versión se muestra en el footer de la home y en el configurador.
 
+## 1.14.0 · 2026-11-21
+- **Ahora somos Al Toque**: soluciones digitales para negocios (páginas web, turnos y caja), no solo páginas. Cambia la marca en todo el sitio.
+- **Portada nueva**: «La solución para tu negocio, al toque», con el texto y los celulares alineados en dos columnas; los rubros pasan solos en una marquesina (se frena al pasar el mouse); las soluciones son un acordeón horizontal (en compu, tarjetas una al lado de la otra que se abren y pasan solas mientras nadie las toca; en celular, una debajo de la otra); un selector de lo que necesitás (web, turnos, controlar el comercio, vender por internet), las soluciones con su precio y su demo, Al Toque Tienda como próximamente (con «Avisame cuando esté»), desarrollos a medida, proyectos, cómo funciona, lo que te aseguramos y preguntas frecuentes.
+- «Encontrar mi solución» abre a Alto desde cualquier página. Las preguntas frecuentes salen de las dudas de Alto: el chat y la página dicen lo mismo.
+- **Al Toque Web** (`/web`): las plantillas, el video del configurador, los precios y lo que trae cada página pasan a su propia página.
+- Sin reseñas de muestra.
+- Salud queda para Sala de Espera: Al Toque ya no ofrece la plantilla de consultorio ni los rubros de salud en Alto y en la agenda (lo ya armado sigue funcionando).
+
+## 1.13.0 · 2026-11-18
+- **Todo lo legal**: Términos y condiciones (contrato de adhesión, 30 cláusulas: anticipo del 50 %, saldo antes de publicar, mora y suspensión con aviso, dos rondas de ajustes, aprobación tácita, materiales, propiedad intelectual sujeta al pago, límite de responsabilidad, indemnidad, fuerza mayor), Política de privacidad (Ley 25.326, leyenda de la AAIP), Botón de arrepentimiento (Res. SCI 424/2020, sin registro y con código de solicitud), Botón de baja e Información legal. Link a Defensa del Consumidor (Res. SCI 274/2021) en el pie.
+- Los datos del titular están en `legales/datos.ts`; mientras falte alguno, los documentos muestran un aviso de borrador.
+- Aviso de aceptación de Términos y Privacidad al enviar un pedido (configurador, `/caja`, Alto, turnos) y links legales en las cajas y en la agenda. La agenda tiene sus propios «Términos del turno».
+- **Alto responde dudas**: «Tengo una pregunta» con 15 preguntas frecuentes (precios, mensual, plazos, pagos, cambios, baja, arrepentimiento, dominio, factura, datos…) o escribiéndola con tus palabras, en cualquier momento del chat.
+- **Alto, aún más fino**: 16 rubros nuevos (psicología, nutrición, odontología, veterinaria, tatuajes, gastronomía, tienda, construcción, inmobiliaria…), nuevas dificultades y funciones (catálogo, menú, pedidos, preguntas frecuentes, equipo, promos, Instagram, tienda, idiomas). Pregunta dónde atiende, su horario, su Instagram y su página actual, cuánto piensa invertir y cómo nos conoció. Comenta cada rubro, da un consejo por lo que le complica y, si el total pasa el presupuesto, propone arrancar por partes.
+
 ## 1.12.0 · 2026-11-16
 - **Alto, más completo**: ahora es un robot con los colores de la marca (parpadea y su antena late) y saluda con la viñeta «¡Bienvenido/a! Soy Alto, el asistente virtual. ¿Te ayudo a armar tu página?».
 - Más fácil de usar: barra de progreso, «Volver» para corregir la respuesta anterior, «Saltear» en lo opcional y «Otro» para escribir el rubro.

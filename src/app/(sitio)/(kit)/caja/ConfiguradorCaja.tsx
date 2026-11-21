@@ -10,6 +10,7 @@ import { claseControl } from "../configurador/campos";
 import { slugDe } from "../configurador/estado";
 import { afiche, boton, margen } from "../_home/Secciones";
 import { enviarPedido, type ResultadoPedido } from "../pedido";
+import { AvisoDatos } from "../legales/AvisoDatos";
 
 type Envio = { estado: "enviando" } | ({ estado: "listo" } & ResultadoPedido) | { estado: "error" };
 
@@ -254,6 +255,7 @@ function Formulario({ whatsapp, inicial }: { whatsapp: string | undefined; inici
             )}
             {!validacion.ok && <p className="mt-3 text-chico text-[#b3261e]">Completá el nombre del negocio para pedirla.</p>}
             {!whatsapp && <p className="mt-3 text-chico text-tinta-suave">Falta configurar NEXT_PUBLIC_OWNER_WHATSAPP.</p>}
+            <AvisoDatos accion="Pedir mi caja por WhatsApp" className="mt-3" />
             <p className="mt-3 text-mini text-tinta-suave">
               Precios de referencia en pesos argentinos, vigentes hasta el {preciosVigentesHasta()} (se actualizan cada tres meses). El valor final se confirma al charlar tu caja.
             </p>

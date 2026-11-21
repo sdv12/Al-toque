@@ -1,6 +1,6 @@
 "use client";
 
-import { PLANTILLAS, registry, type Plantilla } from "@/core/registry";
+import { PLANTILLAS, PLANTILLAS_OCULTAS, registry, type Plantilla } from "@/core/registry";
 import type { LandingConfig } from "@/core/schema/landing-config";
 import { PLANTILLAS_LISTAS } from "@/templates";
 import { Bloque, botonKit } from "../campos";
@@ -42,7 +42,7 @@ export function PestanaPlantilla({ config, usarEjemplo, pendiente, resolverPendi
         <fieldset>
           <legend className="sr-only">Elegí una plantilla</legend>
           <div className="space-y-2">
-            {PLANTILLAS.map((p) => {
+            {PLANTILLAS.filter((p) => !PLANTILLAS_OCULTAS.includes(p) || config.plantilla === p).map((p) => {
               const { meta } = registry[p];
               const lista = PLANTILLAS_LISTAS.includes(p);
               return (

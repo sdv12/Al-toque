@@ -53,7 +53,7 @@ export function AvisoPrecios() {
       aria-modal="false"
       aria-labelledby={titulo}
       onKeyDown={(e) => e.key === "Escape" && cerrar()}
-      className="fixed inset-x-3 bottom-3 z-40 max-w-sm rounded-base bg-tinta p-4 text-fondo sm:p-5 shadow-[0_24px_48px_-20px_rgb(23_21_15/0.6)] transition duration-300 ease-out starting:translate-y-4 starting:opacity-0 motion-reduce:transition-none sm:right-auto sm:left-6 sm:bottom-6"
+      className="fixed inset-x-3 bottom-24 z-40 max-w-sm rounded-base bg-tinta p-4 text-fondo sm:p-5 shadow-[0_24px_48px_-20px_rgb(23_21_15/0.6)] transition duration-300 ease-out starting:translate-y-4 starting:opacity-0 motion-reduce:transition-none sm:right-auto sm:left-6 sm:bottom-6"
     >
       <div className="flex items-start gap-4">
         <span aria-hidden className="hidden size-11 shrink-0 place-items-center rounded-control bg-acento-relleno text-sobre-acento sm:grid">

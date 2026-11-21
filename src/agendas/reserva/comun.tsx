@@ -1,6 +1,7 @@
 "use client";
 /* eslint-disable @next/next/no-img-element -- los logos son data URL guardados en el navegador: next/image no los optimiza. */
 
+import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import { useStore, waLink } from '../lib/store'
 import type { Negocio, Servicio, Turno } from '../lib/tipos'
@@ -79,7 +80,8 @@ export function Pie({ clase = '' }: { clase?: string }) {
   return (
     <footer className={'pie ' + clase}>
       <div className="pie-fila">
-        <a href="#/terminos">Términos y condiciones</a>
+        <a href="#/terminos">Términos del turno</a>
+        <Link href="/privacidad">Privacidad</Link>
         <span>Producto cordobés 🧉</span>
         <a href="#/admin">Soy el profesional</a>
       </div>

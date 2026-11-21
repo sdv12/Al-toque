@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
+import { EVENTO_ABRIR_ALTO } from "./AbrirAlto";
 import { Robot } from "./Robot";
 
 /*
@@ -29,6 +30,25 @@ export function Alto({ whatsapp }: { whatsapp: string | undefined }) {
     if (cerrada) return;
     const t = setTimeout(() => setVineta(true), 2500);
     return () => clearTimeout(t);
+  }, []);
+
+  // Los botones "Encontrar mi solución" lo abren con un evento; ?alto en la dirección lo abre al entrar.
+  useEffect(() => {
+    const raiz = document.documentElement;
+    raiz.dataset.alto = "1";
+    const alAbrir = () => {
+      fueAbierto.current = true;
+      setVineta(false);
+      setUsado(true);
+      setAbierto(true);
+    };
+    window.addEventListener(EVENTO_ABRIR_ALTO, alAbrir);
+    const t = new URLSearchParams(location.search).has("alto") ? setTimeout(alAbrir, 0) : undefined;
+    return () => {
+      delete raiz.dataset.alto;
+      window.removeEventListener(EVENTO_ABRIR_ALTO, alAbrir);
+      clearTimeout(t);
+    };
   }, []);
 
   // Al cerrar el chat, el foco vuelve a la burbuja.

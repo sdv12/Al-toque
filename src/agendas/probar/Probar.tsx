@@ -1,6 +1,7 @@
 "use client";
 /* eslint-disable @next/next/no-img-element -- los logos son data URL guardados en el navegador: next/image no los optimiza. */
 
+import Link from 'next/link'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowLeft, ArrowRight, Plus, Trash2, Upload, Smartphone, Monitor, Eye, X, Check, Copy, LayoutDashboard, ExternalLink, MessageCircle } from 'lucide-react'
 import { useStore } from '../lib/store'
@@ -248,6 +249,9 @@ function LoQuiero({ link }: { link: string }) {
     <>
       <button className="btn grande pr-quiero" disabled={enviando} onClick={pedir}><MessageCircle size={18} /> {enviando ? 'Enviando…' : 'Lo quiero para mi negocio'}</button>
       <p className="small muted centro">Desde {estimado}. Te confirmamos el precio final por WhatsApp.</p>
+      <p className="small muted centro">
+        Al tocar «Lo quiero» aceptás los <Link href="/terminos">Términos y condiciones</Link> y la <Link href="/privacidad">Política de privacidad</Link>. Usamos tus datos solo para responderte.
+      </p>
     </>
   )
 }

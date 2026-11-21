@@ -1,6 +1,12 @@
-# Landing al toque
+# Al Toque
 
-Landings para negocios chicos, armadas por rubro. El cliente entra al **configurador**, elige una
+Soluciones digitales para negocios chicos: **Al Toque Web** (`/web`, páginas por rubro), **Al Toque
+Turnos** (`/agenda` y la app en `/turnos`), **Al Toque Caja** (`/caja`) y Tienda (próximamente). La
+portada orienta y lleva a cada producto; «Encontrar mi solución» abre a Alto (evento de
+`_alto/AbrirAlto.tsx`, o `/?alto` desde páginas sin Alto). Salud no va en Al Toque: es de Sala de
+Espera (`PLANTILLAS_OCULTAS` en el registry y `GRUPOS_OCULTOS` en la agenda la sacan de las listas).
+
+Al Toque Web: landings para negocios chicos, armadas por rubro. El cliente entra al **configurador**, elige una
 plantilla, la personaliza viendo el resultado en vivo y me manda su configuración por WhatsApp.
 Con esa configuración se publica su página en `/l/<slug>`.
 
@@ -71,6 +77,19 @@ reglas y opciones están en `alto.ts` (funciones puras, con tests): rubro → pl
 caja o de agenda; lo que le complica y lo que marca → productos; precios de `precios.ts`. Sin IA.
 Al final deja el borrador del configurador armado (guarda el anterior en
 `landing-kit:borrador-anterior`) o abre la agenda o la caja precargadas.
+El guion (qué pregunta y cuándo) está en `preguntas.ts`; las dudas frecuentes que responde, con sus
+palabras clave, en `dudas.ts` (los precios salen de `precios.ts`).
+
+## Legales
+
+Términos (`/terminos`), Privacidad (`/privacidad`), Botón de arrepentimiento (`/arrepentimiento`),
+Botón de baja (`/baja`) e Información legal (`/legales`), en `src/app/(sitio)/(kit)/`. Los datos
+del titular (nombre, CUIT, IVA, domicilio, registro de la base en la AAIP) están **solo** en
+`legales/datos.ts`: mientras alguno diga «[A COMPLETAR…]», los documentos muestran un aviso de
+borrador. Al cambiar un documento, actualizar `VIGENCIA`. Las solicitudes de arrepentimiento y baja
+llegan por Netlify Forms (`arrepentimiento`, `baja` en `public/__forms.html`) con su código; hay
+que confirmarlas por el mismo medio dentro de las 24 h. Lo revisa un abogado antes de usarse con
+clientes reales.
 
 ## Panel del equipo (`/adm`)
 

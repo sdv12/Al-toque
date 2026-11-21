@@ -2,24 +2,25 @@ import type { Metadata } from "next";
 import { Alto } from "./_alto/Alto";
 import { AvisoPrecios } from "./_home/AvisoPrecios";
 import { fuentesHome } from "./_home/fuentes";
-import { Beneficios, CajaDelLocal, TurnosOnline, Cierre, ComoFunciona, Encabezado, Hero, Pie, Plantillas, Precios, Preguntas, Proyectos, Resenas, Rubros } from "./_home/Secciones";
+import { Cierre, ComoFunciona, Confianza, Encabezado, Hero, Necesidades, Pie, Preguntas, Proyectos, Rubros, Soluciones } from "./_home/Secciones";
 
 export const metadata: Metadata = {
-  title: "Landing al toque · Tu página para tu negocio",
+  title: "Al Toque · Soluciones digitales para tu negocio",
   description:
-    "Plantillas pensadas para barberías, consultorios, casas de campo y cualquier oficio. Elegí, personalizá en vivo y mandámela: la publico.",
+    "Páginas web, turnos online y caja para comercios. Soluciones simples para peluquerías, comercios, alojamientos y oficios de Córdoba. Probalas gratis.",
   alternates: { canonical: "/" },
   openGraph: {
-    title: "Landing al toque",
-    description: "Tu negocio, con página propia. Al toque.",
+    title: "Al Toque",
+    description: "Tu negocio merece trabajar mejor. Páginas web, turnos y caja, al toque.",
     type: "website",
     locale: "es_AR",
     url: "/",
-    images: [{ url: "/muestras/barberia-escritorio.jpg", width: 1440, height: 900, alt: "Una de las plantillas de Landing al toque" }],
+    images: [{ url: "/muestras/barberia-escritorio.jpg", width: 1440, height: 900, alt: "Una página hecha con Al Toque" }],
   },
 };
 
 export default function Inicio() {
+  const whatsapp = process.env.NEXT_PUBLIC_OWNER_WHATSAPP;
   return (
     <div data-kit="home" className={fuentesHome}>
       <a
@@ -32,20 +33,17 @@ export default function Inicio() {
       <main id="contenido">
         <Hero />
         <Rubros />
+        <Necesidades />
+        <Soluciones whatsapp={whatsapp} />
         <Proyectos />
-        <Plantillas />
-        <TurnosOnline />
-        <CajaDelLocal />
         <ComoFunciona />
-        <Precios />
-        <Resenas />
-        <Beneficios />
+        <Confianza />
         <Preguntas />
-        <Cierre whatsapp={process.env.NEXT_PUBLIC_OWNER_WHATSAPP} />
+        <Cierre whatsapp={whatsapp} />
       </main>
       <Pie />
       <AvisoPrecios />
-      <Alto whatsapp={process.env.NEXT_PUBLIC_OWNER_WHATSAPP} />
+      <Alto whatsapp={whatsapp} />
     </div>
   );
 }

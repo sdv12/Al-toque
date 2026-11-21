@@ -24,5 +24,30 @@
       <textarea name="configuracion"></textarea>
       <textarea name="codigo"></textarea>
     </form>
+    <!-- Botón de arrepentimiento (Res. SCI 424/2020) y botón de baja (Ley 24.240, art. 10 ter). -->
+    <form name="arrepentimiento" method="POST" netlify netlify-honeypot="bot-field" hidden>
+      <input type="hidden" name="form-name" value="arrepentimiento" />
+      <input type="hidden" name="subject" />
+      <input name="bot-field" />
+      <input name="codigo" />
+      <input name="nombre" />
+      <input name="contacto" />
+      <input name="pedido" />
+      <input name="servicio" />
+      <input name="fecha" />
+      <textarea name="motivo"></textarea>
+    </form>
+    <form name="baja" method="POST" netlify netlify-honeypot="bot-field" hidden>
+      <input type="hidden" name="form-name" value="baja" />
+      <input type="hidden" name="subject" />
+      <input name="bot-field" />
+      <input name="codigo" />
+      <input name="nombre" />
+      <input name="contacto" />
+      <input name="pedido" />
+      <input name="servicio" />
+      <input name="fecha" />
+      <textarea name="motivo"></textarea>
+    </form>
   </body>
 </html>

@@ -24,7 +24,7 @@ export function preciosVigentesHasta(): string {
   return LARGA.format(new Date(Date.parse(`${ACTUALIZACION_PRECIOS.proxima}T00:00:00Z`) - 86_400_000));
 }
 
-/** Página con una plantilla de rubro (barbería, consultorio, casas, portfolio). */
+/** Página con una plantilla de rubro (barbería, casas, portfolio). */
 const PLANTILLA = { unico: 250_000, mensual: 15_000 };
 
 /** Página "a tu medida": incluye cierta cantidad de bloques; los demás se cobran aparte. */
@@ -120,7 +120,7 @@ export function planes() {
       desde: true,
       ...PLANTILLA,
       incluye: [
-        "Plantilla de barbería, consultorio, casas de campo o portfolio",
+        "Plantilla de barbería, casas de campo o portfolio",
         "Turnos y consultas que llegan por WhatsApp",
         "Hosting, certificado de seguridad y cambios chicos",
         "Vista previa linda cuando compartís el link",

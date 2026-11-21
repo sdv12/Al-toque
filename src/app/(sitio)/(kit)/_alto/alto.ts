@@ -26,8 +26,7 @@ export interface RubroAlto {
 
 export const RUBROS: RubroAlto[] = [
   { id: "barberia", nombre: "Barbería o peluquería", plantilla: "barberia", profesion: "peluqueria" },
-  { id: "salud", nombre: "Consultorio o salud", plantilla: "consultorio", profesion: "consultorio" },
-  { id: "estetica", nombre: "Estética, uñas o spa", plantilla: "consultorio", profesion: "unas" },
+  { id: "estetica", nombre: "Estética, uñas o spa", plantilla: "barberia", profesion: "unas" },
   { id: "clases", nombre: "Clases o entrenamiento", plantilla: "generico", profesion: "entrenamiento" },
   { id: "oficios", nombre: "Taller u oficio", plantilla: "generico", profesion: "taller" },
   { id: "alojamiento", nombre: "Cabañas o alojamiento", plantilla: "alojamiento" },
@@ -36,6 +35,18 @@ export const RUBROS: RubroAlto[] = [
   { id: "kiosco", nombre: "Kiosco", plantilla: "generico", caja: "kiosco" },
   { id: "dietetica", nombre: "Dietética", plantilla: "generico", caja: "dietetica" },
   { id: "comercio", nombre: "Comercio con empleados", plantilla: "generico", caja: "almacen" },
+  { id: "veterinaria", nombre: "Veterinaria o peluquería canina", plantilla: "generico", profesion: "veterinaria" },
+  { id: "tatuajes", nombre: "Tatuajes o piercing", plantilla: "barberia", profesion: "tatuajes" },
+  { id: "estudio", nombre: "Estudio contable o jurídico", plantilla: "generico", profesion: "asesoria" },
+  { id: "fotografia", nombre: "Fotografía", plantilla: "generico", profesion: "fotografia" },
+  { id: "musica", nombre: "Música, arte o idiomas", plantilla: "generico", profesion: "musica" },
+  { id: "autos", nombre: "Lavadero o taller de autos", plantilla: "generico", profesion: "lavadero" },
+  { id: "gastronomia", nombre: "Gastronomía: resto, bar o café", plantilla: "generico" },
+  { id: "tienda", nombre: "Tienda de ropa, regalos o deco", plantilla: "generico", caja: "almacen" },
+  { id: "construccion", nombre: "Construcción o reformas", plantilla: "generico" },
+  { id: "eventos", nombre: "Eventos, salones o catering", plantilla: "generico" },
+  { id: "turismo", nombre: "Turismo o viajes", plantilla: "alojamiento" },
+  { id: "inmobiliaria", nombre: "Inmobiliaria", plantilla: "generico" },
   // Para cualquier otro rubro, el portfolio genérico (ya viene armado; "A tu medida" arranca en blanco).
   { id: "otro", nombre: "Otro", plantilla: "generico" },
 ];
@@ -49,6 +60,13 @@ export const DIFICULTADES = {
   stock: "Controlar stock, empleados o sucursales",
   factura: "Hacer factura electrónica",
   senas: "Cobrar señas",
+  preguntas: "Responder siempre las mismas preguntas",
+  redes: "No tengo tiempo para las redes",
+  deudas: "Me deben plata o me cuesta cobrar",
+  vuelven: "Clientes que no vuelven",
+  ganancia: "No sé bien cuánto gano",
+  faltantes: "Faltantes en la caja",
+  presupuestos: "Armar presupuestos me lleva mucho tiempo",
 } as const;
 export type Dificultad = keyof typeof DIFICULTADES;
 
@@ -82,8 +100,72 @@ export const FUNCIONES = {
   resenas: "Reseñas de clientes",
   mapa: "Mapa y cómo llegar",
   dominio: "Dominio propio (.com.ar)",
+  catalogo: "Catálogo de productos",
+  pedidos: "Pedidos por WhatsApp",
+  menu: "Menú o carta",
+  contacto: "Formulario de consulta",
+  faq: "Preguntas frecuentes",
+  equipo: "Presentar a tu equipo",
+  promos: "Promociones y descuentos",
+  instagram: "Tu Instagram en la página",
+  tienda: "Tienda online con envíos",
+  idiomas: "Página en otro idioma",
 } as const;
 export type Funcion = keyof typeof FUNCIONES;
+
+/** Lo que es parte de una página web (si marca alguna de estas, va una página). */
+const DE_PAGINA: Funcion[] = ["web", "galeria", "precios", "resenas", "mapa", "dominio", "catalogo", "pedidos", "menu", "contacto", "faq", "equipo", "promos", "instagram", "tienda", "idiomas"];
+
+export const MODALIDAD = { local: "En un local a la calle", consultorio: "En un estudio o gabinete", domicilio: "A domicilio", online: "Online", varias: "Un poco de todo" } as const;
+export const HORARIO = { manana: "A la mañana", tarde: "A la tarde", corrido: "Todo el día", finde: "También fines de semana", arreglo: "Cuando arreglo con cada cliente" } as const;
+export const PRESUPUESTO = { bajo: "Hasta $250.000", medio: "Entre $250.000 y $500.000", alto: "Más de $500.000", nose: "Todavía no sé" } as const;
+export const CONOCIO = { instagram: "Por Instagram", recomendacion: "Me lo recomendaron", google: "Buscando en Google", otro: "Otra forma" } as const;
+
+/** Lo que dice Alto después de elegir el rubro. */
+export const COMENTARIO_RUBRO: Record<string, string> = {
+  barberia: "¡Buenísimo! En barberías los turnos online son lo que más tiempo ahorra.",
+  estetica: "¡Lindo rubro! Las fotos de antes y después venden solas.",
+  clases: "Genial. Para clases sirve mucho mostrar horarios y dejar reservar la primera.",
+  oficios: "Bien. En oficios, mostrar trabajos hechos y responder rápido hace la diferencia.",
+  alojamiento: "¡Qué lindo! En alojamiento, fotos grandes y fechas claras son todo.",
+  verduleria: "¡Dale! Para la verdulería tenemos una caja con botones grandes, por kilo y con fiado.",
+  almacen: "¡Bien! Para el almacén, la caja con fiado y cierre del día es la que más se usa.",
+  kiosco: "¡Dale! En el kiosco lo importante es vender rápido y saber cuánto entró.",
+  dietetica: "¡Bien! En dietéticas se vende mucho por kilo: la caja ya lo trae.",
+  comercio: "Perfecto. Con empleados, lo que más sirve es saber quién vendió qué.",
+  veterinaria: "¡Qué lindo! Turnos para baño y consultas, y los datos de cada mascota.",
+  tatuajes: "¡Buenísimo! El portfolio de trabajos y la seña para reservar son clave.",
+  estudio: "Perfecto. Un estudio serio necesita una página clara y un turno para la primera consulta.",
+  fotografia: "¡Genial! La galería es la protagonista en fotografía.",
+  musica: "¡Lindo! Horarios de clases y una clase de prueba para que se animen.",
+  autos: "Bien. Turnos por horario y avisar cuándo está listo el auto ahorra muchas llamadas.",
+  gastronomia: "¡Rico! Menú claro, horarios y pedidos por WhatsApp funcionan muy bien.",
+  tienda: "¡Bien! Un catálogo con pedidos por WhatsApp y una caja para el local.",
+  construccion: "Perfecto. Fotos de obras terminadas y un formulario para pedir presupuesto.",
+  eventos: "¡Lindo! Fotos de eventos, fechas y una consulta rápida para reservar.",
+  turismo: "¡Qué lindo! Destinos, fechas y consulta directa.",
+  inmobiliaria: "Bien. Propiedades con fotos y una consulta directa por cada una.",
+  otro: "¡Dale! Contame un poco más así te recomiendo bien.",
+};
+
+/** Un consejo según lo primero que le complica (se dice antes de la próxima pregunta). */
+export const CONSEJO: Record<Dificultad, string> = {
+  mensajes: "Con turnos online, la gente reserva sola a cualquier hora y vos dejás de contestar «¿tenés lugar?».",
+  ausencias: "Un recordatorio por WhatsApp el día anterior ayuda mucho con los que se olvidan.",
+  visibilidad: "Una página propia con tu dirección y tus horarios hace que te encuentren cuando te buscan.",
+  mostrar: "Una galería y una lista de precios te ahorran mandar fotos una por una.",
+  caja: "Con una caja simple sabés cuánto vendiste y quién te debe, sin cuaderno.",
+  stock: "Con la caja pro ves el stock de cada sucursal y qué hizo cada empleado.",
+  factura: "La caja pro hace la factura electrónica desde la misma venta.",
+  senas: "Pedir seña al reservar baja mucho los turnos perdidos.",
+  preguntas: "Una sección de preguntas frecuentes responde por vos lo que te preguntan siempre.",
+  redes: "Con una página, tu bio de Instagram lleva a un lugar que trabaja solo, aunque no publiques.",
+  deudas: "Con fiado o cuenta corriente anotado, sabés quién te debe y le mandás el saldo por WhatsApp.",
+  vuelven: "Los recordatorios y las promos ayudan a que vuelvan.",
+  ganancia: "El panel te muestra cuánto entra, por qué medio y qué es lo que más se vende.",
+  faltantes: "Con caja y cierre del día ves enseguida si falta plata y de qué turno es.",
+  presupuestos: "Un formulario de consulta te trae los datos que necesitás para presupuestar de una.",
+};
 
 /* Detalles que hacen que el pedido llegue "fino" (se preguntan según lo que eligió). */
 
@@ -124,6 +206,12 @@ export function coloresPara(rubro: RubroAlto): ColorAlto[] {
 export interface Respuestas {
   nombre: string;
   rubro: RubroAlto;
+  modalidad?: keyof typeof MODALIDAD;
+  horario?: keyof typeof HORARIO;
+  instagram?: string;
+  webActual?: string;
+  presupuesto?: keyof typeof PRESUPUESTO;
+  conocio?: keyof typeof CONOCIO;
   /** Si eligió "Otro", a qué se dedica (en sus palabras). */
   rubroOtro?: string;
   presencia?: Presencia[];
@@ -153,7 +241,7 @@ export function queQuiere(funciones: readonly Funcion[] = []) {
   const agenda = q.has("turnos") || q.has("recordatorios") || q.has("sena") || q.has("panel");
   const pro = q.has("cajaPro");
   const caja = !pro && q.has("cajaSimple");
-  const landing = q.has("web") || q.has("galeria") || q.has("precios") || q.has("resenas") || q.has("mapa") || q.has("dominio") || (!agenda && !pro && !caja);
+  const landing = DE_PAGINA.some((x) => q.has(x)) || (!agenda && !pro && !caja);
   return { landing, agenda, caja, pro };
 }
 
@@ -168,6 +256,16 @@ export function funcionesSugeridas(r: Omit<Respuestas, "funciones" | "color">): 
   if (d.has("mostrar")) f.add("web").add("galeria").add("precios");
   if (d.has("caja") || (r.rubro.caja && r.prioridad === "ventas")) f.add("cajaSimple");
   if (d.has("stock") || d.has("factura") || r.rubro.id === "comercio") f.add("cajaPro");
+  if (d.has("preguntas")) f.add("web").add("faq");
+  if (d.has("redes")) f.add("web").add("instagram");
+  if (d.has("presupuestos")) f.add("web").add("contacto");
+  if (d.has("vuelven")) f.add(r.rubro.profesion ? "recordatorios" : "promos");
+  if (d.has("deudas")) f.add(r.rubro.caja ? "cajaSimple" : r.rubro.profesion ? "sena" : "cajaSimple");
+  if (d.has("ganancia")) f.add(r.rubro.caja ? "cajaSimple" : r.rubro.profesion ? "panel" : "cajaSimple");
+  if (d.has("faltantes")) f.add(r.rubro.id === "comercio" ? "cajaPro" : "cajaSimple");
+  if (r.rubro.id === "gastronomia" && f.has("web")) f.add("menu").add("pedidos");
+  if (r.rubro.id === "tienda" && f.has("web")) f.add("catalogo").add("pedidos");
+  if (["fotografia", "tatuajes", "construccion", "eventos"].includes(r.rubro.id) && f.has("web")) f.add("galeria");
   // Lo de la zona es parte de una página: solo se sugiere si ya hay una página en juego.
   if (f.has("web")) {
     if (r.zona === "barrio") f.add("mapa");
@@ -241,6 +339,14 @@ export function recomendar(r: Respuestas): Recomendacion {
     if (r.zona === "turistas") porque.push("Con fotos, reseñas y cómo llegar, para los que todavía no te conocen.");
     if (r.zona === "pais") porque.push("Con dominio propio, para que te encuentren desde cualquier lado.");
     if (quiereAgenda) porque.push("Con turnos online adentro: reservan solos desde tu página.");
+    if (q.has("catalogo") || q.has("menu")) porque.push(q.has("menu") ? "Con tu menú siempre al día, sin imprimir cartas nuevas." : "Con tu catálogo de productos y sus precios.");
+    if (q.has("pedidos")) porque.push("Con pedidos que te llegan armados por WhatsApp.");
+    if (q.has("faq")) porque.push("Con preguntas frecuentes que contestan por vos.");
+    if (q.has("contacto")) porque.push("Con un formulario de consulta para presupuestar más rápido.");
+    if (q.has("instagram")) porque.push("Con tu Instagram a la vista y un link para tu bio.");
+    if (q.has("equipo") || q.has("promos")) porque.push("Con secciones para tu equipo y tus promociones.");
+    if (q.has("tienda")) aparte.push("La tienda online con carrito y envíos la cotizamos aparte; mientras tanto, el catálogo con pedidos por WhatsApp funciona muy bien.");
+    if (q.has("idiomas")) aparte.push("La versión en otro idioma se cotiza aparte según cuántos textos tenga la página.");
     if (!porque.length) porque.push(`Una página pensada para ${(r.rubroOtro || r.rubro.nombre).toLowerCase()}, con tus textos, colores y precios.`);
     if (r.dominio === "tiene") porque.push("Usamos el dominio que ya tenés.");
     if (r.logo === "no" || r.logo === "masomenos") aparte.push("El diseño del logo lo cotizamos aparte (o arrancamos con tu nombre bien tipografiado).");
@@ -313,6 +419,11 @@ export function recomendar(r: Respuestas): Recomendacion {
   const iA = productos.findIndex((x) => x.id === "agenda");
   if (iL > iA && iA >= 0 && quiereLanding) productos.splice(iA, 0, ...productos.splice(iL, 1));
   const total = productos.reduce((t, p) => ({ unico: t.unico + p.precio.unico, mensual: t.mensual + p.precio.mensual }), { unico: 0, mensual: 0 });
+  // Si el total pasa lo que pensaba invertir, se propone arrancar por lo primero de la lista.
+  const tope = r.presupuesto === "bajo" ? 250_000 : r.presupuesto === "medio" ? 500_000 : Infinity;
+  if (total.unico > tope && productos.length > 1)
+    aparte.push(`Para tu presupuesto, podés arrancar por «${productos[0]!.titulo}» y sumar lo demás más adelante; lo que hagamos ahora queda listo para crecer.`);
+  else if (total.unico > tope) aparte.push("Pasa un poco lo que pensabas: hablemos, podemos armar el pago único en partes o empezar con lo esencial.");
   return { productos, total, borrador, aparte };
 }
 
@@ -321,7 +432,13 @@ export function resumenRespuestas(r: Respuestas): string[] {
   const lista = <K extends string>(xs: readonly K[] | undefined, nombres: Record<K, string>) => (xs?.length ? xs.map((x) => nombres[x]).join(", ") : "—");
   const uno = <K extends string>(x: K | undefined, nombres: Record<K, string>) => (x ? nombres[x] : null);
   const detalles: [string, string | null][] = [
+    ["Atiende", uno(r.modalidad, MODALIDAD)],
+    ["Horario", uno(r.horario, HORARIO)],
     ["Lo encuentran hoy en", r.presencia ? lista(r.presencia, PRESENCIA) : null],
+    ["Instagram", r.instagram || null],
+    ["Página actual", r.webActual || null],
+    ["Presupuesto", uno(r.presupuesto, PRESUPUESTO)],
+    ["Nos conoció", uno(r.conocio, CONOCIO)],
     ["Equipo", uno(r.equipo, EQUIPO)],
     ["Servicios", uno(r.servicios, SERVICIOS)],
     ["Productos", uno(r.productos, PRODUCTOS)],

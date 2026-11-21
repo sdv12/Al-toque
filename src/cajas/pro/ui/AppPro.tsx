@@ -212,9 +212,16 @@ function Panel({ e }: { e: EstadoPro }) {
           <footer className="mt-10 text-center text-xs text-slate-600">
             Caja pro de{" "}
             <Link href="/" className="underline">
-              Al toque
+              Al Toque
             </Link>{" "}
-            · Versión {process.env.NEXT_PUBLIC_VERSION}
+            · Versión {process.env.NEXT_PUBLIC_VERSION} ·{" "}
+            <Link href="/terminos" className="underline">
+              Términos
+            </Link>{" "}
+            ·{" "}
+            <Link href="/privacidad" className="underline">
+              Privacidad
+            </Link>
           </footer>
         </main>
       </div>

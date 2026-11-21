@@ -10,6 +10,7 @@ import { enviarPedido, type ResultadoPedido } from "../../pedido";
 import { Bloque, botonKit, claseControl } from "../campos";
 import { totalCorto } from "./PestanaPrecio";
 import { pestanaDeRuta, rutaLegible, slugDe, useCodigoConfig, type Pestana } from "../estado";
+import { AvisoDatos } from "../../legales/AvisoDatos";
 
 type Props = {
   config: LandingConfig;
@@ -123,6 +124,7 @@ export function PestanaEnviar({ config, errores, reemplazar, irA, admin }: Props
             <button type="button" onClick={enviar} disabled={!lista || !codigo || envio?.estado === "enviando"} className={`${botonKit.primario} w-full`}>
               {envio?.estado === "enviando" ? "Enviando…" : "Enviar"}
             </button>
+            <AvisoDatos accion="Enviar" />
             {envio?.estado === "error" && (
               <p role="alert" className="text-chico text-[#b3261e]">
                 No pudimos enviarla. Probá de nuevo en un rato.

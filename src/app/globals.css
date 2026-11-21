@@ -150,3 +150,32 @@
   -webkit-box-decoration-break: clone;
   padding-inline: 0.06em;
 }
+
+/* Marquesina de rubros (como en Sala de Espera): la lista va dos veces y se corre media vuelta. */
+.marquesina {
+  display: flex;
+  width: max-content;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .marquesina {
+    animation: marquesina 38s linear infinite;
+  }
+  .marquesina:hover {
+    animation-play-state: paused;
+  }
+}
+@keyframes marquesina {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Barra de avance del acordeón de soluciones mientras pasa solo. */
+@keyframes acordeon-progreso {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
