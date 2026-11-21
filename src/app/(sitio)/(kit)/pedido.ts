@@ -23,6 +23,8 @@ export type Pedido = {
   configuracion: unknown;
   /** Código comprimido (LK1… / CJ1…) que entiende `pnpm publicar`. */
   codigo: string;
+  /** Para las estadísticas de /adm: nivel de la página o producto (perfil, vidriera, caja, agenda…). */
+  nivel?: string;
 };
 
 export type ResultadoPedido = {
@@ -35,6 +37,44 @@ export type ResultadoPedido = {
 };
 
 export const formatearNumero = (n: number) => `#${String(n).padStart(5, "0")}`;
+
+/** Dominios donde los pedidos suman a las estadísticas de /adm. */
+const SITIOS_QUE_CUENTAN = ["altoque-cba.com.ar", "www.altoque-cba.com.ar"];
+
+/** Página por la que entró a la visita (la anota RegistroEntrada); si no, la actual. */
+const CLAVE_ENTRADA = "altoque:entrada";
+
+export function registrarEntrada() {
+  try {
+    if (!sessionStorage.getItem(CLAVE_ENTRADA)) sessionStorage.setItem(CLAVE_ENTRADA, location.pathname);
+  } catch {}
+}
+
+function entrada(): string {
+  try {
+    return sessionStorage.getItem(CLAVE_ENTRADA) ?? location.pathname;
+  } catch {
+    return location.pathname;
+  }
+}
+
+/**
+ * Suma el pedido a las estadísticas de /adm: solo de dónde vino y qué pidió, nada personal. Sin
+ * esperar la respuesta (keepalive): si falla, el pedido sale igual.
+ */
+export function contarEvento(tipo: Pedido["tipo"] | "Tienda", nivel?: string) {
+  // Solo cuenta lo que pasa en el sitio de verdad: las vistas previas de Netlify y las pruebas en
+  // local comparten el almacenamiento y ensuciarían los números.
+  if (!SITIOS_QUE_CUENTAN.includes(location.hostname)) return;
+  try {
+    void fetch("/api/estadisticas", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tipo, entrada: entrada(), pagina: location.pathname, nivel }),
+      keepalive: true,
+    }).catch(() => {});
+  } catch {}
+}
 
 async function pedirNumero(): Promise<string | null> {
   try {
@@ -81,6 +121,7 @@ export async function enviarPedido(p: Pedido, whatsapp: string | undefined): Pro
     } catch {}
   }
 
+  contarEvento(p.tipo, p.nivel);
   const numero = await pedirNumero();
   const link = whatsapp ? linkWhatsApp(whatsapp, mensajePedido(p, numero)) : null;
   if (ventana && link) ventana.location.href = link;

@@ -6,7 +6,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { useEffect, useState } from "react";
 import { DATOS_INICIALES, SEMILLAS } from "@/core/defaults/libre";
 import { formatearPesos } from "@/core/lib/mensajes";
-import { cotizar } from "@/core/lib/precios";
+import { cotizar, nivelDe, planPerfil } from "@/core/lib/precios";
 import { seccionesDe, type DefSeccion } from "@/core/registry";
 import type { Contenido } from "@/core/schema/contenido";
 import type { LandingConfig } from "@/core/schema/landing-config";
@@ -31,6 +31,23 @@ export function PestanaBloques({ config, editar }: { config: LandingConfig; edit
     const t = setTimeout(() => document.getElementById(recien)?.scrollIntoView({ behavior: "smooth", block: "center" }), 120);
     return () => clearTimeout(t);
   }, [recien]);
+
+  // Si sumar un bloque básico más cambia el nivel (Perfil digital → Personalizado), se avisa antes.
+  const saltoNivel = (() => {
+    const actual = nivelDe(config);
+    const con = { ...config, secciones: [...config.secciones, { id: "x", tipo: "texto", variante: Object.keys(seccionesDe("libre").texto?.variantes ?? { simple: 1 })[0]!, activa: true }] as typeof config.secciones };
+    const despues = nivelDe(con);
+    if (despues.id === actual.id) return null;
+    return { de: actual.nombre, a: despues.nombre, mas: cotizar(con).total.unico - cotizar(config).total.unico };
+  })();
+
+  // En Perfil digital: cuántos bloques más entran sin cambiar de nivel.
+  const quedan = (() => {
+    if (nivelDe(config).id !== "perfil") return null;
+    const defs = seccionesDe(config.plantilla);
+    const usados = (config.secciones as readonly { tipo: string; activa: boolean }[]).filter((s) => s.activa && !defs[s.tipo]?.sistema).length;
+    return Math.max(0, planPerfil().bloquesMax - usados);
+  })();
 
   // Lo que cuesta sumar un componente con sistema (la primera vez incluye la base de datos).
   const costoSistema = (() => {
@@ -114,6 +131,18 @@ export function PestanaBloques({ config, editar }: { config: LandingConfig; edit
       </Bloque>
 
       <Bloque titulo="Agregar bloques" descripcion="Los básicos arman una página vidriera: muestran tu negocio y te contactan por WhatsApp.">
+        {!saltoNivel && quedan !== null && quedan > 0 && (
+          <p className="mb-3 rounded-base bg-superficie-2 px-3 py-2 text-chico">
+            Tu página es <strong className="font-semibold">Perfil digital</strong>: podés sumar {quedan} {quedan === 1 ? "bloque más" : "bloques más"} sin cambiar de
+            nivel.
+          </p>
+        )}
+        {saltoNivel && (
+          <p role="note" className="mb-3 rounded-base border-2 border-tinta bg-superficie-2 p-3 text-chico">
+            Hoy tu página es <strong className="font-semibold">{saltoNivel.de}</strong> (hasta {planPerfil().bloquesMax} bloques). Con un bloque más pasás a{" "}
+            <strong className="font-semibold">{saltoNivel.a}</strong> (+{formatearPesos(saltoNivel.mas)}).
+          </p>
+        )}
         <Biblioteca items={basicos} presentes={presentes} agregar={agregar} />
       </Bloque>
 

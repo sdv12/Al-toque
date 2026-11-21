@@ -43,12 +43,19 @@ export type Pedido = { nombre: string; config: LandingConfig; extra: boolean };
 /** Plantilla pedida desde la home ("Usar esta plantilla" → /configurador?plantilla=…). */
 function pedidoDeUrl(): Pedido | null {
   try {
-    const valor = new URLSearchParams(window.location.search).get("plantilla");
+    const q = new URLSearchParams(window.location.search);
+    const valor = q.get("plantilla");
+    // ?nombre=… (demos para mandar desde /adm): la plantilla arranca con el nombre del negocio.
+    const negocio = (q.get("nombre") ?? "").trim().slice(0, 60);
+    const conNombre = (c: LandingConfig) => {
+      if (negocio.length >= 2) c.negocio.nombre = negocio;
+      return c;
+    };
     if (esEjemploExtra(valor)) {
       const e = EJEMPLOS_EXTRA[valor];
-      return { nombre: e.nombre, config: structuredClone(e.config), extra: true };
+      return { nombre: e.nombre, config: conNombre(structuredClone(e.config)), extra: true };
     }
-    return esPlantilla(valor) ? { nombre: registry[valor].meta.nombre, config: structuredClone(configsPorDefecto[valor]), extra: false } : null;
+    return esPlantilla(valor) ? { nombre: registry[valor].meta.nombre, config: conNombre(structuredClone(configsPorDefecto[valor])), extra: false } : null;
   } catch {
     return null;
   }

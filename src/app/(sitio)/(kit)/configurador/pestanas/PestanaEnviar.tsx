@@ -9,6 +9,8 @@ import { migrateConfig, type ErrorConfig } from "@/core/schema/migrate";
 import { enviarPedido, type ResultadoPedido } from "../../pedido";
 import { Bloque, botonKit, claseControl } from "../campos";
 import { totalCorto } from "./PestanaPrecio";
+import { PRESUPUESTOS, nivelDe } from "@/core/lib/precios";
+import { usePresupuesto } from "../presupuesto";
 import { pestanaDeRuta, rutaLegible, slugDe, useCodigoConfig, type Pestana } from "../estado";
 import { AvisoDatos } from "../../legales/AvisoDatos";
 
@@ -31,6 +33,9 @@ export function PestanaEnviar({ config, errores, reemplazar, irA, admin }: Props
   const lista = errores.length === 0;
   const slug = slugDe(config.negocio.nombre);
   const plantilla = registry[config.plantilla].meta.nombre;
+  const nivel = nivelDe(config);
+  const presupuesto = usePresupuesto();
+  const direccion = (config.extras ?? []).includes("dominio") ? "Dominio propio" : `${slug || "negocio"}.altoque-cba.com.ar`;
 
   async function enviar() {
     if (!lista || !codigo) return;
@@ -43,7 +48,15 @@ export function PestanaEnviar({ config, errores, reemplazar, irA, admin }: Props
         estimado: totalCorto(config),
         slug,
         saludo: "Hola! Te mando la configuración de mi landing.",
-        resumen: [`Negocio: ${config.negocio.nombre}`, `Plantilla: ${plantilla}`, `Estimado: ${totalCorto(config)}`],
+        resumen: [
+          `Negocio: ${config.negocio.nombre}`,
+          `Nivel: ${nivel.nombre}`,
+          `Plantilla: ${plantilla}`,
+          `Dirección: ${direccion}`,
+          `Estimado: ${totalCorto(config)}`,
+          ...(presupuesto ? [`Piensa invertir: ${PRESUPUESTOS[presupuesto].etiqueta}`] : []),
+        ],
+        nivel: nivel.id,
         configuracion: config,
         codigo,
       },

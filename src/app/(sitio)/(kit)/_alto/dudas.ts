@@ -224,7 +224,7 @@ export const DUDAS: Duda[] = [
     claves: ["sin internet", "internet", "se corta", "offline", "conexion", "wifi"],
     respuesta: () => [
       "La caja simple sí: guarda todo en el equipo donde la usás y sigue vendiendo aunque se corte internet.",
-      "Por eso mismo, los datos viven en ese equipo: si se rompe o se pierde, se pierden. Estamos sumando el respaldo para que no te pase.",
+      "Por eso mismo, los datos viven en ese equipo. Con «Guardar una copia» los mandás a tu WhatsApp, Drive o mail, y si el equipo se rompe los recuperás en otro. Te lo recuerda cada semana.",
     ],
   },
   {

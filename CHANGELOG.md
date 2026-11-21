@@ -4,6 +4,15 @@ Versionado semántico: PATCH = arreglos y ajustes; MINOR = funcionalidad nueva v
 MAJOR = cambios que rompen algo existente (formato de configs, flujo, backend).
 La versión se muestra en el footer de la home y en el configurador.
 
+## 1.18.0 · 2026-11-21
+- **Configurador más claro**: arriba siempre dice en qué nivel está tu página (Perfil digital, Listo para usar, Personalizado o Web + Turnos). En Bloques avisa cuántos bloques te quedan en el Perfil digital y, antes de pasarte, cuánto suma pasar a Personalizado.
+- **Tu dirección**: en Precio elegís entre la dirección de Al Toque sin costo (tunegocio.altoque-cba.com.ar, con tu nombre) o dominio propio a tu nombre.
+- **¿Cuánto pensás invertir?** (opcional): si lo que armaste se pasa, te dice qué sacar y cuánto queda, o con qué nivel arrancar. Viaja en el pedido, junto con el nivel y la dirección.
+- **Copia de seguridad en la caja simple**: «Guardar una copia» (en el celular se comparte a WhatsApp, Drive o mail) y «Recuperar desde una copia» en este u otro equipo. Si pasa una semana sin copia, la caja lo recuerda con letra grande.
+- **/adm › Pedidos**: cuántos pedidos llegan por semana, por qué página entraron, desde dónde pidieron y qué nivel o producto, más los anotados para Tienda. Solo números, sin datos personales; solo cuentan los del sitio real.
+- **Arreglo en los números de pedido**: en Netlify, leer de Blobs una clave que todavía no existe se quedaba colgado; el primer pedido esperaba ~30 segundos y salía sin número. Ahora se fija antes si la clave existe.
+- **/adm › Mandar una demo**: nombre del negocio + rubro + producto → el link de la demo personalizada y el mensaje para WhatsApp, listos para prospectar. El configurador acepta `?nombre=`.
+
 ## 1.17.0 · 2026-11-21
 - **Niveles de Al Toque Web**: Perfil digital (nuevo: $160.000 + $15.000/mes, hasta 3 bloques en una dirección de Al Toque), Listo para usar, Personalizado, Web + Turnos y Desarrollo a medida (a presupuestar). El configurador cotiza el Perfil digital solo. En /web: guía «¿Qué necesitás de tu página?», tabla de niveles y qué incluye el mensual y qué se cobra aparte.
 - **Al Toque Turnos en /turnos**: página comercial con «Dejá de coordinar a mano», agenda sola o paquete Web + Turnos (con lo que te ahorrás), adicionales y demos por rubro. La app de turnos pasa a /turnos/demo; /agenda y los links viejos (/turnos#/…, ?demo=, ?d=) redirigen solos.

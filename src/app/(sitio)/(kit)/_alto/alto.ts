@@ -4,7 +4,7 @@ import { COLORES_CAJA, type ColorCaja } from "@/cajas/config";
 import { RUBROS as RUBROS_CAJA_DEF, type RubroCaja } from "@/cajas/rubros";
 import { configsPorDefecto } from "@/core/defaults";
 import { formatearPesos } from "@/core/lib/mensajes";
-import { CAJA_PRO_A_MEDIDA, EXTRAS, ahorroWebTurnos, cotizar, cotizarCaja, planAgenda, planPerfil, type IdExtra, type Monto } from "@/core/lib/precios";
+import { CAJA_PRO_A_MEDIDA, EXTRAS, PRESUPUESTOS, ahorroWebTurnos, cotizar, cotizarCaja, planAgenda, planPerfil, type IdExtra, type IdPresupuesto, type Monto } from "@/core/lib/precios";
 import { registry, type Plantilla } from "@/core/registry";
 import type { LandingConfig } from "@/core/schema/landing-config";
 
@@ -119,7 +119,7 @@ const DE_PAGINA: Funcion[] = ["web", "galeria", "precios", "resenas", "mapa", "d
 
 export const MODALIDAD = { local: "En un local a la calle", consultorio: "En un estudio o gabinete", domicilio: "A domicilio", online: "Online", varias: "Un poco de todo" } as const;
 export const HORARIO = { manana: "A la mañana", tarde: "A la tarde", corrido: "Todo el día", finde: "También fines de semana", arreglo: "Cuando arreglo con cada cliente" } as const;
-export const PRESUPUESTO = { bajo: "Hasta $250.000", medio: "Entre $250.000 y $500.000", alto: "Más de $500.000", nose: "Todavía no sé" } as const;
+export const PRESUPUESTO = Object.fromEntries(Object.entries(PRESUPUESTOS).map(([k, v]) => [k, v.etiqueta])) as Record<IdPresupuesto, string>;
 export const CONOCIO = { instagram: "Por Instagram", recomendacion: "Me lo recomendaron", google: "Buscando en Google", otro: "Otra forma" } as const;
 
 /** Lo que dice Alto después de elegir el rubro. */
@@ -429,7 +429,7 @@ export function recomendar(r: Respuestas): Recomendacion {
   if (iL > iA && iA >= 0 && quiereLanding) productos.splice(iA, 0, ...productos.splice(iL, 1));
   const total = productos.filter((p) => !p.aMedida).reduce((t, p) => ({ unico: t.unico + p.precio.unico, mensual: t.mensual + p.precio.mensual }), { unico: 0, mensual: 0 });
   // Si el total pasa lo que pensaba invertir, se propone arrancar por lo primero de la lista.
-  const tope = r.presupuesto === "bajo" ? 250_000 : r.presupuesto === "medio" ? 500_000 : Infinity;
+  const tope = r.presupuesto ? PRESUPUESTOS[r.presupuesto].tope : Infinity;
   if (total.unico > tope && productos.length > 1)
     aparte.push(`Para tu presupuesto, podés arrancar por «${productos[0]!.titulo}» y sumar lo demás más adelante; lo que hagamos ahora queda listo para crecer.`);
   else if (total.unico > tope) aparte.push("Pasa un poco lo que pensabas: hablemos, podemos armar el pago único en partes o empezar con lo esencial.");

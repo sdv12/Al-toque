@@ -27,7 +27,7 @@ const PREGUNTAS_CAJA = [
   {
     pregunta: "¿Dónde quedan las ventas y los precios?",
     respuesta:
-      "En el celular, la tablet o la compu donde uses la caja. No pasan por ningún servidor: por eso es barata y anda sin internet. La contra: si el equipo se rompe o se pierde, se pierde lo cargado. Estamos sumando un respaldo para guardar una copia; la caja pro, en cambio, guarda todo en la nube.",
+      "En el celular, la tablet o la compu donde uses la caja. No pasan por ningún servidor: por eso es barata y anda sin internet. Por eso conviene guardar una copia: con un botón la mandás a tu WhatsApp, Drive o mail, y si el equipo se rompe o se pierde, la recuperás en otro. La caja te recuerda guardarla una vez por semana.",
   },
   {
     pregunta: "¿Necesito internet para vender?",
@@ -87,8 +87,8 @@ export default function CajaPagina() {
             </span>
             <span>
               <strong className="font-semibold">Dónde quedan tus datos.</strong> La caja simple guarda todo en el equipo donde la usás: por eso anda sin
-              internet y es barata. Si ese equipo se rompe o se pierde, se pierden las ventas y los precios cargados. Estamos sumando un respaldo para que
-              guardes una copia; si necesitás todo en la nube, mirá la caja pro.
+              internet y es barata. Por eso tiene <strong className="font-semibold">«Guardar una copia»</strong>: la mandás a tu WhatsApp, Drive o mail y,
+              si el equipo se rompe o se pierde, la recuperás en otro. Te lo recuerda una vez por semana. Si necesitás todo en la nube, mirá la caja pro.
             </span>
           </p>
         </div>

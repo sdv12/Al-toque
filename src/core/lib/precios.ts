@@ -223,6 +223,54 @@ export function niveles() {
   ];
 }
 
+/* ───────────── Niveles y presupuesto ───────────── */
+
+export type IdNivel = "perfil" | "vidriera" | "medida" | "sistema";
+
+/** En qué nivel cae una configuración (el mismo criterio que usa cotizar). */
+export function nivelDe(config: Pick<LandingConfig, "plantilla" | "secciones" | "extras">): { id: IdNivel; nombre: string } {
+  const c = cotizar(config);
+  if (c.lineas[0]?.concepto.startsWith("Perfil digital")) return { id: "perfil", nombre: "Perfil digital" };
+  if (c.usaSistema) return { id: "sistema", nombre: "Web + Turnos" };
+  if (config.plantilla === "libre") return { id: "medida", nombre: "Personalizado" };
+  return { id: "vidriera", nombre: "Listo para usar" };
+}
+
+/** Lo que piensa invertir la persona (pago único). Lo usan Alto y el configurador. */
+export const PRESUPUESTOS = {
+  bajo: { etiqueta: "Hasta $250.000", tope: 250_000 },
+  medio: { etiqueta: "Entre $250.000 y $500.000", tope: 500_000 },
+  alto: { etiqueta: "Más de $500.000", tope: Infinity },
+  nose: { etiqueta: "Todavía no sé", tope: Infinity },
+} as const;
+export type IdPresupuesto = keyof typeof PRESUPUESTOS;
+
+const pesos = (n: number) => "$" + n.toLocaleString("es-AR");
+
+/**
+ * Si la configuración pasa lo que piensa invertir: qué puede sacar o cómo arrancar para entrar.
+ * Cada sugerencia dice cuánto queda. Vacío si entra (o si no hay tope).
+ */
+export function sugerenciasParaPresupuesto(config: Pick<LandingConfig, "plantilla" | "secciones" | "extras">, presupuesto: IdPresupuesto): string[] {
+  const tope = PRESUPUESTOS[presupuesto].tope;
+  const total = cotizar(config).total.unico;
+  if (total <= tope) return [];
+  const sugerencias: string[] = [];
+  for (const id of config.extras ?? []) {
+    const sin = cotizar({ ...config, extras: (config.extras ?? []).filter((x) => x !== id) }).total.unico;
+    if (sin < total) sugerencias.push(`Sin «${EXTRAS[id as IdExtra]?.nombre ?? id}» queda en ${pesos(sin)}${sin <= tope ? " y entra en lo que pensabas" : ""}.`);
+  }
+  const defs = seccionesDe(config.plantilla);
+  const secciones = config.secciones as readonly { tipo: string; activa: boolean }[];
+  if (secciones.some((s) => s.activa && defs[s.tipo]?.sistema)) {
+    const sinSistema = secciones.map((s) => (defs[s.tipo]?.sistema ? { ...s, activa: false } : s)) as unknown as typeof config.secciones;
+    sugerencias.push(`Sin los componentes con sistema queda en ${pesos(cotizar({ ...config, secciones: sinSistema }).total.unico)}: los podés sumar más adelante.`);
+  }
+  if (tope >= PERFIL.unico) sugerencias.push(`Podés arrancar con el Perfil digital (${pesos(PERFIL.unico)}): hasta ${PERFIL.bloquesMax} bloques, y después crece.`);
+  sugerencias.push("O pagar el único en partes: lo charlamos al ver tu pedido.");
+  return sugerencias;
+}
+
 /** ¿El bloque necesita backend real? (para el cartel de advertencia del configurador). */
 export function esBloqueConSistema(plantilla: Plantilla, tipo: string): boolean {
   return !!seccionesDe(plantilla)[tipo]?.sistema;

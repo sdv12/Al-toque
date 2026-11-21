@@ -1,7 +1,9 @@
 "use client";
 
 import { formatearPesos } from "@/core/lib/mensajes";
-import { EXTRAS, cotizar, type IdExtra } from "@/core/lib/precios";
+import { EXTRAS, PRESUPUESTOS, cotizar, nivelDe, sugerenciasParaPresupuesto, type IdExtra, type IdPresupuesto } from "@/core/lib/precios";
+import { slugDe } from "../estado";
+import { elegirPresupuesto, usePresupuesto } from "../presupuesto";
 import type { LandingConfig } from "@/core/schema/landing-config";
 import { Bloque } from "../campos";
 
@@ -16,6 +18,11 @@ export function totalCorto(config: LandingConfig): string {
 export function PestanaPrecio({ config, editar }: { config: LandingConfig; editar: Editar }) {
   const c = cotizar(config);
   const elegidos = new Set(config.extras ?? []);
+  const nivel = nivelDe(config);
+  const presupuesto = usePresupuesto();
+  const sugerencias = presupuesto ? sugerenciasParaPresupuesto(config, presupuesto) : [];
+  const slug = slugDe(config.negocio.nombre) || "tunegocio";
+  const propio = elegidos.has("dominio");
 
   const alternar = (id: IdExtra, activo: boolean) =>
     editar((b) => {
@@ -28,7 +35,29 @@ export function PestanaPrecio({ config, editar }: { config: LandingConfig; edita
 
   return (
     <>
+      <Bloque titulo="Tu dirección" descripcion="Dónde va a estar tu página. La podés cambiar después.">
+        <fieldset className="space-y-2">
+          <legend className="sr-only">Dirección de la página</legend>
+          {[
+            { valor: false, titulo: "Dirección de Al Toque · sin costo", texto: `${slug}.altoque-cba.com.ar` },
+            { valor: true, titulo: `Dominio propio · +${formatearPesos(EXTRAS.dominio.unico)}`, texto: `${slug}.com.ar, registrado a tu nombre (la renovación anual va aparte)` },
+          ].map((o) => (
+            <label key={String(o.valor)} className="flex cursor-pointer items-start gap-3 rounded-base border border-borde bg-superficie p-3 has-[:checked]:border-tinta">
+              <input type="radio" name="direccion" checked={propio === o.valor} onChange={() => alternar("dominio", o.valor)} className="mt-1 size-4 accent-[var(--lk-acento)]" />
+              <span className="min-w-0">
+                <span className="block font-medium">{o.titulo}</span>
+                <span className="block break-all font-mono text-mini text-tinta-suave">{o.texto}</span>
+              </span>
+            </label>
+          ))}
+        </fieldset>
+      </Bloque>
+
       <Bloque titulo="Tu presupuesto estimado" descripcion="Se actualiza mientras armás la página. Son precios de referencia en pesos: el valor final se confirma al ver tu proyecto.">
+        <p className="mb-3 rounded-base bg-superficie-2 px-3 py-2 text-chico">
+          Nivel: <strong className="font-semibold">{nivel.nombre}</strong>
+          {nivel.id === "perfil" && " · hasta 3 bloques en una dirección de Al Toque"}
+        </p>
         <table className="w-full text-chico">
           <caption className="sr-only">Detalle del presupuesto</caption>
           <thead>
@@ -73,9 +102,41 @@ export function PestanaPrecio({ config, editar }: { config: LandingConfig; edita
         )}
       </Bloque>
 
+      <Bloque titulo="¿Cuánto pensás invertir?" descripcion="Opcional. Si lo que armaste se pasa, te decimos cómo hacerlo entrar. Nos llega con tu pedido.">
+        <label className="block">
+          <span className="sr-only">Lo que pensás invertir (pago único)</span>
+          <select
+            className="block w-full rounded-control border border-borde bg-superficie px-3 py-2 text-cuerpo"
+            value={presupuesto ?? ""}
+            onChange={(e) => elegirPresupuesto((e.target.value || null) as IdPresupuesto | null)}
+          >
+            <option value="">Prefiero no decirlo</option>
+            {(Object.entries(PRESUPUESTOS) as [IdPresupuesto, (typeof PRESUPUESTOS)[IdPresupuesto]][]).map(([id, p]) => (
+              <option key={id} value={id}>
+                {p.etiqueta}
+              </option>
+            ))}
+          </select>
+        </label>
+        {presupuesto && (sugerencias.length ? (
+          <div role="status" className="mt-3 rounded-base border-2 border-[#e9a23b] bg-[#fff6e5] p-3 text-chico text-[#5c3a00]">
+            <p className="font-semibold">Lo que armaste pasa lo que pensabas invertir. Algunas ideas:</p>
+            <ul className="mt-2 list-disc space-y-1 pl-5">
+              {sugerencias.map((s) => (
+                <li key={s}>{s}</li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <p role="status" className="mt-3 rounded-base bg-superficie-2 px-3 py-2 text-chico">
+            Entra en lo que pensabas invertir. 👌
+          </p>
+        ))}
+      </Bloque>
+
       <Bloque titulo="Sumar funciones" descripcion="Opcionales. Las marcadas «sistema» necesitan base de datos.">
         <ul className="space-y-2">
-          {(Object.entries(EXTRAS) as [IdExtra, (typeof EXTRAS)[IdExtra]][]).map(([id, e]) => (
+          {(Object.entries(EXTRAS) as [IdExtra, (typeof EXTRAS)[IdExtra]][]).filter(([id]) => id !== "dominio").map(([id, e]) => (
             <li key={id}>
               <label className="flex cursor-pointer items-start gap-3 rounded-base border border-borde bg-superficie p-3">
                 <input type="checkbox" checked={elegidos.has(id)} onChange={(ev) => alternar(id, ev.target.checked)} className="mt-1 size-4 accent-[var(--lk-acento)]" />

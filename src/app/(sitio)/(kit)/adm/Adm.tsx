@@ -4,6 +4,8 @@ import Image from "next/image";
 import { useSyncExternalStore, type ReactNode } from "react";
 import { afiche, margen } from "../_home/estilos";
 import { compararVersiones, tipoDeVersion, trozos, type Version } from "./changelog";
+import { MandarDemo } from "./MandarDemo";
+import { PanelPedidos } from "./PanelPedidos";
 
 export interface Demo {
   titulo: string;
@@ -68,7 +70,7 @@ export function Adm({ versiones, grupos, encabezado }: { versiones: Version[]; g
   const hash = useSyncExternalStore(suscribir, () => window.location.hash.slice(1), () => "");
   // null en el servidor: el contador de novedades aparece al cargar en el navegador.
   const visto = useSyncExternalStore(suscribir, leerVisto, () => null);
-  const pestana = hash === "novedades" ? "novedades" : "demos";
+  const pestana = hash === "novedades" || hash === "pedidos" || hash === "mandar" ? hash : "demos";
   // La primera vez (nada visto en este navegador) solo cuenta la última versión, no todo el historial.
   const nuevas = visto === null ? [] : visto === "" ? versiones.slice(0, 1) : versiones.filter((v) => compararVersiones(v.version, visto) > 0);
 
@@ -77,16 +79,18 @@ export function Adm({ versiones, grupos, encabezado }: { versiones: Version[]; g
       {encabezado}
 
       <nav aria-label="Secciones del panel" className={`${margen} sticky top-0 z-10 border-b border-borde bg-fondo/95 backdrop-blur`}>
-        <ul className="flex gap-1 py-2">
+        <ul className="flex gap-1 overflow-x-auto py-2">
           {[
             ["demos", "Demos"],
+            ["mandar", "Mandar una demo"],
+            ["pedidos", "Pedidos"],
             ["novedades", "Novedades"],
           ].map(([id, texto]) => (
             <li key={id}>
               <a
                 href={`#${id}`}
                 aria-current={pestana === id ? "page" : undefined}
-                className="inline-flex min-h-11 items-center gap-2 rounded-control px-4 text-chico font-semibold hover:bg-superficie-2 aria-[current=page]:bg-tinta aria-[current=page]:text-fondo"
+                className="inline-flex min-h-11 items-center gap-2 whitespace-nowrap rounded-control px-4 text-chico font-semibold hover:bg-superficie-2 aria-[current=page]:bg-tinta aria-[current=page]:text-fondo"
               >
                 {texto}
                 {id === "novedades" && nuevas.length > 0 && (
@@ -102,7 +106,15 @@ export function Adm({ versiones, grupos, encabezado }: { versiones: Version[]; g
       </nav>
 
       <main id="contenido" className={`${margen} pb-24`}>
-        {pestana === "demos" ? <Demos grupos={grupos} /> : <Novedades versiones={versiones} nuevas={nuevas} />}
+        {pestana === "demos" ? (
+          <Demos grupos={grupos} />
+        ) : pestana === "mandar" ? (
+          <MandarDemo />
+        ) : pestana === "pedidos" ? (
+          <PanelPedidos />
+        ) : (
+          <Novedades versiones={versiones} nuevas={nuevas} />
+        )}
       </main>
     </>
   );

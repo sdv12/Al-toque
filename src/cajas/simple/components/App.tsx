@@ -13,6 +13,7 @@ import FiadoScreen from "@/cajas/simple/screens/FiadoScreen";
 import PreciosScreen from "@/cajas/simple/screens/PreciosScreen";
 import VenderScreen from "@/cajas/simple/screens/VenderScreen";
 import BottomNav, { TABS, type Tab } from "./BottomNav";
+import AvisoRespaldo from "./AvisoRespaldo";
 import OpenSheet from "./OpenSheet";
 import { ToastProvider, useToast } from "./Toast";
 
@@ -39,7 +40,7 @@ const TITLES: Record<Tab, string> = {
 };
 
 export default function App() {
-  const { ready } = useStore();
+  const { ready, sales } = useStore();
   const [tab, setTab] = useState<Tab>("vender");
   const [cajones, setCajones] = useState(false);
   const [error, setError] = useState(false);
@@ -95,6 +96,7 @@ export default function App() {
     <ToastProvider>
       <div className="flex h-dvh flex-col">
         {caja.ejemplo && <AvisoPrueba />}
+        {ready && !error && !caja.ejemplo && <AvisoRespaldo negocio={caja.nombre} sales={sales} />}
         {ready && !error && tab === "vender" ? (
           <main className="mx-auto flex min-h-0 w-full max-w-6xl flex-1 flex-col px-3">
             <h1 className="sr-only">Vender</h1>

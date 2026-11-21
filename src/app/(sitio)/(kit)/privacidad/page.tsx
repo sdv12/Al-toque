@@ -118,8 +118,14 @@ const SECCIONES: Seccion[] = [
         <ul>
           <li>El borrador del configurador y la configuración de la caja de prueba.</li>
           <li>Los datos de ejemplo de las demos de cajas y turnos.</li>
-          <li>Si ya cerraste avisos (precios, bienvenida de Alto).</li>
+          <li>Si ya cerraste avisos (precios, bienvenida de Alto) y lo que pensás invertir, si lo elegís en el configurador.</li>
+          <li>La página por la que entraste, solo durante la visita.</li>
         </ul>
+        <p>
+          Cuando mandás un pedido contamos, <strong>sin ningún dato tuyo</strong>, por qué página entraste, desde cuál pediste y qué elegiste: son
+          números para saber qué se pide más.
+        </p>
+        <p>La copia de seguridad de la caja es un archivo que guardás vos (en tu equipo, tu WhatsApp, Drive o correo): nunca nos llega.</p>
         <p>Lo podés borrar cuando quieras desde la configuración de tu navegador o con «Empezar de cero» en cada demo.</p>
       </>
     ),

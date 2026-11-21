@@ -5,6 +5,7 @@ import CloseSheet from "@/cajas/simple/components/CloseSheet";
 import Confirm from "@/cajas/simple/components/Confirm";
 import OpenSheet from "@/cajas/simple/components/OpenSheet";
 import Sheet from "@/cajas/simple/components/Sheet";
+import Respaldo from "@/cajas/simple/components/Respaldo";
 import { useToast } from "@/cajas/simple/components/Toast";
 import { expectedCash, periodStart, summarize } from "@/cajas/simple/lib/caja";
 import { formatWhen } from "@/cajas/simple/lib/dates";
@@ -173,6 +174,8 @@ export default function CajaScreen({ onMarket }: { onMarket?: () => void }) {
           </ul>
         )}
       </section>
+
+      <Respaldo negocio={cajaActiva().nombre} />
 
       {open?.kind === "abrir" && (
         <OpenSheet

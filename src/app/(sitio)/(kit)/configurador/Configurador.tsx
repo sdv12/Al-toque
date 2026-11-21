@@ -2,6 +2,7 @@
 
 import * as Tabs from "@radix-ui/react-tabs";
 import { useState } from "react";
+import { nivelDe } from "@/core/lib/precios";
 import { registry } from "@/core/registry";
 import { useBorrador, type Pestana } from "./estado";
 import { PestanaContenido } from "./pestanas/PestanaContenido";
@@ -70,9 +71,11 @@ export default function Configurador() {
           type="button"
           onClick={() => irA("precio")}
           className="ml-auto shrink-0 rounded-control border border-borde px-3 py-1 text-right hover:border-tinta-suave"
-          aria-label={`Presupuesto estimado: ${totalCorto(config)}. Ver detalle`}
+          aria-label={`${nivelDe(config).nombre}, presupuesto estimado: ${totalCorto(config)}. Ver detalle`}
         >
-          <span className="block text-mini text-tinta-suave">Estimado</span>
+          <span className="block text-mini text-tinta-suave">
+            <span className="font-semibold text-tinta">{nivelDe(config).nombre}</span> · estimado
+          </span>
           <span className="block text-chico font-semibold tabular-nums">{totalCorto(config)}</span>
         </button>
         <fieldset className="hidden @5xl:block">

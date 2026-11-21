@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { configsPorDefecto } from "../defaults";
 import { libreEjemplo } from "../defaults/libre";
-import { EXTRAS, ahorroWebTurnos, cotizar, esBloqueConSistema, niveles, planAgenda, planPerfil, planes, ACTUALIZACION_PRECIOS, preciosVigentesHasta, proximaActualizacion } from "../lib/precios";
+import { EXTRAS, ahorroWebTurnos, cotizar, esBloqueConSistema, nivelDe, niveles, sugerenciasParaPresupuesto, planAgenda, planPerfil, planes, ACTUALIZACION_PRECIOS, preciosVigentesHasta, proximaActualizacion } from "../lib/precios";
 
 describe("precios", () => {
   it("una plantilla de rubro cuesta el precio de plantilla", () => {
@@ -93,5 +93,24 @@ describe("vigencia de los precios", () => {
     expect(ACTUALIZACION_PRECIOS.proxima).toBe("2027-01-01");
     expect(proximaActualizacion()).toBe("1 de enero de 2027");
     expect(preciosVigentesHasta()).toBe("31 de diciembre de 2026");
+  });
+});
+
+describe("niveles y presupuesto", () => {
+  it("nivelDe dice en qué nivel cae cada configuración", () => {
+    expect(nivelDe({ ...libreEjemplo, secciones: libreEjemplo.secciones.slice(0, 3) }).id).toBe("perfil");
+    expect(nivelDe(libreEjemplo).id).toBe("medida");
+    expect(nivelDe(configsPorDefecto.barberia).id).toBe("vidriera");
+    expect(nivelDe({ ...configsPorDefecto.barberia, extras: ["agenda-real"] }).id).toBe("sistema");
+  });
+
+  it("si entra en el presupuesto no sugiere nada; si se pasa, dice qué sacar y cuánto queda", () => {
+    expect(sugerenciasParaPresupuesto(configsPorDefecto.barberia, "medio")).toEqual([]);
+    expect(sugerenciasParaPresupuesto(configsPorDefecto.barberia, "nose")).toEqual([]);
+    const caro = { ...configsPorDefecto.barberia, extras: ["agenda-real", "dominio"] as string[] };
+    const s = sugerenciasParaPresupuesto(caro, "bajo");
+    expect(s.some((x) => x.includes("Dominio propio"))).toBe(true);
+    expect(s.some((x) => x.includes("Perfil digital"))).toBe(true);
+    expect(s.at(-1)).toMatch(/en partes/);
   });
 });

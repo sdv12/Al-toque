@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import { claseControl } from "../configurador/campos";
 import { boton } from "../_home/Secciones";
 import { AvisoDatos } from "../legales/AvisoDatos";
+import { contarEvento } from "../pedido";
 
 /*
  * Lista de espera de Al Toque Tienda. Llega como aviso (Netlify Forms → correo), igual que los
@@ -33,6 +34,7 @@ export function ListaEspera() {
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams({ "form-name": "tienda", subject: `Lista de espera Tienda · ${f.negocio.trim() || f.nombre.trim()}`, ...f }).toString(),
       });
+      if (r.ok) contarEvento("Tienda", "tienda");
       setEstado(r.ok ? "ok" : "error");
     } catch {
       setEstado("error");

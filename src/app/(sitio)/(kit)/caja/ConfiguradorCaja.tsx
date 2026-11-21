@@ -98,6 +98,7 @@ function Formulario({ whatsapp, inicial }: { whatsapp: string | undefined; inici
         resumen: [`Negocio: ${nombre}`, `Rubro: ${rubro}`, `Con: ${con}`, `Estimado: ${estimado}`],
         configuracion: config,
         codigo,
+        nivel: "caja",
       },
       whatsapp,
     );

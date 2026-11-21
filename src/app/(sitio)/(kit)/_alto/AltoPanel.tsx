@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useId, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { codificarConfig } from "@/core/lib/codigo";
 import { formatearPesos } from "@/core/lib/mensajes";
+import { nivelDe } from "@/core/lib/precios";
 import { enviarPedido, type ResultadoPedido } from "../pedido";
 import { recomendar, resumenRespuestas, type Recomendacion, type Respuestas } from "./alto";
 import { preguntasPara, respuestaEnTexto, validarWhatsapp, type Opcion, type Parcial, type Pregunta } from "./preguntas";
@@ -197,6 +198,7 @@ export default function AltoPanel({
           resumen: [`Le recomendó: ${rec.productos.map((p) => p.titulo).join(", ")}`, `Estimado: ${plataMes(rec.total.unico, rec.total.mensual)}${rec.productos.some((p) => p.aMedida) ? " + caja pro a presupuestar" : ""}`, ...resumenRespuestas(completas)],
           configuracion: { respuestas: { ...completas, rubro: completas.rubro.id }, recomendacion: rec.productos.map((p) => p.id), pagina: rec.borrador },
           codigo: codigo || "—",
+          nivel: rec.borrador ? nivelDe(rec.borrador).id : ({ agenda: "agenda", cajaSimple: "caja", cajaPro: "cajaPro", landing: "vidriera" } as const)[rec.productos[0]?.id ?? "landing"],
         },
         porWhatsapp ? whatsapp : undefined,
       ),

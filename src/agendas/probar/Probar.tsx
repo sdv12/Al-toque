@@ -234,6 +234,7 @@ function LoQuiero({ link }: { link: string }) {
       resumen: [`Rubro: ${PROFESIONES[n.profesion].nombre}`, `Servicios: ${servicios.map((s) => s.nombre).join(', ')}`, `Estimado: ${estimado}`, `Mi demo: ${link}`],
       configuracion: { negocio, servicios: db.servicios },
       codigo: link,
+      nivel: 'agenda',
     }, WHATSAPP_VENTAS || undefined))
     setEnviando(false)
   }

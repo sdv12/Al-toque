@@ -100,3 +100,34 @@ export async function deleteMeta(key: string): Promise<void> {
     tx.onerror = () => reject(tx.error);
   });
 }
+
+/** Todo lo guardado en la caja activa (para la copia de seguridad). */
+export async function leerTodo(): Promise<{ datos: Record<string, unknown[]>; meta: [string, unknown][] }> {
+  const db = await open();
+  const tx = db.transaction([...STORES], "readonly");
+  const datos: Record<string, unknown[]> = {};
+  const pedidos = STORES.filter((s) => s !== "meta").map(async (s) => {
+    datos[s] = await done(tx.objectStore(s).getAll());
+  });
+  const metaStore = tx.objectStore("meta");
+  const [claves, valores] = await Promise.all([done(metaStore.getAllKeys()), done(metaStore.getAll())]);
+  await Promise.all(pedidos);
+  return { datos, meta: claves.map((k, i) => [String(k), valores[i]]) };
+}
+
+/**
+ * Reemplaza todo lo de la caja activa por lo de una copia, en una sola transacción: si algo falla,
+ * no queda nada a medias.
+ */
+export async function reemplazarTodo(datos: Record<string, unknown[]>, meta: [string, unknown][]): Promise<void> {
+  const db = await open();
+  const tx = db.transaction([...STORES], "readwrite");
+  for (const s of STORES) tx.objectStore(s).clear();
+  for (const s of STORES) if (s !== "meta") for (const fila of datos[s] ?? []) tx.objectStore(s).put(fila);
+  for (const [clave, valor] of meta) tx.objectStore("meta").put(valor, clave);
+  await new Promise<void>((resolve, reject) => {
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+    tx.onabort = () => reject(tx.error);
+  });
+}
