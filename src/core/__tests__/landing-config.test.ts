@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { configsPorDefecto } from "../defaults";
+import { estudioEjemplo } from "../defaults/estudio";
 import { libreEjemplo } from "../defaults/libre";
 import { PLANTILLAS_DE_RUBRO, type SeccionConfig } from "../registry";
 import { landingConfigSchema, type ConfigDe } from "../schema/landing-config";
@@ -15,6 +16,12 @@ describe("landingConfigSchema", () => {
   it.each(PLANTILLAS_DE_RUBRO)("acepta la config de ejemplo de %s", (plantilla) => {
     const r = landingConfigSchema.safeParse(configsPorDefecto[plantilla]);
     expect(r.success ? [] : r.error.issues).toEqual([]);
+  });
+
+  it("acepta el ejemplo Estudio (sin la marca de demo)", () => {
+    const r = landingConfigSchema.safeParse(estudioEjemplo);
+    expect(r.success ? [] : r.error.issues).toEqual([]);
+    expect(JSON.parse(JSON.stringify(estudioEjemplo)).demo).toBeUndefined();
   });
 
   describe("plantilla a tu medida", () => {

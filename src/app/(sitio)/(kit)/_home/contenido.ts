@@ -48,11 +48,49 @@ export const FICHAS: Record<Plantilla, Ficha> = {
   },
 };
 
+/**
+ * "Estudio": la plantilla Portfolio modular con su portada a pantalla completa y las variantes
+ * sobrias. Se ofrece como una plantilla más (otro punto de partida en el configurador).
+ */
+export const ESTUDIO = {
+  id: "estudio",
+  plantilla: "generico",
+  /** Config en configs/<slug>.json; la demo se publica en `ruta`. */
+  slug: "demo-arquitectos",
+  ruta: "/estudio",
+  nombre: "Estudio",
+  rubro: "Arquitectura, diseño y profesionales",
+  /** Fondo del escenario de la ficha (el de la demo). */
+  fondo: "#f4f2ee",
+  bajada: "Sobria y elegante: fotos grandes y tus proyectos como protagonistas.",
+  destacados: [
+    "Portada con fotos a pantalla completa que pasan solas.",
+    "Cada proyecto con su ficha y el antes y después para comparar.",
+    "Servicios, preguntas y contacto con consultas directas por WhatsApp.",
+  ],
+  acentos: [
+    { nombre: "Bronce", hex: "#8a6a52" },
+    { nombre: "Grafito", hex: "#3b3b38" },
+    { nombre: "Salvia", hex: "#6f7d6a" },
+    { nombre: "Arcilla", hex: "#9a5b45" },
+    { nombre: "Pizarra", hex: "#44566b" },
+  ],
+  /** Componentes que se pueden prender, apagar y ordenar en el configurador. */
+  componentes: [
+    { nombre: "Portada a pantalla completa", detalle: "Fotos que se funden con un zoom lento, con pausa" },
+    { nombre: "Proyectos con ficha", detalle: "Grilla con filtros por tipo y antes y después" },
+    { nombre: "Servicios en índice", detalle: "Se despliegan y cada uno tiene su consulta" },
+    { nombre: "Testimonios rotativos", detalle: "Una cita grande que va cambiando" },
+    { nombre: "Preguntas frecuentes", detalle: "En acordeón, para resolver dudas antes de escribir" },
+    { nombre: "Contacto sobre foto", detalle: "Formulario corto que termina en tu WhatsApp" },
+  ],
+} as const;
+
 /** Cómo funciona Al Toque Web (configurador). */
 export const PASOS_WEB = [
   {
     titulo: "Elegí la plantilla de tu rubro",
-    texto: "Barbería y estética, casas de campo o una general para cualquier oficio. Cada una está armada distinto.",
+    texto: "Barbería y estética, casas de campo, un estudio o una general para cualquier oficio. Cada una está armada distinto.",
   },
   {
     titulo: "Modificá a tu gusto y mirá cómo queda",

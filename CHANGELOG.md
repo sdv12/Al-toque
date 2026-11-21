@@ -4,6 +4,12 @@ Versionado semántico: PATCH = arreglos y ajustes; MINOR = funcionalidad nueva v
 MAJOR = cambios que rompen algo existente (formato de configs, flujo, backend).
 La versión se muestra en el footer de la home y en el configurador.
 
+## 1.16.0 · 2026-11-21
+- **Al Toque Estudio**: nueva solución en el acordeón de la portada, para arquitectos, diseñadores, constructoras y profesionales, con su precio, la captura y la demo.
+- **Estudio en `/web`**: cuarta plantilla con capturas, colores propios y los componentes que se pueden prender, apagar y ordenar (portada a pantalla completa, proyectos con ficha, servicios en índice, testimonios rotativos, preguntas y contacto sobre foto).
+- «Usar esta plantilla» abre el configurador con el ejemplo Estudio (`/configurador?plantilla=estudio`); también se puede cargar desde la pestaña Plantilla. Si hay un borrador con cambios, pregunta antes de pisarlo.
+- La demo pasa a **`/estudio`** (`/l/demo-arquitectos` redirige). También figura en el pie de la portada y en `/adm`.
+
 ## 1.15.0 · 2026-11-21
 - **Plantilla Portfolio modular, modo Estudio**: nueva portada «Estudio» con foto a pantalla completa que rota sola (zoom lento, contador, barras de avance y pausa) y header transparente que se vuelve sólido al bajar, con menú desplegable en celular. Elegirla pasa toda la página a un tono sobrio: títulos finos, rótulos en mayúsculas, footer liviano y secciones que aparecen al scrollear.
 - Variantes nuevas: Trabajos «Galería con ficha» (grilla con filtros por tipo y ficha emergente con antes/después y «Quiero algo así» por WhatsApp), Servicios «Índice desplegable» (con foto que cambia según el servicio y «Consultar» directo), Testimonios «Rotativo» y Contacto «Sobre foto». Las variantes anteriores no cambian.

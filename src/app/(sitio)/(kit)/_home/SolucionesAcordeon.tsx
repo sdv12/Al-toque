@@ -28,13 +28,16 @@ export type SolucionVista = {
 
 const PASO_MS = 6500;
 
-/** Colores de cada tarjeta, en orden. */
-const TEMAS = [
-  { fondo: "bg-tinta text-fondo", primario: "bg-acento-relleno text-sobre-acento", secundario: "border-fondo text-fondo hover:bg-fondo hover:text-tinta", vineta: "bg-acento-relleno", suave: "opacity-75" },
-  { fondo: "bg-acento-relleno text-sobre-acento", primario: "bg-tinta text-fondo", secundario: "border-tinta hover:bg-tinta hover:text-fondo", vineta: "bg-tinta", suave: "opacity-80" },
-  { fondo: "bg-superficie text-tinta", primario: "bg-tinta text-fondo", secundario: "border-tinta hover:bg-tinta hover:text-fondo", vineta: "bg-acento", suave: "text-tinta-suave" },
-  { fondo: "bg-superficie-2 text-tinta border-dashed", primario: "bg-tinta text-fondo", secundario: "border-tinta hover:bg-tinta hover:text-fondo", vineta: "bg-acento", suave: "text-tinta-suave" },
-];
+type Tema = { fondo: string; primario: string; secundario: string; vineta: string; suave: string };
+
+/** Colores de cada tarjeta, por solución (las que no figuran usan el de la web). */
+const TEMAS: Record<string, Tema> = {
+  web: { fondo: "bg-tinta text-fondo", primario: "bg-acento-relleno text-sobre-acento", secundario: "border-fondo text-fondo hover:bg-fondo hover:text-tinta", vineta: "bg-acento-relleno", suave: "opacity-75" },
+  estudio: { fondo: "bg-fondo text-tinta", primario: "bg-tinta text-fondo", secundario: "border-tinta hover:bg-tinta hover:text-fondo", vineta: "bg-tinta", suave: "text-tinta-suave" },
+  turnos: { fondo: "bg-acento-relleno text-sobre-acento", primario: "bg-tinta text-fondo", secundario: "border-tinta hover:bg-tinta hover:text-fondo", vineta: "bg-tinta", suave: "opacity-80" },
+  caja: { fondo: "bg-superficie text-tinta", primario: "bg-tinta text-fondo", secundario: "border-tinta hover:bg-tinta hover:text-fondo", vineta: "bg-acento", suave: "text-tinta-suave" },
+  tienda: { fondo: "bg-superficie-2 text-tinta border-dashed", primario: "bg-tinta text-fondo", secundario: "border-tinta hover:bg-tinta hover:text-fondo", vineta: "bg-acento", suave: "text-tinta-suave" },
+};
 
 const botonBase = "inline-flex min-h-12 items-center justify-center rounded-control px-6 text-cuerpo font-semibold transition-transform hover:-translate-y-0.5";
 
@@ -78,7 +81,7 @@ export function SolucionesAcordeon({ items, whatsapp }: { items: SolucionVista[]
     >
       {items.map((x, i) => {
         const activa = i === abierta;
-        const tema = TEMAS[i % TEMAS.length]!;
+        const tema = TEMAS[x.id] ?? TEMAS.web!;
         const panel = `${base}-panel-${x.id}`;
         return (
           <article

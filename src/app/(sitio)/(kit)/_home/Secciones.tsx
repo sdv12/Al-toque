@@ -10,7 +10,7 @@ import { planAgenda, planCaja, planes, preciosVigentesHasta, proximaActualizacio
 import { AbrirAlto } from "../_alto/AbrirAlto";
 import { TITULAR } from "../legales/datos";
 import { DUDAS } from "../_alto/dudas";
-import { BENEFICIOS, CONFIANZA, FICHAS, NECESIDADES, PASOS, PASOS_WEB, PREGUNTAS_PORTADA, PROYECTOS, RUBROS } from "./contenido";
+import { BENEFICIOS, CONFIANZA, ESTUDIO, FICHAS, NECESIDADES, PASOS, PASOS_WEB, PREGUNTAS_PORTADA, PROYECTOS, RUBROS } from "./contenido";
 import { Navegador, Telefono } from "./Marcos";
 import { SolucionesAcordeon, type SolucionVista } from "./SolucionesAcordeon";
 
@@ -273,34 +273,89 @@ export function Plantillas() {
       </div>
 
       <div className="mt-16">
-        {PLANTILLAS.map((p, i) => (
-          <FichaPlantilla key={p} plantilla={p} indice={i} />
+        {VISTAS_FICHA.map((f, i) => (
+          <FichaPlantilla key={f.id} ficha={f} indice={i} total={VISTAS_FICHA.length} />
         ))}
       </div>
     </section>
   );
 }
 
-function FichaPlantilla({ plantilla, indice }: { plantilla: Plantilla; indice: number }) {
-  const { meta } = registry[plantilla];
-  const ficha = FICHAS[plantilla];
-  const paleta = paletaDe(plantilla, meta.modos[0]);
+type VistaFicha = {
+  id: string;
+  nombre: string;
+  rubro: string;
+  fondo: string;
+  /** Clase de next/font que trae la fuente display, y la familia para el título. */
+  fuente: string;
+  fuenteDisplay: string;
+  /** Clases extra del título (p. ej. el peso fino de Estudio). */
+  claseTitulo?: string;
+  bajada: string;
+  destacados: readonly string[];
+  acentos: readonly { nombre: string; hex: string }[];
+  componentes?: readonly { nombre: string; detalle: string }[];
+  usar: string;
+  demo: string;
+};
+
+/** Las plantillas de rubro y Estudio (Portfolio modular con su estilo sobrio), en ese orden. */
+const VISTAS_FICHA: VistaFicha[] = [
+  ...PLANTILLAS.map((p): VistaFicha => {
+    const { meta } = registry[p];
+    const ficha = FICHAS[p];
+    return {
+      id: p,
+      nombre: meta.nombre,
+      rubro: meta.rubro,
+      fondo: paletaDe(p, meta.modos[0]).fondo,
+      fuente: FUENTES[p],
+      fuenteDisplay: ficha.fuenteDisplay,
+      bajada: ficha.bajada,
+      destacados: ficha.destacados,
+      acentos: meta.acentos,
+      usar: `/configurador?plantilla=${p}`,
+      demo: `/l/${ficha.slug}`,
+    };
+  }),
+  {
+    id: ESTUDIO.id,
+    nombre: ESTUDIO.nombre,
+    rubro: ESTUDIO.rubro,
+    fondo: ESTUDIO.fondo,
+    fuente: FUENTES[ESTUDIO.plantilla],
+    fuenteDisplay: FICHAS[ESTUDIO.plantilla].fuenteDisplay,
+    claseTitulo: "font-extralight tracking-[0.01em]",
+    bajada: ESTUDIO.bajada,
+    destacados: ESTUDIO.destacados,
+    acentos: ESTUDIO.acentos,
+    componentes: ESTUDIO.componentes,
+    usar: `/configurador?plantilla=${ESTUDIO.id}`,
+    demo: ESTUDIO.ruta,
+  },
+];
+
+function FichaPlantilla({ ficha, indice, total }: { ficha: VistaFicha; indice: number; total: number }) {
   const derecha = indice % 2 === 1;
 
   return (
-    <article aria-labelledby={`plantilla-${plantilla}`} className={`${diferida} grid grid-cols-[minmax(0,1fr)] gap-10 border-t-2 border-tinta py-16 @5xl:grid-cols-12 @5xl:items-center @5xl:gap-12`}>
+    <article
+      id={`ficha-${ficha.id}`}
+      aria-labelledby={`plantilla-${ficha.id}`}
+      className={`${diferida} grid scroll-mt-4 grid-cols-[minmax(0,1fr)] gap-10 border-t-2 border-tinta py-16 @5xl:grid-cols-12 @5xl:items-center @5xl:gap-12`}
+    >
       <div className={`min-w-0 @5xl:col-span-7 ${derecha ? "@5xl:order-2" : ""}`}>
         {/* Escenario con el fondo propio de la plantilla */}
-        <div className="relative rounded-base px-4 pb-14 pt-6 @3xl:px-8 @3xl:pb-16 @3xl:pt-8" style={{ background: paleta.fondo }}>
+        <div className="relative rounded-base px-4 pb-14 pt-6 @3xl:px-8 @3xl:pb-16 @3xl:pt-8" style={{ background: ficha.fondo }}>
           <Navegador
-            src={`/muestras/${plantilla}-escritorio.jpg`}
-            alt={`La plantilla ${meta.nombre} en computadora`}
-            url={`${DOMINIO}/l/${ficha.slug}`}
+            src={`/muestras/${ficha.id}-escritorio.jpg`}
+            alt={`La plantilla ${ficha.nombre} en computadora`}
+            url={`${DOMINIO}${ficha.demo}`}
             sizes="(min-width: 1024px) 50vw, 92vw"
           />
           <Telefono
-            src={`/muestras/${plantilla}-celular.jpg`}
-            alt={`La plantilla ${meta.nombre} en celular`}
+            src={`/muestras/${ficha.id}-celular.jpg`}
+            alt={`La plantilla ${ficha.nombre} en celular`}
             sizes="(min-width: 1024px) 12vw, 28vw"
             className={`absolute -bottom-6 w-[26%] ${derecha ? "left-4 -rotate-[4deg] @3xl:left-8" : "right-4 rotate-[4deg] @3xl:right-8"}`}
           />
@@ -309,10 +364,10 @@ function FichaPlantilla({ plantilla, indice }: { plantilla: Plantilla; indice: n
 
       <div className="min-w-0 @5xl:col-span-5">
         <p className="text-chico text-tinta-suave">
-          <span className="tabular-nums">0{indice + 1}</span> / 0{PLANTILLAS.length} · {meta.rubro}
+          <span className="tabular-nums">0{indice + 1}</span> / 0{total} · {ficha.rubro}
         </p>
-        <h3 id={`plantilla-${plantilla}`} className={`${FUENTES[plantilla]} mt-3 text-titulo leading-[0.95]`} style={{ fontFamily: ficha.fuenteDisplay }}>
-          {meta.nombre}
+        <h3 id={`plantilla-${ficha.id}`} className={`${ficha.fuente} mt-3 text-titulo leading-[0.95] ${ficha.claseTitulo ?? ""}`} style={{ fontFamily: ficha.fuenteDisplay }}>
+          {ficha.nombre}
         </h3>
         <p className="mt-4 text-subtitulo">{ficha.bajada}</p>
         <ul className="mt-6 space-y-3">
@@ -323,10 +378,23 @@ function FichaPlantilla({ plantilla, indice }: { plantilla: Plantilla; indice: n
             </li>
           ))}
         </ul>
+        {ficha.componentes && (
+          <div className="mt-7">
+            <p className="text-mini text-tinta-suave">Componentes que podés prender, apagar y ordenar</p>
+            <ul className="mt-3 grid gap-2 @xl:grid-cols-2">
+              {ficha.componentes.map((c) => (
+                <li key={c.nombre} className="rounded-base border-2 border-tinta/15 bg-superficie px-3.5 py-2.5">
+                  <span className="block text-chico font-semibold">{c.nombre}</span>
+                  <span className="block text-mini text-tinta-suave">{c.detalle}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
         <div className="mt-7">
           <p className="text-mini text-tinta-suave">Colores pensados para esta plantilla</p>
           <ul className="mt-2 flex gap-2">
-            {meta.acentos.map((a) => (
+            {ficha.acentos.map((a) => (
               <li key={a.hex}>
                 <span className="block size-8 rounded-full border-2 border-tinta/15" style={{ background: a.hex }} title={a.nombre} />
                 <span className="sr-only">{a.nombre}</span>
@@ -335,11 +403,11 @@ function FichaPlantilla({ plantilla, indice }: { plantilla: Plantilla; indice: n
           </ul>
         </div>
         <div className="mt-8 flex flex-wrap gap-3">
-          <Link href={`/configurador?plantilla=${plantilla}`} className={boton.tinta}>
+          <Link href={ficha.usar} className={boton.tinta}>
             Usar esta plantilla
           </Link>
-          <Link href={`/l/${ficha.slug}`} className={boton.contorno}>
-            Ver la demo<span className="sr-only"> de {meta.nombre}</span>
+          <Link href={ficha.demo} className={boton.contorno}>
+            Ver la demo<span className="sr-only"> de {ficha.nombre}</span>
           </Link>
         </div>
       </div>
@@ -365,6 +433,18 @@ function soluciones(): SolucionVista[] {
       ver: { href: "/web", texto: "Conocer Al Toque Web" },
       demo: { href: `/l/${FICHAS.barberia.slug}`, texto: "Ver una demo" },
       imagen: { src: "/muestras/barberia-escritorio.jpg", alt: "Una página de barbería hecha con Al Toque Web", marco: "navegador", url: `${DOMINIO}/l/${FICHAS.barberia.slug}` },
+    },
+    {
+      id: "estudio",
+      nombre: "Al Toque Estudio",
+      para: "Arquitectos, diseñadores, constructoras y profesionales",
+      titulo: "Tu obra, a pantalla completa",
+      texto: "Una página sobria y elegante para mostrar tu trabajo: fotos grandes, cada proyecto con su ficha y consultas directas por WhatsApp.",
+      incluye: ["Portada con fotos que pasan solas", "Proyectos con antes y después", "Servicios y contacto que terminan en tu WhatsApp"],
+      precio: precio(vidriera!, true),
+      ver: { href: `/web#ficha-${ESTUDIO.id}`, texto: "Conocer Al Toque Estudio" },
+      demo: { href: ESTUDIO.ruta, texto: "Ver la demo" },
+      imagen: { src: `/muestras/${ESTUDIO.id}-escritorio.jpg`, alt: "La página de un estudio de arquitectura hecha con Al Toque Estudio", marco: "navegador", url: `${DOMINIO}${ESTUDIO.ruta}` },
     },
     {
       id: "turnos",
@@ -693,6 +773,7 @@ export function Pie() {
                   </Link>
                 </li>
               ))}
+              <li><Link href={ESTUDIO.ruta} className="underline-offset-4 hover:underline">Página de estudio</Link></li>
               <li><Link href="/turnos" className="underline-offset-4 hover:underline">Agenda de turnos</Link></li>
               <li><Link href="/c/demo-verduleria" className="underline-offset-4 hover:underline">Caja simple</Link></li>
               <li><Link href="/c/pro" className="underline-offset-4 hover:underline">Caja pro</Link></li>

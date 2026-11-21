@@ -5,7 +5,7 @@ import Link from "next/link";
 import { PLANTILLAS_DE_RUBRO, registry } from "@/core/registry";
 import { DISENOS } from "@/agendas/lib/disenos";
 import { RUBROS, RUBROS_CAJA } from "@/cajas/rubros";
-import { FICHAS, PROYECTOS } from "../_home/contenido";
+import { ESTUDIO, FICHAS, PROYECTOS } from "../_home/contenido";
 import { fuentesHome } from "../_home/fuentes";
 import { Marca, margen } from "../_home/Secciones";
 import { Adm, type GrupoDemos } from "./Adm";
@@ -38,6 +38,14 @@ function demos(): GrupoDemos[] {
           href: `/l/${FICHAS[p].slug}`,
           imagen: `/muestras/${p}-escritorio.jpg`,
         })),
+        {
+          titulo: ESTUDIO.nombre,
+          etiqueta: ESTUDIO.rubro,
+          texto: ESTUDIO.bajada,
+          consejo: "Abrí un proyecto y mostrá el antes y después deslizando.",
+          href: ESTUDIO.ruta,
+          imagen: `/muestras/${ESTUDIO.id}-escritorio.jpg`,
+        },
         {
           titulo: "A tu medida",
           etiqueta: "Cualquier negocio",

@@ -1,18 +1,21 @@
 "use client";
 
+import { EJEMPLOS_EXTRA } from "@/core/defaults/estudio";
 import { PLANTILLAS, PLANTILLAS_OCULTAS, registry, type Plantilla } from "@/core/registry";
 import type { LandingConfig } from "@/core/schema/landing-config";
 import { PLANTILLAS_LISTAS } from "@/templates";
 import { Bloque, botonKit } from "../campos";
+import type { Pedido } from "../estado";
 
 type Props = {
   config: LandingConfig;
   usarEjemplo: (p: Plantilla) => void;
-  pendiente: Plantilla | null;
+  reemplazar: (c: LandingConfig) => void;
+  pendiente: Pedido | null;
   resolverPendiente: (usarla: boolean) => void;
 };
 
-export function PestanaPlantilla({ config, usarEjemplo, pendiente, resolverPendiente }: Props) {
+export function PestanaPlantilla({ config, usarEjemplo, reemplazar, pendiente, resolverPendiente }: Props) {
   function elegir(p: Plantilla) {
     if (p === config.plantilla) return;
     if (window.confirm(`Vas a cambiar a "${registry[p].meta.nombre}". Se carga su contenido de ejemplo y se pierde lo que editaste. ¿Seguimos?`)) {
@@ -25,12 +28,12 @@ export function PestanaPlantilla({ config, usarEjemplo, pendiente, resolverPendi
       {pendiente && (
         <div role="status" className="m-5 mb-0 rounded-base border-2 border-tinta bg-superficie p-4">
           <p className="text-chico">
-            Elegiste <strong>{registry[pendiente].meta.nombre}</strong>, pero tenés un borrador guardado de{" "}
+            Elegiste <strong>{pendiente.nombre}</strong>, pero tenés un borrador guardado de{" "}
             <strong>{registry[config.plantilla].meta.nombre}</strong> con cambios.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
             <button type="button" className={botonKit.primario} onClick={() => resolverPendiente(true)}>
-              Usar {registry[pendiente].meta.nombre}
+              Usar {pendiente.nombre}
             </button>
             <button type="button" className={botonKit.secundario} onClick={() => resolverPendiente(false)}>
               Seguir con mi borrador
@@ -68,6 +71,17 @@ export function PestanaPlantilla({ config, usarEjemplo, pendiente, resolverPendi
             })}
           </div>
         </fieldset>
+      </Bloque>
+      <Bloque titulo="Estudio" descripcion="Portfolio modular en versión sobria: fotos a pantalla completa, proyectos con ficha y servicios en índice. Ideal para arquitectura, diseño y profesionales.">
+        <button
+          type="button"
+          className={botonKit.secundario}
+          onClick={() =>
+            window.confirm('Se carga el ejemplo "Estudio" y se pierde lo que editaste. ¿Seguimos?') && reemplazar(EJEMPLOS_EXTRA.estudio.config)
+          }
+        >
+          Empezar con el ejemplo Estudio
+        </button>
       </Bloque>
       <Bloque titulo="Empezar de nuevo" descripcion="Vuelve al contenido de ejemplo de la plantilla actual.">
         <button

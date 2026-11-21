@@ -25,6 +25,8 @@ const DEMOS = [
   { plantilla: "consultorio", slug: "demo-consultorio" },
   { plantilla: "alojamiento", slug: "demo-casas" },
   { plantilla: "generico", slug: "demo-portfolio" },
+  // Estudio no es una plantilla aparte (es Portfolio modular sobrio), pero tiene su ficha en /web.
+  { plantilla: "estudio", slug: "demo-arquitectos", ruta: "/estudio" },
 ];
 
 /** Proyectos reales que se muestran en la home (sección "Proyectos"): se capturan en vivo. */
@@ -75,7 +77,7 @@ const navegador = await lanzar();
 try {
   for (const demo of SOLO_PROYECTOS || SOLO_CAJAS || SOLO_AGENDA ? [] : DEMOS) {
     for (const vista of VISTAS) {
-      await capturar(navegador, `${BASE}/l/${demo.slug}`, vista, `${demo.plantilla}-${vista.nombre}.jpg`);
+      await capturar(navegador, `${BASE}${demo.ruta ?? `/l/${demo.slug}`}`, vista, `${demo.plantilla}-${vista.nombre}.jpg`);
     }
   }
   // Las cajas: la demo de verdulería en Vender y en Caja del día (con los datos de ejemplo).

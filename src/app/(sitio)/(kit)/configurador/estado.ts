@@ -2,9 +2,10 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { configsPorDefecto } from "@/core/defaults";
+import { EJEMPLOS_EXTRA, esEjemploExtra } from "@/core/defaults/estudio";
 import { codificarConfig } from "@/core/lib/codigo";
 export { slugDe } from "@/core/lib/slug";
-import { esPlantilla, type Plantilla } from "@/core/registry";
+import { esPlantilla, registry, type Plantilla } from "@/core/registry";
 import { landingConfigSchema, type LandingConfig } from "@/core/schema/landing-config";
 import { aplicarMigraciones, erroresDeZod, type ErrorConfig, migraciones, migrateConfig } from "@/core/schema/migrate";
 import { VERSION_ACTUAL } from "@/core/schema/version";
@@ -36,35 +37,46 @@ function leerBorrador(): LandingConfig | null {
 
 export type EstadoGuardado = "guardado" | "pendiente" | "sin-almacenamiento";
 
+/** Ejemplo pedido para empezar: el de una plantilla o un punto de partida extra (p. ej. Estudio). */
+export type Pedido = { nombre: string; config: LandingConfig; extra: boolean };
+
 /** Plantilla pedida desde la home ("Usar esta plantilla" → /configurador?plantilla=…). */
-function plantillaPedida(): Plantilla | null {
+function pedidoDeUrl(): Pedido | null {
   try {
     const valor = new URLSearchParams(window.location.search).get("plantilla");
-    return esPlantilla(valor) ? valor : null;
+    if (esEjemploExtra(valor)) {
+      const e = EJEMPLOS_EXTRA[valor];
+      return { nombre: e.nombre, config: structuredClone(e.config), extra: true };
+    }
+    return esPlantilla(valor) ? { nombre: registry[valor].meta.nombre, config: structuredClone(configsPorDefecto[valor]), extra: false } : null;
   } catch {
     return null;
   }
 }
 
-const sinTocar = (c: LandingConfig) => JSON.stringify(c) === JSON.stringify(configsPorDefecto[c.plantilla]);
+const iguales = (a: LandingConfig, b: LandingConfig) => JSON.stringify(a) === JSON.stringify(b);
+const sinTocar = (c: LandingConfig) =>
+  iguales(c, configsPorDefecto[c.plantilla]) || Object.values(EJEMPLOS_EXTRA).some((e) => iguales(c, e.config));
 
 /**
- * Punto de partida: el borrador guardado, o la plantilla pedida por URL. Si hay un borrador con
- * cambios de otra plantilla, no se pisa: queda la pedida como "pendiente" para que la persona elija.
+ * Punto de partida: el borrador guardado, o el ejemplo pedido por URL. Si hay un borrador con
+ * cambios, no se pisa: queda lo pedido como "pendiente" para que la persona elija. Si el borrador
+ * con cambios es de la misma plantilla (y no se pidió un ejemplo extra), se sigue con él.
  */
-function inicio(): { config: LandingConfig; pendiente: Plantilla | null } {
+function inicio(): { config: LandingConfig; pendiente: Pedido | null } {
   const guardado = leerBorrador();
-  const pedida = plantillaPedida();
-  if (!pedida) return { config: guardado ?? structuredClone(configsPorDefecto.barberia), pendiente: null };
-  if (guardado && guardado.plantilla !== pedida && !sinTocar(guardado)) return { config: guardado, pendiente: pedida };
-  return { config: guardado?.plantilla === pedida ? guardado : structuredClone(configsPorDefecto[pedida]), pendiente: null };
+  const pedido = pedidoDeUrl();
+  if (!pedido) return { config: guardado ?? structuredClone(configsPorDefecto.barberia), pendiente: null };
+  if (!guardado || sinTocar(guardado)) return { config: pedido.config, pendiente: null };
+  if (guardado.plantilla === pedido.config.plantilla && !pedido.extra) return { config: guardado, pendiente: null };
+  return { config: guardado, pendiente: pedido };
 }
 
 export function useBorrador() {
   // El componente se monta solo en el cliente (ssr: false), así que se puede leer localStorage y la URL al iniciar.
   const [arranque] = useState(inicio);
   const [config, setConfig] = useState<LandingConfig>(arranque.config);
-  const [pendiente, setPendiente] = useState<Plantilla | null>(arranque.pendiente);
+  const [pendiente, setPendiente] = useState<Pedido | null>(arranque.pendiente);
   const [guardado, setGuardado] = useState<EstadoGuardado>("guardado");
 
   // La URL queda limpia: recargar no vuelve a aplicar la plantilla pedida.
@@ -104,10 +116,10 @@ export function useBorrador() {
   /** Respuesta al aviso de plantilla pedida con un borrador propio de otra. */
   const resolverPendiente = useCallback(
     (usarla: boolean) => {
-      if (usarla && pendiente) usarEjemplo(pendiente);
+      if (usarla && pendiente) reemplazar(pendiente.config);
       setPendiente(null);
     },
-    [pendiente, usarEjemplo],
+    [pendiente, reemplazar],
   );
 
   const errores = useMemo<ErrorConfig[]>(() => {

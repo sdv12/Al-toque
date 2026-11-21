@@ -13,6 +13,10 @@ const nextConfig: NextConfig = {
     // optimizar desde su origen: así el optimizador no queda como proxy abierto para cualquier URL.
     qualities: [75],
   },
+  // La demo de Al Toque Estudio vive en /estudio (src/app/(sitio)/estudio).
+  async redirects() {
+    return [{ source: "/l/demo-arquitectos", destination: "/estudio", permanent: true }];
+  },
   async headers() {
     return [
       {

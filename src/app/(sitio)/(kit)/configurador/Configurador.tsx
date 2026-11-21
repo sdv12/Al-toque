@@ -126,7 +126,7 @@ export default function Configurador() {
           </Tabs.List>
           <div className="min-h-0 flex-1 overflow-y-auto">
             <Tabs.Content value="plantilla">
-              <PestanaPlantilla config={config} usarEjemplo={usarEjemplo} pendiente={pendiente} resolverPendiente={resolverPendiente} />
+              <PestanaPlantilla config={config} usarEjemplo={usarEjemplo} reemplazar={reemplazar} pendiente={pendiente} resolverPendiente={resolverPendiente} />
             </Tabs.Content>
             <Tabs.Content value="estilo">
               <PestanaEstilo key={`${config.plantilla}-${config.estilo.modo ?? ""}`} config={config} editar={editar} />
