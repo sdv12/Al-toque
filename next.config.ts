@@ -15,7 +15,11 @@ const nextConfig: NextConfig = {
   },
   // La demo de Al Toque Estudio vive en /estudio (src/app/(sitio)/estudio).
   async redirects() {
-    return [{ source: "/l/demo-arquitectos", destination: "/estudio", permanent: true }];
+    return [
+      { source: "/l/demo-arquitectos", destination: "/estudio", permanent: true },
+      // La presentación de turnos pasó de /agenda a /turnos (y la app, a /turnos/demo).
+      { source: "/agenda", destination: "/turnos", permanent: true },
+    ];
   },
   async headers() {
     return [

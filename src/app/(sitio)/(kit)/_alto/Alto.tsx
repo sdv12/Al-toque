@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import { EVENTO_ABRIR_ALTO } from "./AbrirAlto";
+import { CONTEXTOS, type ContextoAlto } from "./dudas";
 import { Robot } from "./Robot";
 
 /*
@@ -14,7 +15,7 @@ const AltoPanel = dynamic(() => import("./AltoPanel"), { ssr: false });
 /** La viñeta se cierra una vez por visita (pestaña). */
 const CLAVE_VINETA = "altoque:alto-vineta";
 
-export function Alto({ whatsapp }: { whatsapp: string | undefined }) {
+export function Alto({ whatsapp, contexto = "inicio" }: { whatsapp: string | undefined; contexto?: ContextoAlto }) {
   const [abierto, setAbierto] = useState(false);
   const [usado, setUsado] = useState(false);
   const [vineta, setVineta] = useState(false);
@@ -76,7 +77,7 @@ export function Alto({ whatsapp }: { whatsapp: string | undefined }) {
           {vineta && (
             <div role="status" className="relative w-[min(19rem,calc(100vw-2rem))] animate-alto-aparece rounded-base border-2 border-tinta bg-fondo p-4 pr-10 shadow-[0_18px_40px_-18px_rgb(23_21_15/0.55)] motion-reduce:animate-none">
               <p className="text-chico leading-snug">
-                <strong>¡Bienvenido/a!</strong> Soy Alto, el asistente virtual. ¿Te ayudo a armar tu página?
+                <strong>¡Bienvenido/a!</strong> Soy Alto, el asistente virtual. {CONTEXTOS[contexto].vineta}
               </p>
               <button type="button" onClick={abrir} className="mt-3 inline-flex min-h-10 items-center rounded-full bg-tinta px-4 text-chico font-semibold text-fondo">
                 ¡Dale!
@@ -108,7 +109,7 @@ export function Alto({ whatsapp }: { whatsapp: string | undefined }) {
           </button>
         </div>
       )}
-      {usado && <AltoPanel whatsapp={whatsapp} visible={abierto} onCerrar={() => setAbierto(false)} />}
+      {usado && <AltoPanel whatsapp={whatsapp} contexto={contexto} visible={abierto} onCerrar={() => setAbierto(false)} />}
     </>
   );
 }

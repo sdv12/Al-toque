@@ -24,7 +24,7 @@ export const TITULAR = {
 };
 
 /** Fecha de la versión vigente de los textos legales (cambiarla al modificarlos). */
-export const VIGENCIA = "2026-11-18";
+export const VIGENCIA = "2026-11-21";
 
 export const fechaVigencia = () =>
   new Intl.DateTimeFormat("es-AR", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(`${VIGENCIA}T12:00:00Z`));

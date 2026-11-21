@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { decodificarDemo } from "@/agendas/lib/demo";
 import { cajaDesdeQuery } from "@/cajas/config";
-import { cotizar, planAgenda, planCajaPro } from "@/core/lib/precios";
+import { ahorroWebTurnos, cotizar, planAgenda, planPerfil } from "@/core/lib/precios";
 import { migrateConfig } from "@/core/schema/migrate";
 import { formatearPesos } from "@/core/lib/mensajes";
-import { COMENTARIO_RUBRO, CONSEJO, DIFICULTADES, RUBROS, coloresPara, funcionesSugeridas, recomendar, resumenRespuestas, type Respuestas } from "./alto";
-import { DUDAS, buscarDuda } from "./dudas";
+import { COMENTARIO_RUBRO, CONSEJO, DIFICULTADES, FUNCIONES, RUBROS, coloresPara, funcionesSugeridas, recomendar, resumenRespuestas, type Respuestas } from "./alto";
+import { CONTEXTOS, DUDAS, buscarDuda, dudasPara } from "./dudas";
 import { PREGUNTAS, preguntasPara, respuestaEnTexto, validarWhatsapp } from "./preguntas";
 
 const rubro = (id: string) => RUBROS.find((r) => r.id === id)!;
@@ -49,8 +49,8 @@ describe("Alto: recomendación", () => {
     expect(r.productos.map((p) => p.id)).toEqual(["agenda"]);
     expect(r.total).toEqual(planAgenda());
     const href = r.productos[0]!.accion.href;
-    expect(href).toMatch(/^\/turnos\?demo=.+#\/probar$/);
-    const demo = decodificarDemo(href.slice("/turnos?demo=".length, href.indexOf("#")));
+    expect(href).toMatch(/^\/turnos\/demo\?demo=.+#\/probar$/);
+    const demo = decodificarDemo(href.slice("/turnos/demo?demo=".length, href.indexOf("#")));
     expect(demo.negocio).toMatchObject({ nombre: "Lo de Ana", profesion: "unas" });
   });
 
@@ -60,10 +60,19 @@ describe("Alto: recomendación", () => {
     expect(cajaDesdeQuery(caja.accion.href.slice("/caja".length))).toMatchObject({ rubro: "kiosco", negocio: { nombre: "Lo de Ana" }, color: "azul" });
   });
 
-  it("caja pro: precio de la pro y primero si lo que urge son las ventas", () => {
+  it("caja pro: a presupuestar (no suma al total) y primero si lo que urge son las ventas", () => {
     const r = recomendar(respuestas({ rubro: rubro("comercio"), funciones: ["cajaPro", "web"], prioridad: "ventas", dificultades: ["factura"] }));
     expect(r.productos[0]!.id).toBe("cajaPro");
-    expect(r.productos[0]!.precio).toEqual({ unico: planCajaPro().unico, mensual: planCajaPro().mensual });
+    expect(r.productos[0]!.aMedida).toBe(true);
+    expect(r.total).toEqual(r.productos.find((p) => p.id === "landing")!.precio);
+    expect(r.aparte.join(" ")).toMatch(/a medida/);
+  });
+
+  it("página con turnos: avisa el ahorro del paquete; con poco presupuesto ofrece el Perfil digital", () => {
+    const paquete = recomendar(respuestas({ rubro: rubro("barberia"), funciones: ["web", "turnos"] }));
+    expect(paquete.aparte.join(" ")).toContain(formatearPesos(ahorroWebTurnos().unico));
+    const justo = recomendar(respuestas({ rubro: rubro("oficios"), funciones: ["web"], presupuesto: "bajo" }));
+    expect(justo.aparte.join(" ")).toContain(formatearPesos(planPerfil().unico));
   });
 
   it("si no marca nada, al menos la página", () => {
@@ -100,9 +109,9 @@ describe("Alto: guion completo", () => {
     expect(validarWhatsapp("123").ok).toBe(false);
   });
 
-  it("sucursales extra suman al mensual de la caja pro; si ya tiene dominio, no se cobra", () => {
+  it("las sucursales van al porqué de la caja pro; si ya tiene dominio, no se cobra", () => {
     const pro = recomendar(respuestas({ rubro: rubro("comercio"), funciones: ["cajaPro"], sucursales: "dos" })).productos[0]!;
-    expect(pro.precio.mensual).toBe(planCajaPro().mensual + planCajaPro().sucursalExtra);
+    expect(pro.porque.join(" ")).toMatch(/2 sucursales/);
     const conDominio = recomendar(respuestas({ rubro: rubro("barberia"), funciones: ["web", "dominio"], dominio: "tiene" }));
     expect(conDominio.borrador!.extras ?? []).not.toContain("dominio");
     const quiereDominio = recomendar(respuestas({ rubro: rubro("barberia"), funciones: ["web"], dominio: "quiere" }));
@@ -192,7 +201,9 @@ describe("Alto: dudas", () => {
 
   it("todas tienen respuesta y el precio sale de precios.ts", () => {
     for (const d of DUDAS) expect(d.respuesta().length, d.id).toBeGreaterThan(0);
-    expect(DUDAS.find((d) => d.id === "precio")!.respuesta().join(" ")).toContain(formatearPesos(planCajaPro().unico));
+    const precio = DUDAS.find((d) => d.id === "precio")!.respuesta().join(" ");
+    expect(precio).toContain(formatearPesos(planPerfil().unico));
+    expect(precio).toMatch(/caja pro .*presupuestan/);
   });
 });
 
@@ -200,5 +211,27 @@ describe("Al Toque no ofrece rubros de salud (van por Sala de Espera)", () => {
   it("Alto no los lista ni usa la plantilla de consultorio", () => {
     for (const r of RUBROS) expect(r.plantilla, r.id).not.toBe("consultorio");
     expect(RUBROS.map((r) => r.nombre).join(" ")).not.toMatch(/salud|consultorio|psicolog|odontolog|nutrici|kinesio/i);
+  });
+});
+
+describe("Alto: dudas nuevas y contexto de cada página", () => {
+  it.each([
+    ["¿qué diferencia hay entre los planes?", "planes"],
+    ["cuanto sale la caja pro para 3 sucursales", "cajapro"],
+    ["la caja anda sin internet?", "internet"],
+    ["ya tengo una página en wix, la pueden mejorar?", "migrar"],
+    ["qué pasa si me atraso con el pago", "mora"],
+    ["les avisa a los clientes para que no falten?", "recordatorios"],
+  ])("«%s» → %s", (texto, id) => {
+    expect(buscarDuda(texto)?.id).toBe(id);
+  });
+
+  it("cada página muestra primero sus dudas y no repite ninguna", () => {
+    for (const c of Object.keys(CONTEXTOS) as (keyof typeof CONTEXTOS)[]) {
+      const lista = dudasPara(c).map((d) => d.id);
+      expect(lista.slice(0, CONTEXTOS[c].dudas.length)).toEqual(CONTEXTOS[c].dudas);
+      expect(new Set(lista).size).toBe(DUDAS.length);
+      for (const f of CONTEXTOS[c].funciones) expect(Object.keys(FUNCIONES), f).toContain(f);
+    }
   });
 });

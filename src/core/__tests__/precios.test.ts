@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { configsPorDefecto } from "../defaults";
 import { libreEjemplo } from "../defaults/libre";
-import { EXTRAS, cotizar, esBloqueConSistema, planes, ACTUALIZACION_PRECIOS, preciosVigentesHasta, proximaActualizacion } from "../lib/precios";
+import { EXTRAS, ahorroWebTurnos, cotizar, esBloqueConSistema, niveles, planAgenda, planPerfil, planes, ACTUALIZACION_PRECIOS, preciosVigentesHasta, proximaActualizacion } from "../lib/precios";
 
 describe("precios", () => {
   it("una plantilla de rubro cuesta el precio de plantilla", () => {
@@ -22,6 +22,30 @@ describe("precios", () => {
   it("los bloques desactivados no suman", () => {
     const todos = libreEjemplo.secciones.map((s) => ({ ...s, activa: false }));
     expect(cotizar({ ...libreEjemplo, secciones: todos }).lineas).toHaveLength(1);
+  });
+
+  it("hasta 3 bloques sin sistema ni dominio propio es Perfil digital; si suma más, pasa a Personalizado", () => {
+    const perfil = cotizar({ ...libreEjemplo, secciones: libreEjemplo.secciones.slice(0, 3) });
+    expect(perfil.total).toEqual({ unico: planPerfil().unico, mensual: planPerfil().mensual });
+    expect(perfil.lineas[0]!.concepto).toMatch(/Perfil digital/);
+    const cuatro = cotizar({ ...libreEjemplo, secciones: libreEjemplo.secciones.slice(0, 4) });
+    expect(cuatro.total.unico).toBe(planes()[1]!.unico);
+    const conDominio = cotizar({ ...libreEjemplo, secciones: libreEjemplo.secciones.slice(0, 3), extras: ["dominio"] });
+    expect(conDominio.total.unico).toBe(planes()[1]!.unico + EXTRAS.dominio.unico);
+  });
+
+  it("los niveles van del más barato al más caro y el último se presupuesta", () => {
+    const n = niveles();
+    expect(n.map((x) => x.id)).toEqual(["perfil", "vidriera", "medida", "sistema", "premium"]);
+    const precios = n.flatMap((x) => (x.precio ? [x.precio.unico] : []));
+    expect([...precios].sort((a, b) => a - b)).toEqual(precios);
+    expect(n.at(-1)!.precio).toBeNull();
+  });
+
+  it("el paquete Web + Turnos sale menos que la página y la agenda por separado", () => {
+    const [vidriera, , sistema] = planes();
+    expect(sistema!.unico).toBeLessThan(vidriera!.unico + planAgenda().unico);
+    expect(ahorroWebTurnos().unico).toBe(vidriera!.unico + planAgenda().unico - sistema!.unico);
   });
 
   it("un componente con sistema suma su costo y la base de datos una sola vez", () => {
@@ -47,7 +71,7 @@ describe("precios", () => {
   it("los planes de la home salen de los mismos valores", () => {
     const [vidriera, medida, sistema] = planes();
     expect(vidriera!.unico).toBe(cotizar(configsPorDefecto.barberia).total.unico);
-    expect(medida!.unico).toBe(cotizar({ ...libreEjemplo, secciones: [] }).total.unico);
+    expect(medida!.unico).toBe(cotizar({ ...libreEjemplo, secciones: libreEjemplo.secciones.slice(0, 6) }).total.unico);
     expect(sistema!.unico).toBeGreaterThan(vidriera!.unico);
   });
 

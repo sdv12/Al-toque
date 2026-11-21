@@ -6,7 +6,7 @@ import { fuentes as fuentesAlojamiento } from "@/templates/alojamiento";
 import { fuentes as fuentesBarberia } from "@/templates/barberia";
 import { fuentes as fuentesGenerico } from "@/templates/generico";
 import { formatearPesos } from "@/core/lib/mensajes";
-import { planAgenda, planCaja, planes, preciosVigentesHasta, proximaActualizacion } from "@/core/lib/precios";
+import { niveles, planAgenda, planCaja, planPerfil, planes, preciosVigentesHasta, proximaActualizacion } from "@/core/lib/precios";
 import { AbrirAlto } from "../_alto/AbrirAlto";
 import { TITULAR } from "../legales/datos";
 import { DUDAS } from "../_alto/dudas";
@@ -64,7 +64,7 @@ export function Marca({ className = "", sobreOscuro = false }: { className?: str
 }
 
 /** `desde`: en otras páginas que no son la portada, los links de secciones apuntan a "/#…". */
-export function Encabezado({ desde = "", actual }: { desde?: "" | "/"; actual?: "/web" | "/agenda" | "/caja" }) {
+export function Encabezado({ desde = "", actual }: { desde?: "" | "/"; actual?: "/web" | "/turnos" | "/caja" }) {
   return (
     <header className={`${margen} flex h-18 items-center justify-between gap-3 py-4`}>
       <Link href="/" aria-label="Al Toque, inicio" className="text-[1.6rem] @md:text-[2rem]">
@@ -421,6 +421,7 @@ const precio = (p: { unico: number; mensual: number }, desde: boolean) => ({ uni
 
 function soluciones(): SolucionVista[] {
   const [vidriera] = planes();
+  const perfil = planPerfil();
   return [
     {
       id: "web",
@@ -429,7 +430,7 @@ function soluciones(): SolucionVista[] {
       titulo: "Tu página, lista para que te encuentren",
       texto: "Plantillas pensadas para tu rubro que cambiás a tu gusto, mirando cómo queda.",
       incluye: ["Tus servicios, precios y horarios", "Consultas y reservas por WhatsApp", "Lista para Google y para compartir"],
-      precio: precio(vidriera!, true),
+      precio: precio(perfil, true),
       ver: { href: "/web", texto: "Conocer Al Toque Web" },
       demo: { href: `/l/${FICHAS.barberia.slug}`, texto: "Ver una demo" },
       imagen: { src: "/muestras/barberia-escritorio.jpg", alt: "Una página de barbería hecha con Al Toque Web", marco: "navegador", url: `${DOMINIO}/l/${FICHAS.barberia.slug}` },
@@ -454,8 +455,8 @@ function soluciones(): SolucionVista[] {
       texto: "Tus clientes eligen servicio, día y horario libre, a cualquier hora. Con o sin página web.",
       incluye: ["Agenda con horarios libres", "Panel con la agenda, la caja y tus números", "Nueve diseños para elegir"],
       precio: precio(planAgenda(), false),
-      ver: { href: "/agenda", texto: "Conocer Al Toque Turnos" },
-      demo: { href: "/turnos#/probar", texto: "Probala con tus datos" },
+      ver: { href: "/turnos", texto: "Conocer Al Toque Turnos" },
+      demo: { href: "/turnos/demo#/probar", texto: "Probala con tus datos" },
       imagen: { src: "/muestras/agenda-base.jpg", alt: "La agenda de turnos en un celular", marco: "telefono" },
     },
     {
@@ -478,8 +479,7 @@ function soluciones(): SolucionVista[] {
       texto:
         "Una tienda con catálogo, carrito y pedidos online. La estamos preparando: mientras tanto, tu página puede mostrar tu catálogo y recibir pedidos por WhatsApp.",
       incluye: [],
-      ver: { href: "/web", texto: "Ver el catálogo con pedidos" },
-      avisame: "¡Hola! Quiero que me avisen cuando esté Al Toque Tienda.",
+      ver: { href: "/tienda", texto: "Sumarme a la lista de espera" },
     },
   ];
 }
@@ -569,61 +569,144 @@ export function ComoFuncionaWeb() {
 
 /* ───────────── Precios ───────────── */
 
-const DESTINO_PLAN: Record<string, { href: string; texto: string }> = {
-  vidriera: { href: "/configurador", texto: "Elegir plantilla" },
-  medida: { href: "/configurador?plantilla=libre", texto: "Armar desde cero" },
-  sistema: { href: "/configurador?plantilla=libre", texto: "Ver componentes" },
+/** Qué cubre el mensual y qué se cobra aparte (lo mismo que dicen los Términos). */
+const MENSUAL = {
+  incluye: [
+    "Alojamiento y certificado de seguridad (https)",
+    "Mantenimiento técnico y actualizaciones",
+    "Cambios chicos: textos, precios, horarios, fotos o contacto (hasta 1 hora por mes)",
+    "Soporte por WhatsApp o correo, con respuesta en 48 horas hábiles",
+  ],
+  aparte: [
+    "Secciones o funciones nuevas, o cambiar de plantilla",
+    "Dominio propio (alta y renovación anual)",
+    "Logo, fotos profesionales y carga de catálogos grandes",
+    "Capacitaciones largas para tu equipo",
+  ],
 };
 
 export function Precios() {
+  const lista = niveles();
   return (
     <section id="precios" data-precios aria-labelledby="precios-titulo" className={`${diferida} ${margen} scroll-mt-4 py-24`}>
       <div className="grid gap-6 @5xl:grid-cols-12 @5xl:items-end">
         <h2 id="precios-titulo" className={`${afiche} text-titulo @5xl:col-span-7`}>
-          Precios <span className="resaltado">claros</span>
+          Un nivel para <span className="resaltado">cada momento</span>
         </h2>
         {/* Dos párrafos hermanos: un <p> no puede ir dentro de otro (rompe la hidratación). */}
         <div className="max-w-medida space-y-1 text-subtitulo @5xl:col-span-5">
-          <p>Un pago inicial para armarla y una cuota mensual accesible para mantenerla online.</p>
-          <p>Mientras la armás, ves el precio final al instante.</p>
+          <p>Un pago inicial para armarla y un mensual para mantenerla online. Empezás simple y crecés sin arrancar de cero.</p>
+          <p>Mientras la armás en el configurador, ves el precio al instante.</p>
         </div>
       </div>
-      <ul className="mt-14 grid gap-4 @4xl:grid-cols-3">
-        {planes().map((p) => {
-          const destacado = p.id === "medida";
+      <ul className="mt-14 grid gap-4 @3xl:grid-cols-2 @6xl:grid-cols-5">
+        {lista.map((p) => {
+          const destacado = p.id === "vidriera";
+          const oscuro = p.id === "premium";
           return (
             <li
               key={p.id}
-              className={`flex flex-col rounded-base border-2 border-tinta p-7 ${destacado ? "bg-acento-relleno text-sobre-acento" : "bg-superficie"}`}
+              className={`flex flex-col rounded-base border-2 border-tinta p-6 ${destacado ? "bg-acento-relleno text-sobre-acento" : oscuro ? "bg-tinta text-fondo" : "bg-superficie"}`}
             >
-              <h3 className={`${afiche} text-[clamp(2rem,1.4rem+2cqi,2.75rem)] leading-none`}>{p.nombre}</h3>
-              <p className={`mt-3 ${destacado ? "" : "text-tinta-suave"}`}>{p.bajada}</p>
-              <p className="mt-6">
-                {p.desde && <span className="block text-chico">desde</span>}
-                <span className={`${afiche} block text-[clamp(2.5rem,1.6rem+3cqi,3.5rem)] leading-none tabular-nums`}>{formatearPesos(p.unico)}</span>
-                <span className="mt-1 block text-chico">pago único + {formatearPesos(p.mensual)} por mes</span>
+              {destacado && <p className="mb-2 text-mini font-bold uppercase tracking-wide">El más elegido</p>}
+              <h3 className={`${afiche} text-[clamp(1.8rem,1.3rem+1.4cqi,2.3rem)] leading-none`}>{p.nombre}</h3>
+              <p className={`mt-3 text-chico ${destacado || oscuro ? "opacity-85" : "text-tinta-suave"}`}>{p.bajada}</p>
+              <p className="mt-5">
+                {p.precio ? (
+                  <>
+                    {p.precio.desde && <span className="block text-chico">desde</span>}
+                    <span className={`${afiche} block text-[clamp(2.1rem,1.5rem+1.8cqi,2.8rem)] leading-none tabular-nums`}>{formatearPesos(p.precio.unico)}</span>
+                    <span className="mt-1 block text-chico">pago único + {formatearPesos(p.precio.mensual)} por mes</span>
+                  </>
+                ) : (
+                  <>
+                    <span className={`${afiche} block text-[clamp(2.1rem,1.5rem+1.8cqi,2.8rem)] leading-none`}>A presupuestar</span>
+                    <span className="mt-1 block text-chico opacity-85">según el alcance y la complejidad</span>
+                  </>
+                )}
               </p>
-              <ul className="mt-6 flex-1 space-y-2.5 text-chico">
+              <ul className="mt-5 flex-1 space-y-2 text-chico">
                 {p.incluye.map((i) => (
                   <li key={i} className="flex gap-2.5">
-                    <span aria-hidden className={`mt-[0.5em] h-1.5 w-3 shrink-0 ${destacado ? "bg-tinta" : "bg-acento"}`} />
+                    <span aria-hidden className={`mt-[0.5em] h-1.5 w-3 shrink-0 ${destacado ? "bg-tinta" : "bg-acento-relleno"}`} />
                     {i}
                   </li>
                 ))}
               </ul>
-              <Link href={DESTINO_PLAN[p.id]!.href} className={`${destacado ? boton.tinta : boton.contorno} mt-8`}>
-                {DESTINO_PLAN[p.id]!.texto}
+              <Link
+                href={p.href}
+                className={`mt-7 ${destacado ? boton.tinta : oscuro ? boton.amarillo : boton.contorno} px-4 text-chico`}
+              >
+                {p.accion}
                 <span className="sr-only"> ({p.nombre})</span>
               </Link>
             </li>
           );
         })}
       </ul>
+
+      <div className="mt-6 grid gap-4 @4xl:grid-cols-2">
+        {([
+          ["Qué incluye el mensual", MENSUAL.incluye, "bg-superficie"],
+          ["Qué se cobra aparte", MENSUAL.aparte, "bg-superficie-2"],
+        ] as const).map(([titulo, items, fondo]) => (
+          <div key={titulo} className={`rounded-base border-2 border-tinta p-6 ${fondo}`}>
+            <h3 className="text-subtitulo font-semibold">{titulo}</h3>
+            <ul className="mt-3 space-y-2 text-chico">
+              {items.map((i) => (
+                <li key={i} className="flex gap-2.5">
+                  <span aria-hidden className="mt-[0.5em] h-1.5 w-3 shrink-0 bg-acento" />
+                  {i}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
       <p className="mt-6 text-pretty text-chico text-tinta-suave">
         * Precios de referencia en pesos argentinos, vigentes hasta el {preciosVigentesHasta()}: se actualizan cada tres meses y la próxima actualización
         es el {proximaActualizacion()}. El valor final se confirma al ver tu proyecto. Los componentes con sistema (agenda real, pagos online,
-        recordatorios, panel) suman instalación y mensual porque necesitan base de datos y servidor.
+        recordatorios, panel) suman instalación y mensual porque necesitan base de datos y servidor. Detalle en los{" "}
+        <Link href="/terminos" className="underline underline-offset-4">
+          Términos y condiciones
+        </Link>
+        .
       </p>
+    </section>
+  );
+}
+
+/** Guía de /web: de lo que necesitás a la plantilla o el nivel que te conviene. */
+const GUIA_WEB = [
+  { necesito: "Que me encuentren y me escriban", te_conviene: "Perfil digital", href: "#precios" },
+  { necesito: "Mostrar mis servicios, precios y trabajos", te_conviene: "Plantilla de barbería o portfolio", href: "#plantillas" },
+  { necesito: "Mostrar mis casas o cabañas con fechas", te_conviene: "Plantilla de casas de campo", href: "#plantillas" },
+  { necesito: "Algo con mi estilo, bloque por bloque", te_conviene: "Personalizado", href: "/configurador?plantilla=libre" },
+  { necesito: "Que reserven turnos desde la página", te_conviene: "Web + Turnos", href: "/turnos" },
+  { necesito: "Vender productos con pedidos", te_conviene: "Catálogo con pedidos por WhatsApp", href: "/configurador?plantilla=libre" },
+];
+
+export function GuiaWeb() {
+  return (
+    <section aria-labelledby="guia-titulo" className={`${margen} py-16`}>
+      <h2 id="guia-titulo" className={`${afiche} text-titulo`}>
+        ¿Qué necesitás de <span className="resaltado">tu página?</span>
+      </h2>
+      <ul className="mt-10 grid gap-3 @3xl:grid-cols-2 @6xl:grid-cols-3">
+        {GUIA_WEB.map((g) => (
+          <li key={g.necesito}>
+            <a
+              href={g.href}
+              className="flex h-full flex-col justify-between gap-3 rounded-base border-2 border-tinta bg-superficie p-5 transition-colors hover:bg-acento-relleno hover:text-sobre-acento"
+            >
+              <span className="font-semibold">{g.necesito}</span>
+              <span className="text-chico">
+                Te conviene: <strong className="font-semibold">{g.te_conviene}</strong> →
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }
@@ -758,9 +841,9 @@ export function Pie() {
             <p className="font-semibold opacity-70">Soluciones</p>
             <ul className="mt-3 space-y-2">
               <li><Link href="/web" className="underline-offset-4 hover:underline">Al Toque Web</Link></li>
-              <li><Link href="/agenda" className="underline-offset-4 hover:underline">Al Toque Turnos</Link></li>
+              <li><Link href="/turnos" className="underline-offset-4 hover:underline">Al Toque Turnos</Link></li>
               <li><Link href="/caja" className="underline-offset-4 hover:underline">Al Toque Caja</Link></li>
-              <li><Link href="/#tienda" className="underline-offset-4 hover:underline">Al Toque Tienda (próximamente)</Link></li>
+              <li><Link href="/tienda" className="underline-offset-4 hover:underline">Al Toque Tienda (próximamente)</Link></li>
             </ul>
           </nav>
           <nav aria-label="Demos">
@@ -774,7 +857,7 @@ export function Pie() {
                 </li>
               ))}
               <li><Link href={ESTUDIO.ruta} className="underline-offset-4 hover:underline">Página de estudio</Link></li>
-              <li><Link href="/turnos" className="underline-offset-4 hover:underline">Agenda de turnos</Link></li>
+              <li><Link href="/turnos/demo" className="underline-offset-4 hover:underline">Agenda de turnos</Link></li>
               <li><Link href="/c/demo-verduleria" className="underline-offset-4 hover:underline">Caja simple</Link></li>
               <li><Link href="/c/pro" className="underline-offset-4 hover:underline">Caja pro</Link></li>
             </ul>

@@ -9,7 +9,7 @@ import { recomendar, resumenRespuestas, type Recomendacion, type Respuestas } fr
 import { preguntasPara, respuestaEnTexto, validarWhatsapp, type Opcion, type Parcial, type Pregunta } from "./preguntas";
 import { Robot } from "./Robot";
 import { AvisoDatos } from "../legales/AvisoDatos";
-import { DUDAS, SIN_RESPUESTA, buscarDuda } from "./dudas";
+import { CONTEXTOS, DUDAS, SIN_RESPUESTA, buscarDuda, dudasPara, type ContextoAlto } from "./dudas";
 
 /*
  * El chat de Alto. Recorre el guion de preguntas.ts: cada respuesta se guarda con una copia de
@@ -18,7 +18,7 @@ import { DUDAS, SIN_RESPUESTA, buscarDuda } from "./dudas";
  */
 
 const CLAVE_BORRADOR = "landing-kit:borrador";
-const BIENVENIDA = "¡Bienvenido/a! Soy Alto, el asistente virtual. ¿Te ayudo a armar tu página?";
+const BIENVENIDA = "¡Bienvenido/a! Soy Alto, el asistente virtual.";
 
 const chip =
   "inline-flex min-h-10 items-center gap-2 rounded-full border-2 border-tinta bg-superficie px-3.5 text-chico font-semibold transition-colors hover:bg-acento-relleno/40 aria-pressed:bg-acento-relleno aria-pressed:text-sobre-acento disabled:opacity-40";
@@ -29,7 +29,18 @@ type Paso = { id: string; antes: Parcial };
 /** Una duda que hizo la persona, con el momento del guion en que la hizo (-1: antes de empezar). */
 type Charla = { n: number; despuesDe: number; pregunta: string; respuesta: string[] };
 
-export default function AltoPanel({ whatsapp, visible, onCerrar }: { whatsapp: string | undefined; visible: boolean; onCerrar: () => void }) {
+export default function AltoPanel({
+  whatsapp,
+  contexto = "inicio",
+  visible,
+  onCerrar,
+}: {
+  whatsapp: string | undefined;
+  contexto?: ContextoAlto;
+  visible: boolean;
+  onCerrar: () => void;
+}) {
+  const ctx = CONTEXTOS[contexto];
   const [empezo, setEmpezo] = useState(false);
   const [mirando, setMirando] = useState(false);
   const [r, setR] = useState<Parcial>({});
@@ -63,14 +74,16 @@ export default function AltoPanel({ whatsapp, visible, onCerrar }: { whatsapp: s
     const t = setTimeout(
       () => {
         setVista(actual.id);
-        setMarcadas(actual.tipo === "varias" && actual.sugeridas ? actual.sugeridas(r) : []);
+        // En la página de un producto, además de lo sugerido, viene marcado ese producto.
+        const sugeridas = actual.tipo === "varias" && actual.sugeridas ? actual.sugeridas(r) : [];
+        setMarcadas(actual.id === "funciones" ? [...new Set([...sugeridas, ...ctx.funciones])] : sugeridas);
         setTexto("");
         setError(null);
       },
       quieto ? 0 : 450 + actual.texto(r).join(" ").length * 6,
     );
     return () => clearTimeout(t);
-  }, [actual, vista, r]);
+  }, [actual, vista, r, ctx]);
 
   useEffect(() => {
     fin.current?.scrollIntoView({ block: "end", behavior: "smooth" });
@@ -178,10 +191,10 @@ export default function AltoPanel({ whatsapp, visible, onCerrar }: { whatsapp: s
           tipo: "Consulta",
           negocio: completas.nombre || completas.contacto || "Sin nombre todavía",
           detalle: rec.productos.map((p) => p.titulo).join(" + "),
-          estimado: plataMes(rec.total.unico, rec.total.mensual),
+          estimado: `${plataMes(rec.total.unico, rec.total.mensual)}${rec.productos.some((p) => p.aMedida) ? " + caja pro a presupuestar" : ""}`,
           slug: "",
           saludo: `¡Hola! ${quien}Charlé con Alto${completas.nombre ? ` para ${completas.nombre}` : ""} y me interesa.`,
-          resumen: [`Le recomendó: ${rec.productos.map((p) => p.titulo).join(", ")}`, `Estimado: ${plataMes(rec.total.unico, rec.total.mensual)}`, ...resumenRespuestas(completas)],
+          resumen: [`Le recomendó: ${rec.productos.map((p) => p.titulo).join(", ")}`, `Estimado: ${plataMes(rec.total.unico, rec.total.mensual)}${rec.productos.some((p) => p.aMedida) ? " + caja pro a presupuestar" : ""}`, ...resumenRespuestas(completas)],
           configuracion: { respuestas: { ...completas, rubro: completas.rubro.id }, recomendacion: rec.productos.map((p) => p.id), pagina: rec.borrador },
           codigo: codigo || "—",
         },
@@ -232,7 +245,8 @@ export default function AltoPanel({ whatsapp, visible, onCerrar }: { whatsapp: s
       </header>
 
       <div role="log" aria-live="polite" className="min-h-0 flex-1 space-y-2.5 overflow-y-auto px-4 py-4">
-        <Globo de="alto">{BIENVENIDA}</Globo>
+        <Globo de="alto">{`${BIENVENIDA} ${ctx.vineta}`}</Globo>
+        {ctx.saludo && <Globo de="alto">{ctx.saludo}</Globo>}
         {mirando && !empezo && (
           <>
             <Globo de="yo">Solo estoy mirando</Globo>
@@ -301,7 +315,7 @@ export default function AltoPanel({ whatsapp, visible, onCerrar }: { whatsapp: s
 
       <div className="border-t-2 border-tinta/10 bg-superficie-2 px-4 py-3">
         {dudando ? (
-          <Dudas titulo={titulo} duda={duda} setDuda={setDuda} onPreguntar={preguntar} onVolver={() => setDudando(false)} seguir={empezo && !terminado} />
+          <Dudas titulo={titulo} contexto={contexto} duda={duda} setDuda={setDuda} onPreguntar={preguntar} onVolver={() => setDudando(false)} seguir={empezo && !terminado} />
         ) : !empezo ? (
           <div className="flex flex-wrap gap-2">
             <button type="button" className={`${chip} bg-acento-relleno text-sobre-acento`} onClick={() => setEmpezo(true)}>
@@ -497,11 +511,11 @@ function Respuesta(props: {
 }
 
 /** Las dudas frecuentes como chips, más una caja para escribir la propia. */
-function Dudas(props: { titulo: string; duda: string; setDuda: (t: string) => void; onPreguntar: (pregunta: string, id?: string) => void; onVolver: () => void; seguir: boolean }) {
+function Dudas(props: { titulo: string; contexto: ContextoAlto; duda: string; setDuda: (t: string) => void; onPreguntar: (pregunta: string, id?: string) => void; onVolver: () => void; seguir: boolean }) {
   return (
     <div className="flex flex-col gap-2.5">
       <Opciones etiqueta="Preguntas frecuentes">
-        {DUDAS.map((d) => (
+        {dudasPara(props.contexto).map((d) => (
           <button key={d.id} type="button" className={chip} onClick={() => props.onPreguntar(d.pregunta, d.id)}>
             {d.pregunta}
           </button>
@@ -564,7 +578,7 @@ function Resultado({ rec, onConfigurador }: { rec: Recomendacion; onConfigurador
           <li key={p.id} className="border-b border-borde pb-3.5 last:border-0 last:pb-0">
             <p className="flex flex-wrap items-baseline justify-between gap-x-3">
               <span className="font-semibold">{p.titulo}</span>
-              <span className="text-mini tabular-nums">{p.precio.unico || p.precio.mensual ? plataMes(p.precio.unico, p.precio.mensual) : "Incluido"}</span>
+              <span className="text-mini tabular-nums">{p.aMedida ? "A presupuestar" : p.precio.unico || p.precio.mensual ? plataMes(p.precio.unico, p.precio.mensual) : "Incluido"}</span>
             </p>
             <ul className="mt-1.5 space-y-1 text-mini text-tinta-suave">
               {p.porque.map((x) => (
@@ -590,7 +604,7 @@ function Resultado({ rec, onConfigurador }: { rec: Recomendacion; onConfigurador
         </p>
       ))}
       <p className="mt-3 flex items-baseline justify-between gap-3 border-t-2 border-tinta pt-3">
-        <span className="font-semibold">Total estimado</span>
+        <span className="font-semibold">Total estimado{rec.productos.some((p) => p.aMedida) ? " (sin la caja pro)" : ""}</span>
         <span className="font-semibold tabular-nums">{plataMes(rec.total.unico, rec.total.mensual)}</span>
       </p>
       <p className="mt-1 text-mini text-tinta-suave">Precios de referencia; el final lo confirmamos al charlar.</p>

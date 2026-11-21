@@ -2,21 +2,23 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { DISENOS } from "@/agendas/lib/disenos";
-import { GRUPOS } from "@/agendas/lib/profesiones";
+import { linkDemoAgenda } from "@/agendas/lib/demo";
+import { GRUPOS, type IdProfesion } from "@/agendas/lib/profesiones";
 import { formatearPesos } from "@/core/lib/mensajes";
-import { planAgenda, proximaActualizacion } from "@/core/lib/precios";
+import { EXTRAS, ahorroWebTurnos, planAgenda, planes, proximaActualizacion } from "@/core/lib/precios";
 import { Alto } from "../_alto/Alto";
 import { AvisoPrecios } from "../_home/AvisoPrecios";
 import { fuentesHome } from "../_home/fuentes";
 import { Telefono } from "../_home/Marcos";
 import { Encabezado, Pie, afiche, boton, margen } from "../_home/Secciones";
+import { LinksViejos } from "./LinksViejos";
 
 export const metadata: Metadata = {
   title: "Al Toque Turnos · Turnos online para tu negocio",
   description:
     "Tus clientes reservan solos desde un link, a cualquier hora. Vos manejás la agenda, la caja y los números desde el celular. Nueve diseños para elegir. Probalo gratis.",
-  alternates: { canonical: "/agenda" },
-  openGraph: { title: "Al Toque Turnos", description: "Turnos online para tu negocio. Probalo con tus datos.", type: "website", locale: "es_AR", url: "/agenda" },
+  alternates: { canonical: "/turnos" },
+  openGraph: { title: "Al Toque Turnos", description: "Turnos online para tu negocio. Probalo con tus datos.", type: "website", locale: "es_AR", url: "/turnos" },
 };
 
 const PANEL = [
@@ -53,20 +55,31 @@ const PREGUNTAS = [
   },
 ];
 
-export default function AgendaPagina() {
+/** Demos por rubro: [profesión de la agenda, nombre del negocio de muestra, qué se ve]. */
+const DEMOS_RUBRO: [IdProfesion, string, string][] = [
+  ["peluqueria", "Barbería del Centro", "Corte, corte y barba, color y peinado"],
+  ["unas", "Estudio de uñas", "Semipermanente, kapping, esculpidas y retiro"],
+  ["entrenamiento", "Entrenamiento personal", "Clases 1 a 1, en dupla y evaluación física"],
+  ["taller", "Taller mecánico", "Service, aceite, diagnóstico y alineación"],
+];
+
+export default function TurnosPagina() {
   const plan = planAgenda();
+  const paquete = planes()[2]!;
+  const ahorro = ahorroWebTurnos();
   const rubros = Object.values(GRUPOS).flat().length;
   return (
     <div data-kit="home" className={fuentesHome}>
       <a href="#contenido" className="sr-only z-50 rounded-control bg-tinta px-4 py-2 text-fondo focus:not-sr-only focus:absolute focus:left-3 focus:top-3">
         Saltar al contenido
       </a>
-      <Encabezado desde="/" actual="/agenda" />
+      <LinksViejos />
+      <Encabezado desde="/" actual="/turnos" />
       <main id="contenido">
         <section aria-labelledby="agenda-titulo" className={`${margen} pt-10 pb-16 @3xl:pt-16`}>
-          <p className="text-chico font-semibold">Para {rubros} rubros: belleza, clases, talleres, estudios, servicios y más</p>
+          <p className="text-chico font-semibold">Al Toque Turnos · Para {rubros} rubros: belleza, clases, talleres, estudios, servicios y más</p>
           <h1 id="agenda-titulo" className={`${afiche} mt-3 text-[clamp(3.25rem,1.6rem+8cqi,8rem)] leading-[0.86]`}>
-            Turnos online. <span className="resaltado">Al toque.</span>
+            Dejá de coordinar <span className="resaltado">a mano.</span>
           </h1>
           <div className="mt-8 grid gap-8 @4xl:grid-cols-12 @4xl:items-end">
             <div className="@4xl:col-span-7">
@@ -75,10 +88,10 @@ export default function AgendaPagina() {
                 rubro, tus servicios y tus horarios: es gratis y no pide registrarse.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
-                <Link href="/turnos#/probar" className={boton.tinta}>
+                <Link href="/turnos/demo#/probar" className={boton.tinta}>
                   Probalo con tus datos
                 </Link>
-                <Link href="/turnos#/" className={boton.contorno}>
+                <Link href="/turnos/demo#/" className={boton.contorno}>
                   Ver una demo
                 </Link>
               </div>
@@ -102,7 +115,7 @@ export default function AgendaPagina() {
           <ul className="mt-12 grid grid-cols-2 gap-x-5 gap-y-10 @3xl:grid-cols-3 @6xl:grid-cols-5">
             {DISENOS.map((d, i) => (
               <li key={d.id}>
-                <Link href={`/turnos?d=${d.id}#/`} className="group block">
+                <Link href={`/turnos/demo?d=${d.id}#/`} className="group block">
                   <Telefono
                     src={`/muestras/agenda-${d.id}.jpg`}
                     alt={`Diseño ${d.nombre} de la página de reservas`}
@@ -134,7 +147,7 @@ export default function AgendaPagina() {
                   </div>
                 ))}
               </dl>
-              <Link href="/turnos#/admin/hoy" className="mt-8 inline-flex min-h-12 items-center rounded-control bg-acento-relleno px-7 font-semibold text-sobre-acento">
+              <Link href="/turnos/demo#/admin/hoy" className="mt-8 inline-flex min-h-12 items-center rounded-control bg-acento-relleno px-7 font-semibold text-sobre-acento">
                 Ver el panel de la demo
               </Link>
               <p className="mt-2 text-mini opacity-70">PIN de la demo: 1234</p>
@@ -173,6 +186,90 @@ export default function AgendaPagina() {
           </div>
         </section>
 
+        <section id="precios" aria-labelledby="niveles-turnos" className={`${margen} scroll-mt-4 py-20`} data-precios>
+          <div className="grid gap-6 @5xl:grid-cols-12 @5xl:items-end">
+            <h2 id="niveles-turnos" className={`${afiche} text-titulo @5xl:col-span-7`}>
+              Sola o con <span className="resaltado">tu página</span>
+            </h2>
+            <p className="max-w-medida text-subtitulo @5xl:col-span-5">Un pago único para dejarla andando y un mensual que cubre la base de datos, el soporte y las actualizaciones.</p>
+          </div>
+          <ul className="mt-12 grid gap-4 @4xl:grid-cols-2">
+            <li className="flex flex-col rounded-base border-2 border-tinta bg-superficie p-7">
+              <h3 className={`${afiche} text-[clamp(2rem,1.4rem+2cqi,2.75rem)] leading-none`}>Agenda sola</h3>
+              <p className="mt-3 text-tinta-suave">Tu link de reservas y el panel. Ideal si ya te encuentran por Instagram o WhatsApp.</p>
+              <p className="mt-6">
+                <span className={`${afiche} text-[clamp(2.5rem,1.6rem+3cqi,3.5rem)] leading-none tabular-nums`}>{formatearPesos(plan.unico)}</span>
+                <span className="mt-1 block text-chico">pago único + {formatearPesos(plan.mensual)} por mes</span>
+              </p>
+              <ul className="mt-6 flex-1 space-y-2.5 text-chico">
+                {["Página de reservas con tu diseño", "Panel: hoy, agenda, caja, números y clientes", "Servicios, horarios y profesionales cargados", "Base de datos, soporte y actualizaciones"].map((i) => (
+                  <li key={i} className="flex gap-2.5">
+                    <span aria-hidden className="mt-[0.5em] h-1.5 w-3 shrink-0 bg-acento" />
+                    {i}
+                  </li>
+                ))}
+              </ul>
+              <Link href="/turnos/demo#/probar" className={`${boton.contorno} mt-8`}>
+                Probala con tus datos
+              </Link>
+            </li>
+            <li className="flex flex-col rounded-base border-2 border-tinta bg-acento-relleno p-7 text-sobre-acento">
+              <p className="text-chico font-semibold">Paquete · te ahorrás {formatearPesos(ahorro.unico)}</p>
+              <h3 className={`${afiche} mt-1 text-[clamp(2rem,1.4rem+2cqi,2.75rem)] leading-none`}>Web + Turnos</h3>
+              <p className="mt-3">Tu página con los turnos adentro: te conocen y reservan en el mismo lugar.</p>
+              <p className="mt-6">
+                <span className="block text-chico">desde</span>
+                <span className={`${afiche} text-[clamp(2.5rem,1.6rem+3cqi,3.5rem)] leading-none tabular-nums`}>{formatearPesos(paquete.unico)}</span>
+                <span className="mt-1 block text-chico">pago único + {formatearPesos(paquete.mensual)} por mes</span>
+              </p>
+              <ul className="mt-6 flex-1 space-y-2.5 text-chico">
+                {["Página web con una plantilla de tu rubro", "Turnos guardados, sin superposiciones", "Panel para gestionar turnos y consultas", "Hosting, base de datos y mantenimiento"].map((i) => (
+                  <li key={i} className="flex gap-2.5">
+                    <span aria-hidden className="mt-[0.5em] h-1.5 w-3 shrink-0 bg-tinta" />
+                    {i}
+                  </li>
+                ))}
+              </ul>
+              <Link href="/configurador" className={`${boton.tinta} mt-8`}>
+                Armar mi página con turnos
+              </Link>
+            </li>
+          </ul>
+          <div className="mt-4 rounded-base border-2 border-dashed border-tinta p-6">
+            <p className="font-semibold">Adicionales</p>
+            <ul className="mt-3 grid gap-3 text-chico @3xl:grid-cols-2">
+              <li>
+                <strong className="font-semibold">{EXTRAS.recordatorios.nombre}:</strong> {EXTRAS.recordatorios.descripcion} {formatearPesos(EXTRAS.recordatorios.unico)} +{" "}
+                {formatearPesos(EXTRAS.recordatorios.mensual)} por mes.
+              </li>
+              <li>
+                <strong className="font-semibold">Seña online:</strong> que paguen una parte al reservar. Se presupuesta según el medio de pago.
+              </li>
+            </ul>
+          </div>
+          <p className="mt-4 text-chico text-tinta-suave">Precios de referencia, actualizados cada tres meses · próxima actualización: {proximaActualizacion()}.</p>
+        </section>
+
+        <section aria-labelledby="demos-rubro" className={`${margen} border-t-2 border-tinta py-20`}>
+          <h2 id="demos-rubro" className={`${afiche} text-titulo`}>
+            Mirala con <span className="resaltado">tu rubro</span>
+          </h2>
+          <p className="mt-3 max-w-medida text-subtitulo">Una demo ya cargada con los servicios típicos. Tocá la tuya y reservá como lo haría tu cliente.</p>
+          <ul className="mt-10 grid gap-3 @3xl:grid-cols-2 @6xl:grid-cols-4">
+            {DEMOS_RUBRO.map(([profesion, nombre, detalle]) => (
+              <li key={profesion}>
+                <Link
+                  href={linkDemoAgenda(nombre, profesion, "")}
+                  className="flex h-full flex-col justify-between gap-3 rounded-base border-2 border-tinta bg-superficie p-5 transition-colors hover:bg-acento-relleno hover:text-sobre-acento"
+                >
+                  <span className={`${afiche} text-[1.8rem] leading-none`}>{nombre}</span>
+                  <span className="text-chico">{detalle} →</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+
         <section aria-labelledby="preguntas-agenda" className={`${margen} bg-superficie-2 py-20`}>
           <div className="mx-auto max-w-4xl">
             <h2 id="preguntas-agenda" className={`${afiche} text-center text-[clamp(2.4rem,1.2rem+5cqi,4.25rem)] leading-[0.95]`}>
@@ -201,7 +298,7 @@ export default function AgendaPagina() {
       </main>
       <Pie />
       <AvisoPrecios />
-      <Alto whatsapp={process.env.NEXT_PUBLIC_OWNER_WHATSAPP} />
+      <Alto whatsapp={process.env.NEXT_PUBLIC_OWNER_WHATSAPP} contexto="turnos" />
     </div>
   );
 }

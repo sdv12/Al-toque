@@ -4,6 +4,14 @@ Versionado semántico: PATCH = arreglos y ajustes; MINOR = funcionalidad nueva v
 MAJOR = cambios que rompen algo existente (formato de configs, flujo, backend).
 La versión se muestra en el footer de la home y en el configurador.
 
+## 1.17.0 · 2026-11-21
+- **Niveles de Al Toque Web**: Perfil digital (nuevo: $160.000 + $15.000/mes, hasta 3 bloques en una dirección de Al Toque), Listo para usar, Personalizado, Web + Turnos y Desarrollo a medida (a presupuestar). El configurador cotiza el Perfil digital solo. En /web: guía «¿Qué necesitás de tu página?», tabla de niveles y qué incluye el mensual y qué se cobra aparte.
+- **Al Toque Turnos en /turnos**: página comercial con «Dejá de coordinar a mano», agenda sola o paquete Web + Turnos (con lo que te ahorrás), adicionales y demos por rubro. La app de turnos pasa a /turnos/demo; /agenda y los links viejos (/turnos#/…, ?demo=, ?d=) redirigen solos.
+- **Caja pro sin precio publicado**: es un proyecto a medida que se presupuesta según el alcance y la complejidad. /caja suma el aviso de dónde quedan los datos de la caja simple.
+- **Al Toque Tienda en /tienda**: próximamente, con lista de espera (llega por Netlify Forms) para medir cuánta gente la quiere.
+- **Alto, más completo**: arranca orientado a cada página (saludo, dudas y qué marcar), 13 dudas nuevas (planes, Perfil digital, paquete, caja pro, dirección de la página, soporte, capacitación, sin internet, migrar una página, logo, atrasos, límites de turnos y recordatorios), avisa el ahorro del paquete, sugiere el Perfil digital si el presupuesto es justo y deja la caja pro como «a presupuestar».
+- Términos: niveles, desarrollo a medida y presupuesto de la caja pro. Privacidad: lista de espera de Tienda. Un test asegura que ninguna página escriba precios a mano.
+
 ## 1.16.0 · 2026-11-21
 - **Al Toque Estudio**: nueva solución en el acordeón de la portada, para arquitectos, diseñadores, constructoras y profesionales, con su precio, la captura y la demo.
 - **Estudio en `/web`**: cuarta plantilla con capturas, colores propios y los componentes que se pueden prender, apagar y ordenar (portada a pantalla completa, proyectos con ficha, servicios en índice, testimonios rotativos, preguntas y contacto sobre foto).

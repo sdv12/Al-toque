@@ -193,9 +193,9 @@ export const PASOS = [
 /** Selector de necesidades: cada una lleva a su solución. */
 export const NECESIDADES = [
   { texto: "Quiero una página web", detalle: "Que me encuentren y me escriban", href: "/web" },
-  { texto: "Quiero organizar mis turnos", detalle: "Que reserven solos, sin mensajes", href: "/agenda" },
+  { texto: "Quiero organizar mis turnos", detalle: "Que reserven solos, sin mensajes", href: "/turnos" },
   { texto: "Quiero controlar mi comercio", detalle: "Ventas, caja y fiado en orden", href: "/caja" },
-  { texto: "Quiero vender por internet", detalle: "Catálogo y pedidos online", href: "#tienda" },
+  { texto: "Quiero vender por internet", detalle: "Catálogo y pedidos online", href: "/tienda" },
 ] as const;
 
 /**

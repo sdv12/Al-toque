@@ -3,7 +3,8 @@ import type { IdProfesion } from "@/agendas/lib/profesiones";
 import { COLORES_CAJA, type ColorCaja } from "@/cajas/config";
 import { RUBROS as RUBROS_CAJA_DEF, type RubroCaja } from "@/cajas/rubros";
 import { configsPorDefecto } from "@/core/defaults";
-import { EXTRAS, cotizar, cotizarCaja, planAgenda, planCajaPro, type IdExtra, type Monto } from "@/core/lib/precios";
+import { formatearPesos } from "@/core/lib/mensajes";
+import { CAJA_PRO_A_MEDIDA, EXTRAS, ahorroWebTurnos, cotizar, cotizarCaja, planAgenda, planPerfil, type IdExtra, type Monto } from "@/core/lib/precios";
 import { registry, type Plantilla } from "@/core/registry";
 import type { LandingConfig } from "@/core/schema/landing-config";
 
@@ -286,6 +287,8 @@ export interface Producto {
   /** Por qué se lo recomendamos, en sus palabras. */
   porque: string[];
   precio: Monto;
+  /** Sin precio publicado: se presupuesta según el alcance (caja pro). No suma al total. */
+  aMedida?: boolean;
   /** Lo que se prueba o se arma al tocar el botón. */
   accion: { texto: string; href: string };
 }
@@ -401,14 +404,20 @@ export function recomendar(r: Respuestas): Recomendacion {
     if (d.has("factura")) porque.push("Factura electrónica (ARCA) y QR de Mercado Pago en la misma venta.");
     porque.push("Todo queda registrado: quién vendió, quién abrió y cerró la caja.");
     // Sucursales extra: el mensual de la pro incluye una.
-    const extra = r.sucursales === "dos" ? 1 : r.sucursales === "tres" ? 2 : 0;
-    if (extra) porque.push(`Con ${extra + 1}${r.sucursales === "tres" ? " o más" : ""} sucursales, cada una con su caja y su stock.`);
-    if (r.sucursales === "tres") aparte.push("Desde la cuarta sucursal, cada una suma su mensual.");
-    if (r.productos === "muchos") aparte.push("Con más de 300 productos, los cargamos desde tu lista de Excel o del proveedor.");
-    const pro = planCajaPro();
-    productos.push({ id: "cajaPro", titulo: "Caja pro", porque, precio: { unico: pro.unico, mensual: pro.mensual + extra * pro.sucursalExtra }, accion: { texto: "Probar la caja pro", href: "/c/pro" } });
+    if (r.sucursales === "dos" || r.sucursales === "tres") porque.push(`Con ${r.sucursales === "dos" ? "2" : "3 o más"} sucursales, cada una con su caja y su stock.`);
+    if (r.productos === "muchos") porque.push("Cargamos tus productos desde tu lista de Excel o del proveedor.");
+    aparte.push(`La caja pro es un proyecto a medida: ${CAJA_PRO_A_MEDIDA.texto.charAt(0).toLowerCase()}${CAJA_PRO_A_MEDIDA.texto.slice(1)} Con lo que me contaste te armamos el presupuesto.`);
+    productos.push({ id: "cajaPro", titulo: "Caja pro", porque, precio: { unico: 0, mensual: 0 }, aMedida: true, accion: { texto: "Probar la caja pro", href: "/c/pro" } });
   }
 
+  if (quiereLanding && quiereAgenda) {
+    const a = ahorroWebTurnos();
+    if (a.unico > 0) aparte.push(`Va como paquete Web + Turnos: te ahorrás ${formatearPesos(a.unico)} frente a contratar la página y la agenda por separado.`);
+  }
+  if (quiereLanding && !quiereAgenda && r.presupuesto === "bajo") {
+    const perfil = planPerfil();
+    aparte.push(`Si preferís arrancar más simple, el Perfil digital sale ${formatearPesos(perfil.unico)} + ${formatearPesos(perfil.mensual)} por mes: una página corta con lo esencial, que después crece.`);
+  }
   if (r.zona === "pais") aparte.push("Si querés vender online con envíos, lo charlamos aparte.");
   if (r.plazo === "ya") aparte.push("Como lo necesitás ya, te proponemos arrancar por lo más urgente y sumar el resto después.");
 
@@ -418,7 +427,7 @@ export function recomendar(r: Respuestas): Recomendacion {
   const iL = productos.findIndex((x) => x.id === "landing");
   const iA = productos.findIndex((x) => x.id === "agenda");
   if (iL > iA && iA >= 0 && quiereLanding) productos.splice(iA, 0, ...productos.splice(iL, 1));
-  const total = productos.reduce((t, p) => ({ unico: t.unico + p.precio.unico, mensual: t.mensual + p.precio.mensual }), { unico: 0, mensual: 0 });
+  const total = productos.filter((p) => !p.aMedida).reduce((t, p) => ({ unico: t.unico + p.precio.unico, mensual: t.mensual + p.precio.mensual }), { unico: 0, mensual: 0 });
   // Si el total pasa lo que pensaba invertir, se propone arrancar por lo primero de la lista.
   const tope = r.presupuesto === "bajo" ? 250_000 : r.presupuesto === "medio" ? 500_000 : Infinity;
   if (total.unico > tope && productos.length > 1)

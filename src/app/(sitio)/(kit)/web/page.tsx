@@ -4,7 +4,7 @@ import { Alto } from "../_alto/Alto";
 import { AbrirAlto } from "../_alto/AbrirAlto";
 import { AvisoPrecios } from "../_home/AvisoPrecios";
 import { fuentesHome } from "../_home/fuentes";
-import { Beneficios, Cierre, ComoFuncionaWeb, Encabezado, Pie, Plantillas, Precios, Preguntas, afiche, boton, margen } from "../_home/Secciones";
+import { Beneficios, Cierre, ComoFuncionaWeb, Encabezado, GuiaWeb, Pie, Plantillas, Precios, Preguntas, afiche, boton, margen } from "../_home/Secciones";
 
 export const metadata: Metadata = {
   title: "Al Toque Web · Tu página para tu negocio",
@@ -49,16 +49,17 @@ export default function Web() {
             <AbrirAlto className="font-semibold underline underline-offset-4">Preguntale a Alto</AbrirAlto>.
           </p>
         </section>
+        <GuiaWeb />
         <Plantillas />
         <ComoFuncionaWeb />
         <Precios />
         <Beneficios />
-        <Preguntas ids={["tiempo", "fotos", "pedidos", "cambios", "dominio", "mensual", "saber", "celular"]} />
+        <Preguntas ids={["planes", "perfil", "subdominio", "tiempo", "fotos", "pedidos", "cambios", "mensual", "migrar", "saber"]} />
         <Cierre whatsapp={whatsapp} />
       </main>
       <Pie />
       <AvisoPrecios />
-      <Alto whatsapp={whatsapp} />
+      <Alto whatsapp={whatsapp} contexto="web" />
     </div>
   );
 }

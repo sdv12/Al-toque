@@ -1,7 +1,9 @@
 # Al Toque
 
-Soluciones digitales para negocios chicos: **Al Toque Web** (`/web`, páginas por rubro), **Al Toque
-Turnos** (`/agenda` y la app en `/turnos`), **Al Toque Caja** (`/caja`) y Tienda (próximamente). La
+Soluciones digitales para negocios chicos: **Al Toque Web** (`/web`, niveles Perfil digital → Desarrollo a
+medida), **Al Toque Turnos** (`/turnos`; la app en `/turnos/demo`, `/agenda` redirige), **Al Toque Caja**
+(`/caja`; la pro se presupuesta) y **Tienda** (`/tienda`, lista de espera). Precios: solo en
+`src/core/lib/precios.ts` (un test falla si una página escribe uno a mano). Alto recibe `contexto` por página. La
 portada orienta y lleva a cada producto; «Encontrar mi solución» abre a Alto (evento de
 `_alto/AbrirAlto.tsx`, o `/?alto` desde páginas sin Alto). Salud no va en Al Toque: es de Sala de
 Espera (`PLANTILLAS_OCULTAS` en el registry y `GRUPOS_OCULTOS` en la agenda la sacan de las listas).

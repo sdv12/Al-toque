@@ -38,6 +38,10 @@ const SECCIONES: Seccion[] = [
           <strong>Alto, el asistente:</strong> las respuestas que elijas, tu nombre, tu WhatsApp y lo que quieras comentarnos.
         </li>
         <li>
+          <strong>Lista de espera de Al Toque Tienda:</strong> tu nombre, tu WhatsApp o correo, y lo que nos cuentes de tu negocio, para avisarte
+          cuando la tienda esté lista.
+        </li>
+        <li>
           <strong>Botones de arrepentimiento y de baja:</strong> nombre, correo o WhatsApp, número de pedido y el motivo, si lo contás.
         </li>
         <li>

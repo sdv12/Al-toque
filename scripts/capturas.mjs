@@ -6,7 +6,7 @@
  *   pnpm capturas                        # BASE=http://localhost:3124 por defecto
  *   SOLO=proyectos pnpm capturas         # solo los proyectos reales (sitios en vivo, sin servidor local)
  *   SOLO=cajas pnpm capturas             # solo las capturas de la caja
- *   SOLO=agenda pnpm capturas            # solo las de la agenda de turnos (/turnos)
+ *   SOLO=agenda pnpm capturas            # solo las de la agenda de turnos (/turnos/demo)
  *
  * Usa el Chromium de Playwright; si no lo encuentra, indicá CHROME_PATH=/ruta/a/chrome.
  */
@@ -90,8 +90,8 @@ try {
   // El configurador, con el borrador limpio y una plantilla elegida para que se vea el preview.
   // Agenda de turnos: cada diseño en celular (sin el selector de diseños flotante, ?embed) y el panel.
   if (!SOLO_PROYECTOS && !SOLO_CAJAS) {
-    for (const d of DISENOS_AGENDA) await capturar(navegador, `${BASE}/turnos?d=${d}&embed=1#/`, VISTAS[1], `agenda-${d}.jpg`);
-    await capturar(navegador, `${BASE}/turnos#/admin/numeros`, VISTAS[0], "agenda-panel.jpg", async (p) => {
+    for (const d of DISENOS_AGENDA) await capturar(navegador, `${BASE}/turnos/demo?d=${d}&embed=1#/`, VISTAS[1], `agenda-${d}.jpg`);
+    await capturar(navegador, `${BASE}/turnos/demo#/admin/numeros`, VISTAS[0], "agenda-panel.jpg", async (p) => {
       await p.evaluate(() => sessionStorage.setItem("ar-admin", "1"));
       await p.reload({ waitUntil: "networkidle" });
     });

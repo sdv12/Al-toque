@@ -3,7 +3,7 @@ import { PROFESIONES, type IdProfesion } from "./profesiones";
 import type { Db, Negocio, Servicio } from "./tipos";
 
 /*
- * Link de demo compartible (/turnos?demo=…): el negocio (sin logo ni PIN) y sus servicios en
+ * Link de demo compartible (/turnos/demo?demo=…): el negocio (sin logo ni PIN) y sus servicios en
  * base64url. Al abrirlo, la app arma la demo con esos datos y turnos de ejemplo.
  */
 
@@ -28,5 +28,5 @@ export const decodificarDemo = (txt: string): Base => {
 /** Demo de turnos con el nombre y el rubro de alguien (para llegar desde Alto). `pantalla`: "probar", "" (reserva) o "admin". */
 export function linkDemoAgenda(nombre: string, profesion: IdProfesion, pantalla = "probar"): string {
   const servicios = PROFESIONES[profesion].servicios.map(([n, duracion, precio], i): Servicio => ({ id: `s${i}`, nombre: n, duracion, precio, activo: true }));
-  return `/turnos?demo=${codificarBase({ nombre: nombre.trim() || PROFESIONES[profesion].demo, profesion }, servicios)}#/${pantalla}`;
+  return `/turnos/demo?demo=${codificarBase({ nombre: nombre.trim() || PROFESIONES[profesion].demo, profesion }, servicios)}#/${pantalla}`;
 }

@@ -5,7 +5,7 @@ import "@/agendas/estilos/admin.css";
 import "@/agendas/estilos/disenos.css";
 
 /*
- * Root layout de Agenda al toque (/turnos): la app de turnos portada de Agenda Rápida, con sus
+ * Root layout de Agenda al toque (/turnos/demo): la app de turnos portada de Agenda Rápida, con sus
  * hojas de estilo originales (no usa Tailwind). Cada diseño cambia las variables con
  * <html data-d="…">, que pone la app.
  */

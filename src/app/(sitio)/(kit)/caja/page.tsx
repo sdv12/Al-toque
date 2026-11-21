@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { formatearPesos } from "@/core/lib/mensajes";
-import { planCaja, planCajaPro, proximaActualizacion } from "@/core/lib/precios";
+import { CAJA_PRO_A_MEDIDA, planCaja, proximaActualizacion } from "@/core/lib/precios";
 import { RUBROS, RUBROS_CAJA } from "@/cajas/rubros";
 import { Alto } from "../_alto/Alto";
 import { AvisoPrecios } from "../_home/AvisoPrecios";
@@ -27,7 +27,7 @@ const PREGUNTAS_CAJA = [
   {
     pregunta: "¿Dónde quedan las ventas y los precios?",
     respuesta:
-      "En el celular, la tablet o la compu donde uses la caja. No pasan por ningún servidor: por eso es barata y anda sin internet. Si se rompe o se pierde el equipo, se pierde lo cargado (el respaldo en la nube viene con la versión pro).",
+      "En el celular, la tablet o la compu donde uses la caja. No pasan por ningún servidor: por eso es barata y anda sin internet. La contra: si el equipo se rompe o se pierde, se pierde lo cargado. Estamos sumando un respaldo para guardar una copia; la caja pro, en cambio, guarda todo en la nube.",
   },
   {
     pregunta: "¿Necesito internet para vender?",
@@ -45,13 +45,12 @@ const PREGUNTAS_CAJA = [
   {
     pregunta: "¿Hace factura electrónica?",
     respuesta:
-      "La simple no. Si necesitás factura, varias cajas, empleados con permisos, lector de código de barras o QR de Mercado Pago, eso es la caja pro: escribinos y la vemos.",
+      "La simple no. Si necesitás factura, varias cajas, empleados con permisos, lector de código de barras o QR de Mercado Pago, eso es la caja pro: te la armamos a medida y te pasamos el presupuesto.",
   },
 ];
 
 export default function CajaPagina() {
   const plan = planCaja();
-  const pro = planCajaPro();
   return (
     <div data-kit="home" className={fuentesHome}>
       <a
@@ -63,7 +62,7 @@ export default function CajaPagina() {
       <Encabezado desde="/" actual="/caja" />
       <main id="contenido">
         <section aria-labelledby="caja-titulo" className={`${margen} pb-14 pt-10 @3xl:pt-16`}>
-          <p className="text-chico font-semibold">Para {RUBROS_CAJA.map((r) => RUBROS[r].nombre.toLowerCase()).join(", ").replace(/, ([^,]*)$/, " y $1")}</p>
+          <p className="text-chico font-semibold">Al Toque Caja · Para {RUBROS_CAJA.map((r) => RUBROS[r].nombre.toLowerCase()).join(", ").replace(/, ([^,]*)$/, " y $1")}</p>
           <h1 id="caja-titulo" className={`${afiche} mt-3 text-[clamp(3.25rem,1.6rem+8cqi,8rem)] leading-[0.86]`}>
             La caja de tu negocio. <span className="resaltado">Al toque.</span>
           </h1>
@@ -81,6 +80,19 @@ export default function CajaPagina() {
           </div>
         </section>
 
+        <div className={margen}>
+          <p role="note" className="flex gap-3 rounded-base border-2 border-tinta bg-superficie-2 p-5 text-chico">
+            <span aria-hidden className="grid size-8 shrink-0 place-items-center rounded-full bg-acento-relleno font-bold text-sobre-acento">
+              !
+            </span>
+            <span>
+              <strong className="font-semibold">Dónde quedan tus datos.</strong> La caja simple guarda todo en el equipo donde la usás: por eso anda sin
+              internet y es barata. Si ese equipo se rompe o se pierde, se pierden las ventas y los precios cargados. Estamos sumando un respaldo para que
+              guardes una copia; si necesitás todo en la nube, mirá la caja pro.
+            </span>
+          </p>
+        </div>
+
         <ConfiguradorCaja whatsapp={process.env.NEXT_PUBLIC_OWNER_WHATSAPP} />
 
         <section id="pro" aria-labelledby="pro-titulo" className={`${margen} scroll-mt-4 py-24`}>
@@ -91,18 +103,13 @@ export default function CajaPagina() {
                 Caja <span className="resaltado">pro</span>
               </h2>
               <p className="mt-4 max-w-medida text-subtitulo">
-                Como la que usa un comercio con empleados y sucursales: todo guardado en la nube y a la vista desde cualquier lado.
+                Para comercios con empleados, varias cajas o sucursales: la armamos a medida de tu negocio, con todo guardado en la nube y a la vista desde
+                cualquier lado.
               </p>
-              <p className="mt-6" data-precios>
-                <span className="block text-chico">desde</span>
-                <span className={`${afiche} text-[clamp(2.5rem,1.6rem+3cqi,3.5rem)] leading-none tabular-nums`}>{formatearPesos(pro.unico)}</span>
-                <span className="ml-2 text-chico">
-                  + {formatearPesos(pro.mensual)} por mes · {formatearPesos(pro.sucursalExtra)} por mes cada sucursal extra
-                </span>
-                <span className="mt-1 block text-chico text-tinta-suave">
-                  El mensual incluye una sucursal, hasta {pro.facturasIncluidas.toLocaleString("es-AR")} facturas por mes, base de datos, soporte y actualizaciones.
-                </span>
-              </p>
+              <div className="mt-6 max-w-medida rounded-base bg-tinta p-5 text-fondo">
+                <p className={`${afiche} text-[clamp(1.9rem,1.4rem+1.6cqi,2.5rem)] leading-none`}>{CAJA_PRO_A_MEDIDA.titulo}</p>
+                <p className="mt-2 text-chico opacity-85">{CAJA_PRO_A_MEDIDA.texto}</p>
+              </div>
             </div>
             <ul className="space-y-2.5 text-chico @4xl:col-span-5 @4xl:self-center">
               {[
@@ -124,12 +131,12 @@ export default function CajaPagina() {
               </Link>
               {process.env.NEXT_PUBLIC_OWNER_WHATSAPP ? (
                 <a
-                  href={`https://wa.me/${process.env.NEXT_PUBLIC_OWNER_WHATSAPP}?text=${encodeURIComponent("Hola! Quiero saber más de la caja pro.")}`}
+                  href={`https://wa.me/${process.env.NEXT_PUBLIC_OWNER_WHATSAPP}?text=${encodeURIComponent("¡Hola! Quiero un presupuesto para la caja pro.")}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={boton.contorno}
                 >
-                  Consultar por la caja pro
+                  Pedir presupuesto
                 </a>
               ) : (
                 <Link href="/#preguntas" className={boton.contorno}>
@@ -167,7 +174,7 @@ export default function CajaPagina() {
       </main>
       <Pie />
       <AvisoPrecios />
-      <Alto whatsapp={process.env.NEXT_PUBLIC_OWNER_WHATSAPP} />
+      <Alto whatsapp={process.env.NEXT_PUBLIC_OWNER_WHATSAPP} contexto="caja" />
     </div>
   );
 }

@@ -53,8 +53,11 @@ const SECCIONES: Seccion[] = [
     cuerpo: (
       <ul>
         <li>
-          <strong>Página web o landing:</strong> el sitio del Cliente armado con una de nuestras plantillas o «a tu medida», publicado en una dirección
-          nuestra o en el dominio del Cliente.
+          <strong>Página web o landing:</strong> el sitio del Cliente en cualquiera de sus niveles (Perfil digital, Listo para usar, Personalizado o
+          Web + Turnos), publicado en una dirección nuestra (por ejemplo, negocio.altoque-cba.com.ar) o en el dominio del Cliente.
+        </li>
+        <li>
+          <strong>Desarrollo a medida:</strong> un diseño, sistema o integración que no forma parte de nuestros productos y se presupuesta especialmente.
         </li>
         <li>
           <strong>Agenda:</strong> el sistema de turnos online (página de reservas y panel del negocio).
@@ -139,6 +142,10 @@ const SECCIONES: Seccion[] = [
         <p>
           Los precios del sitio son de referencia, en pesos argentinos. Antes de empezar te mandamos un presupuesto por escrito (correo o WhatsApp) con el
           alcance, el pago único, el abono mensual y el plazo estimado. El presupuesto vale por 15 días corridos.
+        </p>
+        <p>
+          La caja pro y los desarrollos a medida no tienen precio publicado: se presupuestan según el alcance y la complejidad del proyecto. Lo que no esté
+          en el presupuesto aceptado se cotiza aparte.
         </p>
         <p>Los precios se informan según nuestra condición frente al IVA ({t.condicionIva}).</p>
         <p>

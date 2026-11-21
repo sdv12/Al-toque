@@ -1,5 +1,5 @@
 import { formatearPesos } from "@/core/lib/mensajes";
-import { ACTUALIZACION_PRECIOS, planAgenda, planCaja, planCajaPro, planes, proximaActualizacion } from "@/core/lib/precios";
+import { ACTUALIZACION_PRECIOS, CAJA_PRO_A_MEDIDA, EXTRAS, ahorroWebTurnos, planAgenda, planCaja, planPerfil, planes, proximaActualizacion } from "@/core/lib/precios";
 
 /*
  * Lo que Alto sabe contestar. Cada duda tiene palabras clave para encontrarla cuando la persona
@@ -22,9 +22,10 @@ export const DUDAS: Duda[] = [
     claves: ["cuanto", "precio", "sale", "cuesta", "valor", "cobran", "plata", "presupuesto", "costo", "tarifa"],
     respuesta: () => {
       const [vidriera, medida, sistema] = planes();
+      const perfil = planPerfil();
       return [
-        `Página con plantilla: desde ${mes(vidriera!.unico, vidriera!.mensual)}. A tu medida: desde ${mes(medida!.unico, medida!.mensual)}. Con turnos o sistema: desde ${mes(sistema!.unico, sistema!.mensual)}.`,
-        `Agenda de turnos sola: ${mes(planAgenda().unico, planAgenda().mensual)}. Caja simple: ${mes(planCaja().unico, planCaja().mensual)}. Caja pro: ${mes(planCajaPro().unico, planCajaPro().mensual)}.`,
+        `Páginas: Perfil digital ${mes(perfil.unico, perfil.mensual)}; Listo para usar desde ${mes(vidriera!.unico, vidriera!.mensual)}; Personalizado desde ${mes(medida!.unico, medida!.mensual)}; Web + Turnos desde ${mes(sistema!.unico, sistema!.mensual)}.`,
+        `Agenda de turnos sola: ${mes(planAgenda().unico, planAgenda().mensual)}. Caja simple: desde ${mes(planCaja().unico, planCaja().mensual)}. La caja pro y los desarrollos a medida se presupuestan según lo que necesites.`,
         "Si me contás de tu negocio, te armo el número exacto para lo tuyo.",
       ];
     },
@@ -104,7 +105,7 @@ export const DUDAS: Duda[] = [
   {
     id: "datos",
     pregunta: "¿Qué hacen con mis datos?",
-    claves: ["datos", "privacidad", "seguro", "seguridad", "informacion", "clientes"],
+    claves: ["datos", "privacidad", "seguro", "seguridad", "informacion"],
     respuesta: () => [
       "Los usamos solo para responderte y prestarte el servicio; no los vendemos ni los cedemos. Los datos de tus clientes son tuyos.",
       "Está todo explicado en la Política de privacidad, al pie de la página.",
@@ -146,6 +147,130 @@ export const DUDAS: Duda[] = [
     ],
   },
   {
+    id: "planes",
+    pregunta: "¿Qué diferencia hay entre los planes?",
+    claves: ["diferencia", "planes", "plan", "niveles", "cual me conviene", "conviene", "opciones"],
+    respuesta: () => [
+      "Perfil digital: una página corta con lo esencial (quién sos, qué hacés, cómo contactarte) en una dirección de Al Toque. Ideal para arrancar.",
+      "Listo para usar: una plantilla completa pensada para tu rubro. Personalizado: hoja en blanco con tu estilo y los bloques que quieras, con dominio propio si querés.",
+      "Web + Turnos: tu página con turnos reales adentro. Desarrollo a medida: diseño y funciones exclusivas, presupuestado.",
+      "Si me contás qué necesitás, te digo cuál te conviene.",
+    ],
+  },
+  {
+    id: "perfil",
+    pregunta: "¿Qué es el Perfil digital?",
+    claves: ["perfil digital", "perfil", "lo mas barato", "mas barato", "economico", "simple", "basico"],
+    respuesta: () => {
+      const p = planPerfil();
+      return [
+        `Es el plan de entrada: ${mes(p.unico, p.mensual)}. Una página corta con hasta ${p.bloquesMax} bloques (quién sos, qué hacés y cómo contactarte), botón de WhatsApp y tus redes, en tunegocio.altoque-cba.com.ar.`,
+        "Cuando quieras más (otra sección, tu propio dominio, turnos), lo pasamos a Personalizado sin empezar de cero.",
+      ];
+    },
+  },
+  {
+    id: "paquete",
+    pregunta: "¿Conviene la web con turnos juntos?",
+    claves: ["paquete", "juntos", "web y turnos", "pagina y turnos", "combo", "descuento", "promo"],
+    respuesta: () => {
+      const a = ahorroWebTurnos();
+      const [, , sistema] = planes();
+      return [
+        `Sí: el paquete Web + Turnos sale desde ${mes(sistema!.unico, sistema!.mensual)} y te ahorrás ${formatearPesos(a.unico)} frente a contratar la página y la agenda por separado.`,
+        "Los turnos quedan dentro de tu página: tus clientes te conocen y reservan en el mismo lugar.",
+      ];
+    },
+  },
+  {
+    id: "cajapro",
+    pregunta: "¿Cuánto sale la caja pro?",
+    claves: ["caja pro", "sucursales", "empleados", "stock", "lector", "codigo de barras"],
+    respuesta: () => [
+      `No tiene un precio fijo: ${CAJA_PRO_A_MEDIDA.texto.charAt(0).toLowerCase()}${CAJA_PRO_A_MEDIDA.texto.slice(1)}`,
+      "Contame cómo es tu comercio (o hacé las preguntas conmigo) y te mandamos el presupuesto. Mientras, podés probar la demo en /c/pro.",
+    ],
+  },
+  {
+    id: "subdominio",
+    pregunta: "¿Qué dirección va a tener mi página?",
+    claves: ["subdominio", "direccion", "link", "altoque-cba", "mi propia direccion"],
+    respuesta: () => [
+      "Con Perfil digital o Listo para usar, tu página va en tunegocio.altoque-cba.com.ar, sin costo extra.",
+      `Si querés tu propio dominio (tunegocio.com.ar), lo registramos a tu nombre y lo conectamos: el alta y la configuración salen ${formatearPesos(EXTRAS.dominio.unico)}; la renovación anual va aparte.`,
+    ],
+  },
+  {
+    id: "soporte",
+    pregunta: "¿Y si algo no anda o necesito ayuda?",
+    claves: ["soporte", "ayuda", "no anda", "problema", "falla", "error", "atencion", "contesta"],
+    respuesta: () => [
+      "Nos escribís por WhatsApp o correo y te respondemos dentro de las 48 horas hábiles. Si algo dejó de andar por nuestra parte, lo arreglamos sin costo.",
+      "Hablás con las personas que lo hicieron, no con un bot de soporte (bueno, salvo conmigo 😅).",
+    ],
+  },
+  {
+    id: "capacitacion",
+    pregunta: "¿Me enseñan a usarlo?",
+    claves: ["enseñan", "ensenan", "aprender", "capacitacion", "explican", "como se usa", "tutorial"],
+    respuesta: () => [
+      "Sí. Al entregarte la agenda o la caja te mostramos cómo se usa (en el local o por videollamada) y te dejamos una guía corta.",
+      "Si después se suma alguien de tu equipo, una explicación más va dentro del soporte; capacitaciones largas se cotizan aparte.",
+    ],
+  },
+  {
+    id: "internet",
+    pregunta: "¿La caja anda sin internet?",
+    claves: ["sin internet", "internet", "se corta", "offline", "conexion", "wifi"],
+    respuesta: () => [
+      "La caja simple sí: guarda todo en el equipo donde la usás y sigue vendiendo aunque se corte internet.",
+      "Por eso mismo, los datos viven en ese equipo: si se rompe o se pierde, se pierden. Estamos sumando el respaldo para que no te pase.",
+    ],
+  },
+  {
+    id: "migrar",
+    pregunta: "Ya tengo una página, ¿la pueden mejorar?",
+    claves: ["ya tengo", "mi pagina actual", "migrar", "pasar", "renovar", "mejorar", "rehacer", "wix", "wordpress"],
+    respuesta: () => [
+      "Sí. Miramos la que tenés y la rehacemos en Al Toque con tus textos y fotos. Si ya tenés dominio, lo usamos: no lo perdés.",
+      "Contame la dirección al final de las preguntas y la revisamos.",
+    ],
+  },
+  {
+    id: "logo",
+    pregunta: "¿Hacen logos o fotos?",
+    claves: ["logo", "diseño grafico", "fotografo", "fotos profesionales", "identidad", "marca"],
+    respuesta: () => [
+      "El logo y las fotos profesionales se cotizan aparte. Si todavía no tenés logo, arrancamos con tu nombre bien tipografiado y queda prolijo igual.",
+    ],
+  },
+  {
+    id: "mora",
+    pregunta: "¿Qué pasa si me atraso con el mensual?",
+    claves: ["atraso", "me atraso", "no pago", "deuda", "mora", "vencimiento", "corta"],
+    respuesta: () => [
+      "Te avisamos antes. Si pasan 15 días del vencimiento, el servicio se suspende (con aviso de 5 días) hasta que se regularice; nada se borra en ese tiempo.",
+      "Si se complica un mes, escribinos y lo charlamos. Está todo en los Términos y condiciones.",
+    ],
+  },
+  {
+    id: "turnoslimite",
+    pregunta: "¿Hay límite de turnos o de profesionales?",
+    claves: ["limite", "cuantos turnos", "profesionales", "barberos", "varios", "empleados", "sillas"],
+    respuesta: () => [
+      "No hay límite de turnos. Podés tener varios profesionales: cada cliente elige con quién se atiende y cada uno tiene su agenda.",
+    ],
+  },
+  {
+    id: "recordatorios",
+    pregunta: "¿Les avisa a mis clientes antes del turno?",
+    claves: ["recordatorio", "recordatorios", "avisa", "aviso", "olvidan", "faltan", "falten", "no vienen", "antes del turno"],
+    respuesta: () => [
+      "Desde el panel les mandás el recordatorio por WhatsApp con un toque, y pueden agendar el turno en su calendario.",
+      `Los recordatorios automáticos (al reservar y el día anterior) se suman por ${formatearPesos(EXTRAS.recordatorios.unico)} + ${formatearPesos(EXTRAS.recordatorios.mensual)} por mes.`,
+    ],
+  },
+  {
     id: "actualizacion",
     pregunta: "¿Los precios aumentan?",
     claves: ["aumento", "aumentan", "actualizan", "inflacion", "suben", "ajuste"],
@@ -180,3 +305,40 @@ export const SIN_RESPUESTA = [
   "Esa no la sé contestar yo, pero te la responde una persona del equipo.",
   "Dejala en el comentario del final, cuando armemos tu pedido, o escribinos por WhatsApp.",
 ];
+
+/** En qué página está Alto: cambia el saludo, las dudas que muestra primero y lo que sugiere marcar. */
+export type ContextoAlto = "inicio" | "web" | "turnos" | "caja" | "tienda";
+
+export const CONTEXTOS: Record<ContextoAlto, { saludo: string | null; vineta: string; dudas: string[]; funciones: string[] }> = {
+  inicio: { saludo: null, vineta: "¿Te ayudo a encontrar la solución para tu negocio?", dudas: ["precio", "planes", "tiempo", "pago", "mensual", "baja"], funciones: [] },
+  web: {
+    saludo: "Veo que estás mirando las páginas web. Te ayudo a elegir el nivel que te conviene, o en un par de minutos armamos la tuya.",
+    vineta: "¿Te ayudo a elegir tu página?",
+    dudas: ["planes", "perfil", "subdominio", "precio", "tiempo", "migrar"],
+    funciones: ["web"],
+  },
+  turnos: {
+    saludo: "Estás mirando los turnos online. Te cuento cómo funciona, cuánto sale sola o con tu página, y te dejo una demo con tu rubro.",
+    vineta: "¿Te ayudo a organizar tus turnos?",
+    dudas: ["paquete", "turnoslimite", "recordatorios", "precio", "capacitacion"],
+    funciones: ["turnos"],
+  },
+  caja: {
+    saludo: "Estás mirando la caja. Te ayudo a ver si te sirve la simple o si conviene la pro, y te armo la tuya con tus productos.",
+    vineta: "¿Te ayudo con la caja de tu negocio?",
+    dudas: ["internet", "cajapro", "factura", "capacitacion", "precio"],
+    funciones: ["cajaSimple"],
+  },
+  tienda: {
+    saludo: "La tienda online todavía no está, pero ya podés vender con un catálogo y pedidos por WhatsApp. Si querés, te ayudo con eso.",
+    vineta: "¿Querés vender por internet?",
+    dudas: ["tienda", "pedidos", "planes", "precio"],
+    funciones: ["catalogo", "pedidos"],
+  },
+};
+
+/** Las dudas en el orden de la página: primero las del contexto, después el resto. */
+export function dudasPara(contexto: ContextoAlto): Duda[] {
+  const primero = CONTEXTOS[contexto].dudas;
+  return [...primero.map((id) => DUDAS.find((d) => d.id === id)!).filter(Boolean), ...DUDAS.filter((d) => !primero.includes(d.id))];
+}

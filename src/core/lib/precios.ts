@@ -27,7 +27,14 @@ export function preciosVigentesHasta(): string {
 /** Página con una plantilla de rubro (barbería, casas, portfolio). */
 const PLANTILLA = { unico: 250_000, mensual: 15_000 };
 
-/** Página "a tu medida": incluye cierta cantidad de bloques; los demás se cobran aparte. */
+/**
+ * Perfil digital: el escalón de entrada. Una página corta armada con bloques (hasta 3, sin
+ * componentes con sistema) en una dirección de Al Toque (negocio.altoque-cba.com.ar), sin dominio
+ * propio. Si suma más bloques, un componente con sistema o el dominio propio, pasa a Personalizado.
+ */
+const PERFIL = { unico: 160_000, mensual: 15_000, bloquesMax: 3 };
+
+/** Página "a tu medida" (nivel Personalizado): incluye cierta cantidad de bloques; los demás se cobran aparte. */
 const A_MEDIDA = { unico: 320_000, mensual: 15_000, bloquesIncluidos: 6, bloqueExtra: 20_000 };
 
 /**
@@ -89,6 +96,18 @@ export function cotizar(config: Pick<LandingConfig, "plantilla" | "secciones" | 
 
   if (config.plantilla === "libre") {
     const basicos = activas.filter((s) => !defs[s.tipo]?.sistema);
+    const conSistema = activas.some((s) => defs[s.tipo]?.sistema);
+    const esPerfil = basicos.length <= PERFIL.bloquesMax && !conSistema && !(config.extras ?? []).includes("dominio");
+    if (esPerfil) {
+      lineas.push({ concepto: `Perfil digital (hasta ${PERFIL.bloquesMax} bloques, en una dirección de Al Toque)`, unico: PERFIL.unico, mensual: PERFIL.mensual, sistema: false });
+      for (const id of config.extras ?? []) {
+        const extra = EXTRAS[id as IdExtra];
+        if (extra) lineas.push({ concepto: extra.nombre, unico: extra.unico, mensual: extra.mensual, sistema: extra.sistema });
+      }
+      const usa = lineas.some((l) => l.sistema);
+      if (usa) lineas.push({ concepto: "Base de datos y servidor", ...SISTEMA_BASE, sistema: true });
+      return { lineas, total: sumar(lineas), usaSistema: usa };
+    }
     lineas.push({ concepto: `Página a tu medida (hasta ${A_MEDIDA.bloquesIncluidos} bloques)`, unico: A_MEDIDA.unico, mensual: A_MEDIDA.mensual, sistema: false });
     const extra = Math.max(0, basicos.length - A_MEDIDA.bloquesIncluidos);
     if (extra > 0) lineas.push({ concepto: `${extra} ${extra === 1 ? "bloque extra" : "bloques extra"}`, unico: extra * A_MEDIDA.bloqueExtra, mensual: 0, sistema: false });
@@ -115,7 +134,7 @@ export function planes() {
   return [
     {
       id: "vidriera",
-      nombre: "Vidriera",
+      nombre: "Listo para usar",
       bajada: "Una plantilla pensada para tu rubro, con tus textos, colores y precios.",
       desde: true,
       ...PLANTILLA,
@@ -128,8 +147,8 @@ export function planes() {
     },
     {
       id: "medida",
-      nombre: "A tu medida",
-      bajada: "Hoja en blanco: sumás solo los bloques que necesitás.",
+      nombre: "Personalizado",
+      bajada: "Hoja en blanco con tu estilo: sumás solo los bloques que necesitás.",
       desde: true,
       unico: A_MEDIDA.unico,
       mensual: A_MEDIDA.mensual,
@@ -142,17 +161,64 @@ export function planes() {
     },
     {
       id: "sistema",
-      nombre: "Con sistema",
-      bajada: "Para los que necesitan agenda real, pagos o un panel propio.",
+      nombre: "Web + Turnos",
+      bajada: "Tu página con turnos reales adentro. También para seña online o un panel propio.",
       desde: true,
       unico: PLANTILLA.unico + SISTEMA_BASE.unico + COMPONENTE_SISTEMA.unico,
       mensual: PLANTILLA.mensual + SISTEMA_BASE.mensual + COMPONENTE_SISTEMA.mensual,
       incluye: [
-        "Todo lo de Vidriera o A tu medida",
+        "Todo lo de Listo para usar o Personalizado",
         "Turnos guardados, sin superposiciones",
         "Seña online, recordatorios o panel de gestión",
         "Base de datos y mantenimiento incluidos en el mensual",
       ],
+    },
+  ];
+}
+
+/** Perfil digital, el nivel de entrada. */
+export function planPerfil() {
+  return { ...PERFIL };
+}
+
+/** Lo que el paquete Web + Turnos ahorra frente a contratar la página y la agenda por separado. */
+export function ahorroWebTurnos(): Monto {
+  const [vidriera, , sistema] = planes();
+  return { unico: vidriera!.unico + AGENDA.unico - sistema!.unico, mensual: vidriera!.mensual + AGENDA.mensual - sistema!.mensual };
+}
+
+/**
+ * Los niveles de Al Toque Web, del más simple al más completo. El último (desarrollo a medida) no
+ * tiene precio publicado: se presupuesta según el alcance.
+ */
+export function niveles() {
+  const [vidriera, medida, sistema] = planes();
+  return [
+    {
+      id: "perfil",
+      nombre: "Perfil digital",
+      bajada: "Lo justo para que te encuentren y te escriban.",
+      precio: { unico: PERFIL.unico, mensual: PERFIL.mensual, desde: false } as { unico: number; mensual: number; desde: boolean } | null,
+      incluye: [
+        `Hasta ${PERFIL.bloquesMax} bloques: quién sos, qué hacés y cómo contactarte`,
+        "En una dirección de Al Toque: tunegocio.altoque-cba.com.ar",
+        "Botón de WhatsApp y tus redes",
+        "Hosting, certificado de seguridad y cambios chicos",
+      ],
+      href: "/configurador?plantilla=libre",
+      accion: "Armar mi perfil",
+    },
+    { ...vidriera!, precio: { unico: vidriera!.unico, mensual: vidriera!.mensual, desde: true }, href: "/configurador", accion: "Elegir plantilla" },
+    { ...medida!, precio: { unico: medida!.unico, mensual: medida!.mensual, desde: true }, href: "/configurador?plantilla=libre", accion: "Armar desde cero" },
+    { ...sistema!, precio: { unico: sistema!.unico, mensual: sistema!.mensual, desde: true }, href: "/turnos", accion: "Ver turnos" },
+    {
+      id: "premium",
+      nombre: "Desarrollo a medida",
+      bajada: "Diseño y funciones exclusivas para tu negocio.",
+      precio: null,
+      incluye: ["Diseño propio, desde cero", "Integraciones y automatizaciones", "Sistemas de gestión a tu medida", "Soporte y evolución presupuestados"],
+      href: "/#contacto",
+      accion: "Contanos tu proyecto",
     },
   ];
 }
@@ -206,16 +272,15 @@ export function planCaja() {
 
 /**
  * Caja pro: varias cajas y sucursales, usuarios con permisos, factura electrónica (ARCA), QR de
- * Mercado Pago, stock con lector, cuentas corrientes y auditoría. Necesita servidor y base de
- * datos. El mensual incluye 1 sucursal y hasta 1.000 facturas por mes: cubre la base de datos, el
- * servicio de facturación (~$35.000/mes por cliente si es vía TusFacturasAPP), soporte y
- * actualizaciones. Cada sucursal extra suma.
+ * Mercado Pago, stock con lector, cuentas corrientes y auditoría. NO tiene precio publicado: es un
+ * proyecto a medida y se presupuesta según el alcance y la complejidad (sucursales, usuarios,
+ * facturación, integraciones, carga de productos). Referencia interna para presupuestar: base de
+ * datos + servicio de facturación (~$35.000/mes por cliente vía TusFacturasAPP) + soporte.
  */
-const CAJA_PRO = { unico: 520_000, mensual: 75_000, sucursalExtra: 25_000, facturasIncluidas: 1_000 };
-
-export function planCajaPro() {
-  return CAJA_PRO;
-}
+export const CAJA_PRO_A_MEDIDA = {
+  titulo: "Presupuesto a medida",
+  texto: "El precio depende del alcance y la complejidad: cuántas sucursales y usuarios, si facturás, qué integraciones necesitás y cuántos productos hay que cargar.",
+} as const;
 
 /**
  * Agenda al toque sola (página de reservas + panel con agenda, caja y números, sin landing): más
