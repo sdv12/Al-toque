@@ -20,10 +20,10 @@
   --lk-fuente-cuerpo: var(--fuente-generico-cuerpo), system-ui, sans-serif;
   --lk-fuente-nota: var(--lk-fuente-cuerpo);
 
-  --lk-t-display: clamp(3rem, 1.3rem + 8.5cqi, 8.75rem);
-  --lk-t-display-alto: 0.9;
-  --lk-t-display-tracking: -0.045em;
-  --lk-t-display-peso: 800;
+  --lk-t-display: clamp(3rem, 1.3rem + 8.5cqi, 9rem);
+  --lk-t-display-alto: 0.92;
+  --lk-t-display-tracking: 0.02em;
+  --lk-t-display-peso: 200;
   --lk-t-titulo: clamp(2rem, 1.25rem + 3.8cqi, 4.25rem);
   --lk-t-titulo-alto: 0.98;
   --lk-t-subtitulo: clamp(1.25rem, 1.1rem + 0.8cqi, 1.625rem);
@@ -65,4 +65,65 @@
 [data-plantilla="generico"][data-esquinas="redondeado"] {
   --lk-radio: 22px;
   --lk-radio-control: 999px;
+}
+
+/*
+ * Modo Estudio: aparición al scrollear sin JavaScript (scroll-driven animations). Donde el
+ * navegador no las soporta, o con movimiento reducido, el contenido simplemente ya está ahí.
+ */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-plantilla="generico"] .revelar {
+      animation: generico-revelar linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 45%;
+    }
+  }
+}
+
+@keyframes generico-revelar {
+  from {
+    opacity: 0;
+    transform: translateY(2.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Zoom muy lento sobre la foto activa de la portada. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-plantilla="generico"] .zoom-lento {
+    animation: generico-zoom 9s linear both;
+  }
+}
+
+@keyframes generico-zoom {
+  from {
+    transform: scale(1.02);
+  }
+  to {
+    transform: scale(1.12);
+  }
+}
+
+/* Barra de avance de la portada rotativa. */
+@keyframes generico-avance {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Indicador de "seguí bajando" al pie de la portada. */
+@keyframes generico-bajar {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(200%);
+  }
 }

@@ -6,7 +6,8 @@ import type { ConfigDe } from "@/core/schema/landing-config";
 import { IconoWhatsApp } from "@/ui/primitives/IconoWhatsApp";
 import { RedesSociales } from "@/ui/primitives/RedesSociales";
 import { Separador } from "@/ui/primitives/Separador";
-import { margen } from "./estilos";
+import { esEstudio, margen, rotulo } from "./estilos";
+import { HeaderEstudio } from "./estudio";
 import { Bento } from "./secciones/Bento";
 import { Casos, Contacto, Faq, Servicios, Testimonios } from "./secciones/Secciones";
 
@@ -20,6 +21,13 @@ const SECCIONES: Record<TipoSeccion<"generico">, ComponentType<PropsSeccion>> = 
   testimonios: Testimonios as ComponentType<PropsSeccion>,
   contacto: Contacto as ComponentType<PropsSeccion>,
   faq: Faq as ComponentType<PropsSeccion>,
+};
+
+const NAV_ESTUDIO: Partial<Record<TipoSeccion<"generico">, { id: string; etiqueta: string }>> = {
+  casos: { id: "casos", etiqueta: "Proyectos" },
+  servicios: { id: "servicios", etiqueta: "Servicios" },
+  faq: { id: "preguntas", etiqueta: "Preguntas" },
+  contacto: { id: "contacto", etiqueta: "Contacto" },
 };
 
 const NAV: Partial<Record<TipoSeccion<"generico">, { id: string; etiqueta: string }>> = {
@@ -37,6 +45,72 @@ export function LandingGenerico({ config }: { config: Config }) {
   const { negocio } = config;
   const activas = config.secciones.filter((s) => s.activa);
   const nav = activas.flatMap((s) => (NAV[s.tipo] ? [NAV[s.tipo]!] : []));
+
+  if (esEstudio(config)) {
+    const navEstudio = activas.flatMap((s) => (NAV_ESTUDIO[s.tipo] ? [NAV_ESTUDIO[s.tipo]!] : []));
+    return (
+      <>
+        <a
+          href="#contenido"
+          className="sr-only z-50 bg-tinta px-4 py-2 text-fondo focus:not-sr-only focus:absolute focus:left-3 focus:top-3"
+        >
+          Saltar al contenido
+        </a>
+        <HeaderEstudio nombre={negocio.nombre} enlaces={navEstudio} />
+        <main id="contenido">
+          {activas.map((s, i) => {
+            const Seccion = SECCIONES[s.tipo];
+            return (
+              <Fragment key={s.tipo}>
+                {i > 0 && s.separador && <Separador />}
+                <Seccion config={config} variante={s.variante} />
+              </Fragment>
+            );
+          })}
+        </main>
+        <footer className="border-t border-borde px-5 pb-8 pt-20 @4xl:px-10">
+          <div className="grid gap-12 @4xl:grid-cols-12">
+            <p className="font-display text-titulo font-extralight @4xl:col-span-6">{negocio.eslogan}</p>
+            <div className="grid gap-8 text-chico @2xl:grid-cols-2 @4xl:col-span-5 @4xl:col-start-8">
+              <div className="space-y-1">
+                <p className={`${rotulo} mb-3 text-tinta-suave`}>Estudio</p>
+                <p>{negocio.direccion}</p>
+                <p>{negocio.horario}</p>
+              </div>
+              <div className="space-y-1">
+                <p className={`${rotulo} mb-3 text-tinta-suave`}>Seguinos</p>
+                <a href={linkWhatsApp(negocio.whatsapp)} target="_blank" rel="noopener noreferrer" className="block hover:text-acento-texto">
+                  WhatsApp
+                </a>
+                <RedesSociales redes={negocio.redes} nombre={negocio.nombre} className="gap-2 pt-2" />
+              </div>
+            </div>
+          </div>
+          <div className="mt-20 flex flex-wrap items-end justify-between gap-4 border-t border-borde pt-6">
+            <p aria-hidden className="text-chico uppercase tracking-[0.28em]">
+              {negocio.nombre}
+            </p>
+            <a href="#inicio" className={`${rotulo} text-tinta-suave hover:text-tinta`}>
+              Volver arriba ↑
+            </a>
+          </div>
+        </footer>
+        {config.whatsappFlotante && (
+          <div className="pointer-events-none sticky bottom-0 z-20 flex justify-end p-5">
+            <a
+              href={linkWhatsApp(negocio.whatsapp)}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Escribinos por WhatsApp"
+              className="pointer-events-auto grid size-14 place-items-center rounded-full bg-tinta text-fondo shadow-[0_12px_30px_-12px_rgb(0_0_0/0.55)] transition-transform hover:-translate-y-0.5"
+            >
+              <IconoWhatsApp className="size-6" />
+            </a>
+          </div>
+        )}
+      </>
+    );
+  }
 
   return (
     <>

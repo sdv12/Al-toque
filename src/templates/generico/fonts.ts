@@ -1,17 +1,18 @@
 // Sin preload: el CSS de las cuatro plantillas convive en un chunk compartido (lo importan
 // configurador y /dev/tokens) y el preload haría bajar las fuentes de todas en cada landing.
 // Con @font-face sin preload, el navegador baja solo las caras que la página usa.
-import { Bricolage_Grotesque, Instrument_Sans } from "next/font/google";
+import { Raleway, DM_Sans } from "next/font/google";
 
-const display = Bricolage_Grotesque({
+const display = Raleway({
   subsets: ["latin"],
-  axes: ["opsz", "wdth"],
+  weight: ["200", "300", "400", "500"],
+  style: ["normal", "italic"],
   variable: "--fuente-generico-display",
   display: "swap",
   preload: false,
 });
 
-const cuerpo = Instrument_Sans({
+const cuerpo = DM_Sans({
   subsets: ["latin"],
   style: ["normal", "italic"],
   variable: "--fuente-generico-cuerpo",

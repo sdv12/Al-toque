@@ -87,7 +87,7 @@ export function Carrusel({ etiqueta, children }: { etiqueta: string; children: R
 }
 
 /** Formulario corto: arma el mensaje y abre WhatsApp. Nada se guarda en un servidor. */
-export function FormularioContacto({ negocio, temas }: { negocio: { nombre: string; whatsapp: string }; temas: string[] }) {
+export function FormularioContacto({ negocio, temas, sobrio }: { negocio: { nombre: string; whatsapp: string }; temas: string[]; sobrio?: boolean }) {
   const id = useId();
   const [nombre, setNombre] = useState("");
   const [tema, setTema] = useState("");
@@ -102,18 +102,25 @@ export function FormularioContacto({ negocio, temas }: { negocio: { nombre: stri
     setEnviado(link);
   }
 
-  const campo = "mt-1.5 block w-full rounded-control border-2 border-borde bg-fondo px-4 py-3 text-cuerpo text-tinta focus:border-tinta";
+  // Sobrio (modo Estudio): solo la línea de abajo, rótulos en mayúsculas finas.
+  const campo = sobrio
+    ? "mt-1 block w-full border-0 border-b border-borde bg-transparent px-0 py-3 text-cuerpo text-tinta transition-colors focus:border-tinta focus:outline-none focus-visible:border-b-2"
+    : "mt-1.5 block w-full rounded-control border-2 border-borde bg-fondo px-4 py-3 text-cuerpo text-tinta focus:border-tinta";
+  const etiqueta = sobrio ? "text-mini font-medium uppercase tracking-[0.18em] text-tinta-suave" : "text-chico font-semibold";
+  const enviarClase = sobrio
+    ? "inline-flex min-h-12 w-full items-center justify-center gap-3 bg-tinta px-8 text-mini font-medium uppercase tracking-[0.22em] text-fondo transition-colors hover:bg-acento-relleno hover:text-sobre-acento @xl:w-auto"
+    : `${boton.primario} w-full @xl:w-auto`;
   return (
-    <form onSubmit={enviar} className="space-y-4">
+    <form onSubmit={enviar} className={sobrio ? "space-y-7" : "space-y-4"}>
       <div className="grid gap-4 @xl:grid-cols-2">
         <div>
-          <label htmlFor={`${id}-n`} className="text-chico font-semibold">
+          <label htmlFor={`${id}-n`} className={etiqueta}>
             Tu nombre
           </label>
           <input id={`${id}-n`} required minLength={2} autoComplete="name" value={nombre} onChange={(e) => setNombre(e.target.value)} className={campo} />
         </div>
         <div>
-          <label htmlFor={`${id}-t`} className="text-chico font-semibold">
+          <label htmlFor={`${id}-t`} className={etiqueta}>
             ¿Por qué nos escribís?
           </label>
           <select id={`${id}-t`} value={tema} onChange={(e) => setTema(e.target.value)} className={campo}>
@@ -126,18 +133,18 @@ export function FormularioContacto({ negocio, temas }: { negocio: { nombre: stri
         </div>
       </div>
       <div>
-        <label htmlFor={`${id}-m`} className="text-chico font-semibold">
+        <label htmlFor={`${id}-m`} className={etiqueta}>
           Contanos qué necesitás
         </label>
         <textarea id={`${id}-m`} required minLength={5} rows={4} value={mensaje} onChange={(e) => setMensaje(e.target.value)} className={campo} />
       </div>
       <div>
-        <label htmlFor={`${id}-z`} className="text-chico font-semibold">
+        <label htmlFor={`${id}-z`} className={etiqueta}>
           Barrio o zona <span className="font-normal text-tinta-suave">(opcional)</span>
         </label>
         <input id={`${id}-z`} value={zona} onChange={(e) => setZona(e.target.value)} className={campo} />
       </div>
-      <button type="submit" className={`${boton.primario} w-full @xl:w-auto`}>
+      <button type="submit" className={enviarClase}>
         <IconoWhatsApp className="size-5" /> Enviar por WhatsApp
       </button>
       <p role="status" className="min-h-5 text-chico text-tinta-suave">

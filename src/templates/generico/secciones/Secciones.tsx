@@ -1,12 +1,36 @@
+import Image from "next/image";
 import { formatearPrecio, linkWhatsApp } from "@/core/lib/mensajes";
 import type { VarianteDe } from "@/core/registry";
 import type { ConfigDe } from "@/core/schema/landing-config";
 import { IconoWhatsApp } from "@/ui/primitives/IconoWhatsApp";
-import { boton, margen, tile, tileBase, tituloSeccion } from "../estilos";
+import type { Imagen } from "@/core/schema/comun";
+import { boton, esEstudio, margen, rotulo, tile, tileBase, tituloSeccion } from "../estilos";
+import { GaleriaProyectos, IndiceServicios, TestimoniosRotativos } from "../estudio";
 import { Foto } from "../Foto";
 import { Carrusel, Comparador, FormularioContacto } from "../interactivos";
 
 type Config = ConfigDe<"generico">;
+
+const conFoto = <T extends { src?: string | undefined }>(i: T | undefined): i is T & { src: string } => !!i?.src;
+
+/** Encabezado del modo Estudio: rótulo con número, título fino y bajada a la derecha. */
+function EncabezadoEstudio({ id, numero, rotulo: etiqueta, titulo, bajada }: { id: string; numero: string; rotulo: string; titulo: string; bajada?: string }) {
+  return (
+    <div className="revelar grid gap-6 @4xl:grid-cols-12">
+      <p className={`${rotulo} text-tinta-suave @4xl:col-span-3`}>
+        <span className="tabular-nums">{numero}</span> — {etiqueta}
+      </p>
+      <div className="flex flex-col gap-6 @4xl:col-span-9 @4xl:flex-row @4xl:items-end @4xl:justify-between">
+        <h2 id={id} className="max-w-[16ch] font-display text-titulo font-extralight">
+          {titulo}
+        </h2>
+        {bajada && <p className="max-w-xs text-chico text-tinta-suave">{bajada}</p>}
+      </div>
+    </div>
+  );
+}
+
+const seccionEstudio = "scroll-mt-18 px-5 py-24 @4xl:px-10 @4xl:py-36";
 
 function Encabezado({ id, titulo, bajada }: { id: string; titulo: string; bajada?: string }) {
   return (
@@ -23,6 +47,15 @@ function Encabezado({ id, titulo, bajada }: { id: string; titulo: string; bajada
 
 export function Casos({ config, variante }: { config: Config; variante: VarianteDe<"generico", "casos"> }) {
   const casos = config.contenido.casos ?? [];
+
+  if (variante === "galeria") {
+    return (
+      <section id="casos" aria-labelledby="casos-titulo" className={`${seccionEstudio} border-t border-borde`}>
+        <EncabezadoEstudio id="casos-titulo" numero="01" rotulo="Proyectos" titulo="Obra seleccionada" bajada="Tocá un proyecto para ver el antes y el después." />
+        <GaleriaProyectos casos={casos} whatsapp={config.negocio.whatsapp} negocio={config.negocio.nombre} />
+      </section>
+    );
+  }
 
   if (variante === "problema-solucion") {
     return (
@@ -106,6 +139,16 @@ export function Casos({ config, variante }: { config: Config; variante: Variante
 export function Servicios({ config, variante }: { config: Config; variante: VarianteDe<"generico", "servicios"> }) {
   const servicios = config.contenido.servicios ?? [];
 
+  if (variante === "indice") {
+    const fotos = (config.contenido.galeria ?? []).filter(conFoto);
+    return (
+      <section id="servicios" aria-labelledby="servicios-titulo" className={`${seccionEstudio} bg-superficie`}>
+        <EncabezadoEstudio id="servicios-titulo" numero="02" rotulo="Servicios" titulo="Qué hacemos" bajada="Cada encargo se cotiza después de una primera charla." />
+        <IndiceServicios servicios={servicios} fotos={fotos} whatsapp={config.negocio.whatsapp} negocio={config.negocio.nombre} />
+      </section>
+    );
+  }
+
   if (variante === "bloques") {
     return (
       <section id="servicios" aria-labelledby="servicios-titulo" className={`${margen} py-20`}>
@@ -151,6 +194,18 @@ export function Servicios({ config, variante }: { config: Config; variante: Vari
 
 export function Testimonios({ config, variante }: { config: Config; variante: VarianteDe<"generico", "testimonios"> }) {
   const testimonios = config.contenido.testimonios ?? [];
+
+  if (variante === "rotativo") {
+    if (testimonios.length === 0) return null;
+    return (
+      <section id="testimonios" aria-label="Lo que dicen los clientes" className={seccionEstudio}>
+        <p className={`${rotulo} revelar mb-12 text-center text-tinta-suave`}>Clientes</p>
+        <div className="revelar">
+          <TestimoniosRotativos testimonios={testimonios} />
+        </div>
+      </section>
+    );
+  }
 
   if (variante === "carrusel") {
     return (
@@ -214,6 +269,46 @@ export function Contacto({ config, variante }: { config: Config; variante: Varia
     </a>
   );
 
+  if (variante === "con-foto") {
+    const galeria = (config.contenido.galeria ?? []).filter(conFoto);
+    const casos = (config.contenido.casos ?? []).map((c) => c.despues).filter(conFoto);
+    const fondo: (Imagen & { src: string }) | undefined = galeria.at(-1) ?? casos[0];
+    return (
+      <section id="contacto" aria-labelledby="contacto-titulo" className="relative scroll-mt-18 overflow-hidden bg-[#141412] px-5 py-24 text-[#f7f5f1] @4xl:px-10 @4xl:py-36">
+        {fondo && (
+          <div aria-hidden className="absolute inset-0">
+            <Image src={fondo.src} unoptimized={!fondo.src.startsWith("/")} alt="" fill sizes="100vw" className="object-cover" />
+            <div className="absolute inset-0 bg-[#0d0d0c]/70" />
+          </div>
+        )}
+        <div className="relative grid gap-12 @4xl:grid-cols-12">
+          <div className="flex flex-col justify-between gap-10 @4xl:col-span-5">
+            <div>
+              <p className={`${rotulo} text-[#f7f5f1]/75`}>Contacto</p>
+              <h2 id="contacto-titulo" className="mt-6 max-w-[12ch] font-display text-titulo font-extralight">
+                Empecemos por una conversación.
+              </h2>
+              <p className="mt-6 max-w-sm text-[#f7f5f1]/80">Contanos qué tenés en mente. Se abre WhatsApp con tu mensaje listo y respondemos en el día.</p>
+            </div>
+            <dl className="grid gap-5 border-t border-[#f7f5f1]/25 pt-6 text-chico">
+              <div>
+                <dt className={`${rotulo} text-[#f7f5f1]/65`}>Dónde</dt>
+                <dd className="mt-1">{negocio.direccion}</dd>
+              </div>
+              <div>
+                <dt className={`${rotulo} text-[#f7f5f1]/65`}>Cuándo</dt>
+                <dd className="mt-1">{negocio.horario}</dd>
+              </div>
+            </dl>
+          </div>
+          <div className="bg-fondo p-6 text-tinta @4xl:col-span-6 @4xl:col-start-7 @4xl:p-10">
+            <FormularioContacto negocio={negocio} temas={temas} sobrio />
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   if (variante === "dividido") {
     return (
       <section id="contacto" aria-labelledby="contacto-titulo" className={`${margen} py-20`}>
@@ -260,6 +355,35 @@ export function Contacto({ config, variante }: { config: Config; variante: Varia
 
 export function Faq({ config }: { config: Config; variante: VarianteDe<"generico", "faq"> }) {
   const faq = config.contenido.faq ?? [];
+  if (esEstudio(config)) {
+    return (
+      <section id="preguntas" aria-labelledby="preguntas-titulo" className={seccionEstudio}>
+        <div className="grid gap-10 @4xl:grid-cols-12">
+          <div className="revelar @4xl:col-span-4">
+            <p className={`${rotulo} text-tinta-suave`}>Preguntas</p>
+            <h2 id="preguntas-titulo" className="mt-6 font-display text-titulo font-extralight">
+              Antes de empezar
+            </h2>
+          </div>
+          <div className="border-t border-borde @4xl:col-span-8">
+            {faq.map((f) => (
+              <details key={f.id} className="group border-b border-borde">
+                <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-6 py-6 font-display text-subtitulo font-light [&::-webkit-details-marker]:hidden">
+                  {f.pregunta}
+                  <span aria-hidden className="grid size-8 shrink-0 place-items-center rounded-full border border-borde transition-transform duration-500 group-open:rotate-45 group-open:border-tinta">
+                    <svg viewBox="0 0 12 12" className="size-2.5">
+                      <path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.2" />
+                    </svg>
+                  </span>
+                </summary>
+                <p className="max-w-[60ch] pb-8 text-tinta-suave">{f.respuesta}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
   return (
     <section id="preguntas" aria-labelledby="preguntas-titulo" className={`${margen} py-20`}>
       <Encabezado id="preguntas-titulo" titulo="Preguntas" />

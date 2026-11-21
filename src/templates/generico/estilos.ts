@@ -17,3 +17,14 @@ export const tileBase = "rounded-base border border-borde p-5 @4xl:p-7";
 export const tile = `${tileBase} bg-superficie`;
 
 export const tituloSeccion = "font-display text-titulo";
+
+/**
+ * Modo "Estudio": se activa eligiendo la portada a pantalla completa. Cambia el tono de toda la
+ * página (header sobre la foto, encabezados finos, footer sobrio), no solo de la portada.
+ */
+export function esEstudio(config: { secciones: readonly { tipo: string; variante: string }[] }): boolean {
+  return config.secciones.some((s) => s.tipo === "bento" && s.variante === "estudio");
+}
+
+/** Rótulo chico en mayúsculas espaciadas, para el modo Estudio. */
+export const rotulo = "text-mini font-medium uppercase tracking-[0.22em]";

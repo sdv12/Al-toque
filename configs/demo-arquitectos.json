@@ -1,0 +1,210 @@
+{
+  "version": 2,
+  "plantilla": "generico",
+  "estilo": {
+    "acento": "#8a6a52",
+    "esquinas": "recto",
+    "modo": "claro",
+    "fondo": "#f4f2ee"
+  },
+  "negocio": {
+    "nombre": "Cosentino Arquitectos",
+    "eslogan": "Arquitectura de precisión.",
+    "subtitulo": "Estudio con base en Córdoba. Vivienda, usos mixtos y espacio de trabajo. También revisamos planos de terceros antes de que comience la obra.",
+    "whatsapp": "5493515550606",
+    "direccion": "Av. Hipólito Yrigoyen 1540, piso 3, Córdoba",
+    "horario": "Lunes a viernes · 9 a 18 h",
+    "redes": [
+      {
+        "red": "instagram",
+        "url": "https://instagram.com/cosentino.arq"
+      }
+    ]
+  },
+  "secciones": [
+    {
+      "tipo": "bento",
+      "variante": "estudio",
+      "activa": true
+    },
+    {
+      "tipo": "casos",
+      "variante": "galeria",
+      "activa": true
+    },
+    {
+      "tipo": "servicios",
+      "variante": "indice",
+      "activa": true
+    },
+    {
+      "tipo": "testimonios",
+      "variante": "rotativo",
+      "activa": true
+    },
+    {
+      "tipo": "faq",
+      "variante": "acordeon",
+      "activa": true
+    },
+    {
+      "tipo": "contacto",
+      "variante": "con-foto",
+      "activa": true
+    }
+  ],
+  "contenido": {
+    "servicios": [
+      {
+        "id": "proyecto-integral",
+        "nombre": "Proyecto y dirección de obra",
+        "descripcion": "Anteproyecto, proyecto ejecutivo y conducción de obra. Un solo interlocutor de inicio a fin.",
+        "precio": null,
+        "duracionMin": 60
+      },
+      {
+        "id": "reforma",
+        "nombre": "Reforma y remodelación",
+        "descripcion": "Redistribución de planta, ampliación o puesta en valor. Con proyecto ejecutivo.",
+        "precio": null,
+        "duracionMin": 60
+      },
+      {
+        "id": "revision-planos",
+        "nombre": "Revisión de planos",
+        "descripcion": "Informe técnico sobre planos de obra, legales o de terceros. Antes de firmar o construir.",
+        "precio": 80000,
+        "precioDesde": true,
+        "duracionMin": 60
+      },
+      {
+        "id": "visita-tecnica",
+        "nombre": "Visita técnica",
+        "descripcion": "Relevamiento del inmueble e informe escrito. Para comprar, reformar o regularizar.",
+        "precio": 55000,
+        "duracionMin": 60
+      }
+    ],
+    "casos": [
+      {
+        "id": "casa-cerro-chico",
+        "titulo": "Vivienda · Villa Cabrera",
+        "cliente": "Familia Morales",
+        "problema": "Lote de 8 m de frente en PH, patio interior compartido y planta baja sin luz natural.",
+        "solucion": "Lucernario central, escalera de vidrio que conduce la luz a planta baja y patio elevado sobre cochera.",
+        "resultado": "Premio FAC 2024 categoría vivienda.",
+        "antes": {
+          "alt": "Obra en etapa de fundaciones",
+          "src": "/demos/arquitectos/cabrera-antes.jpg"
+        },
+        "despues": {
+          "alt": "Casa terminada de noche, con el jardín y un árbol grande",
+          "src": "/demos/arquitectos/cabrera-despues.jpg"
+        }
+      },
+      {
+        "id": "oficinas-centro",
+        "titulo": "Oficinas · Centro",
+        "cliente": "Estudio jurídico",
+        "problema": "80 m² de planta abierta sin privacidad acústica ni sala de reuniones funcional.",
+        "solucion": "Particiones acústicas móviles, circulación perimetral y sala interior con ventilación cruzada.",
+        "resultado": "Capacidad duplicada. Rotación de personal bajó un 30 % en doce meses.",
+        "antes": {
+          "alt": "Planta vacía con pasillo y paredes desnudas",
+          "src": "/demos/arquitectos/oficinas-antes.jpg"
+        },
+        "despues": {
+          "alt": "Oficina con mesa de reuniones y ventanales",
+          "src": "/demos/arquitectos/oficinas-despues.jpg"
+        }
+      },
+      {
+        "id": "ampliacion-nueva-italia",
+        "titulo": "Ampliación · Nueva Italia",
+        "cliente": "Vivienda familiar",
+        "problema": "Casa de los años 70 con ampliación informal no regularizada y pendiente de cubierta incorrecta.",
+        "solucion": "Relevamiento, planos de estado actual, corrección de cubierta y 42 m² de ampliación con materiales del lugar.",
+        "resultado": "Regularización municipal completa en cuatro meses.",
+        "antes": {
+          "alt": "Obra con hierros y encofrados a la vista",
+          "src": "/demos/arquitectos/italia-antes.jpg"
+        },
+        "despues": {
+          "alt": "Casa con fachada de madera y planta alta terminada",
+          "src": "/demos/arquitectos/italia-despues.jpg"
+        }
+      }
+    ],
+    "galeria": [
+      {
+        "src": "/demos/arquitectos/interior-living.jpg",
+        "alt": "Living con sofá claro y revestimiento de madera",
+        "epigrafe": "Interior · Cerro de las Rosas"
+      },
+      {
+        "src": "/demos/arquitectos/interior-escalera.jpg",
+        "alt": "Escalera suspendida junto a un ventanal con pileta",
+        "epigrafe": "Reforma · Urca"
+      },
+      {
+        "src": "/demos/arquitectos/planos.jpg",
+        "alt": "Arquitecto revisando planos sobre la mesa",
+        "epigrafe": "Revisión de planos"
+      },
+      {
+        "src": "/demos/arquitectos/fachada.jpg",
+        "alt": "Fachada de casa con volumen revestido en madera",
+        "epigrafe": "Vivienda · Argüello"
+      }
+    ],
+    "testimonios": [
+      {
+        "id": "t1",
+        "autor": "Rodrigo y Camila Morales",
+        "texto": "Entregaron en fecha, con los planos al día y sin sorpresas de presupuesto. No es lo habitual.",
+        "detalle": "Casa en Villa Cabrera"
+      },
+      {
+        "id": "t2",
+        "autor": "Dr. Federico Alonso",
+        "texto": "Revisaron los planos de otro estudio antes de que firmara el contrato. Encontraron tres errores que me habrían costado muy caro.",
+        "detalle": "Revisión de planos, Centro"
+      },
+      {
+        "id": "t3",
+        "autor": "Florencia Ibáñez",
+        "texto": "La reforma quedó mejor que el render. Escuchan, no imponen.",
+        "detalle": "Local gastronómico, Güemes"
+      }
+    ],
+    "faq": [
+      {
+        "id": "presupuesto",
+        "pregunta": "¿Cuánto sale un proyecto?",
+        "respuesta": "Depende del tipo, la escala y la etapa. Para una vivienda nueva, el honorario de proyecto y dirección ronda entre el 8 y el 12 % del costo de obra. Te damos un número concreto en la primera reunión, sin compromiso."
+      },
+      {
+        "id": "revision-planos",
+        "pregunta": "¿En qué consiste la revisión de planos?",
+        "respuesta": "Revisamos planos de obra, planos legales o proyectos de terceros. Verificamos medidas, cotas, compatibilidad con el Reglamento de Edificación de Córdoba y posibles conflictos constructivos. El informe es escrito y firmado. Ideal antes de comprar un inmueble, contratar una obra o iniciar una reforma."
+      },
+      {
+        "id": "tiempos",
+        "pregunta": "¿Cuánto tarda un proyecto residencial?",
+        "respuesta": "El anteproyecto lleva entre dos y cuatro semanas. El proyecto ejecutivo completo (planos, especificaciones, cómputos) lleva entre seis y diez semanas más, según la complejidad. Los plazos de obra dependen de los gremios y el presupuesto disponible."
+      },
+      {
+        "id": "sin-planos",
+        "pregunta": "Quiero reformar pero no tengo planos del inmueble. ¿Se puede?",
+        "respuesta": "Sí. Arrancamos con un relevamiento completo: vamos al lugar, medimos todo y generamos los planos de estado actual. Desde ahí trabajamos el proyecto de reforma. También gestionamos la regularización si la construcción tiene partes sin planos aprobados."
+      },
+      {
+        "id": "zona",
+        "pregunta": "¿Trabajan solo en Córdoba capital?",
+        "respuesta": "Principalmente sí, pero tomamos proyectos en el interior de la provincia. Las revisiones de planos las hacemos por videollamada más el archivo digital, sin importar la ubicación."
+      }
+    ]
+  },
+  "whatsappFlotante": true,
+  "demo": true
+}

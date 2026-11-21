@@ -216,31 +216,31 @@ export const registry = {
       bento: {
         etiqueta: "Home bento",
         descripcion: "Bloques de distinto tamaño con lo más importante.",
-        variantes: { clasico: "Clásico", denso: "Denso", asimetrico: "Asimétrico" },
+        variantes: { clasico: "Clásico", denso: "Denso", asimetrico: "Asimétrico", estudio: "Estudio (foto a pantalla completa)" },
         inicio: true,
       },
       casos: {
         etiqueta: "Trabajos",
         descripcion: "Casos de antes/después o problema/solución.",
-        variantes: { "antes-despues": "Antes y después", "problema-solucion": "Problema y solución" },
+        variantes: { "antes-despues": "Antes y después", "problema-solucion": "Problema y solución", galeria: "Galería con ficha" },
         requiere: ["casos"],
       },
       servicios: {
         etiqueta: "Servicios",
         descripcion: "Qué hacés y cuánto sale.",
-        variantes: { lista: "Lista", bloques: "Bloques" },
+        variantes: { lista: "Lista", bloques: "Bloques", indice: "Índice desplegable" },
         requiere: ["servicios"],
       },
       testimonios: {
         etiqueta: "Testimonios",
         descripcion: "Clientes contentos.",
-        variantes: { "cita-grande": "Cita grande", carrusel: "Carrusel" },
+        variantes: { "cita-grande": "Cita grande", carrusel: "Carrusel", rotativo: "Rotativo" },
         requiere: ["testimonios"],
       },
       contacto: {
         etiqueta: "Contacto",
         descripcion: "Formulario corto + WhatsApp.",
-        variantes: { "formulario-wa": "Formulario y WhatsApp", dividido: "Dividido" },
+        variantes: { "formulario-wa": "Formulario y WhatsApp", dividido: "Dividido", "con-foto": "Sobre foto" },
       },
       faq: {
         etiqueta: "Preguntas",

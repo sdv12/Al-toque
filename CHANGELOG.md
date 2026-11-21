@@ -4,6 +4,12 @@ Versionado semántico: PATCH = arreglos y ajustes; MINOR = funcionalidad nueva v
 MAJOR = cambios que rompen algo existente (formato de configs, flujo, backend).
 La versión se muestra en el footer de la home y en el configurador.
 
+## 1.15.0 · 2026-11-21
+- **Plantilla Portfolio modular, modo Estudio**: nueva portada «Estudio» con foto a pantalla completa que rota sola (zoom lento, contador, barras de avance y pausa) y header transparente que se vuelve sólido al bajar, con menú desplegable en celular. Elegirla pasa toda la página a un tono sobrio: títulos finos, rótulos en mayúsculas, footer liviano y secciones que aparecen al scrollear.
+- Variantes nuevas: Trabajos «Galería con ficha» (grilla con filtros por tipo y ficha emergente con antes/después y «Quiero algo así» por WhatsApp), Servicios «Índice desplegable» (con foto que cambia según el servicio y «Consultar» directo), Testimonios «Rotativo» y Contacto «Sobre foto». Las variantes anteriores no cambian.
+- Demo de estudio de arquitectura (`/l/demo-arquitectos`) con fotos reales.
+- Tipografía de la plantilla: Raleway fina para títulos y DM Sans para el texto.
+
 ## 1.14.0 · 2026-11-21
 - **Ahora somos Al Toque**: soluciones digitales para negocios (páginas web, turnos y caja), no solo páginas. Cambia la marca en todo el sitio.
 - **Portada nueva**: «La solución para tu negocio, al toque», con el texto y los celulares alineados en dos columnas; los rubros pasan solos en una marquesina (se frena al pasar el mouse); las soluciones son un acordeón horizontal (en compu, tarjetas una al lado de la otra que se abren y pasan solas mientras nadie las toca; en celular, una debajo de la otra); un selector de lo que necesitás (web, turnos, controlar el comercio, vender por internet), las soluciones con su precio y su demo, Al Toque Tienda como próximamente (con «Avisame cuando esté»), desarrollos a medida, proyectos, cómo funciona, lo que te aseguramos y preguntas frecuentes.

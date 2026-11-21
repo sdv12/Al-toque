@@ -4,7 +4,8 @@ import type { VarianteDe } from "@/core/registry";
 import type { ConfigDe } from "@/core/schema/landing-config";
 import { IconoWhatsApp } from "@/ui/primitives/IconoWhatsApp";
 import { RedesSociales } from "@/ui/primitives/RedesSociales";
-import { boton, tile, tileBase } from "../estilos";
+import { boton, rotulo, tile, tileBase } from "../estilos";
+import { PortadaRotativa } from "../estudio";
 import { Foto } from "../Foto";
 
 type Config = ConfigDe<"generico">;
@@ -12,7 +13,7 @@ type Props = { config: Config; variante: VarianteDe<"generico", "bento"> };
 type Bloque = "presentacion" | "subtitulo" | "contacto" | "trabajo" | "servicios" | "testimonio" | "datos";
 
 /** Posición de cada bloque en la grilla según la variante (en angosto se apilan en este orden). */
-const DISPOSICION: Record<Props["variante"], { bloque: Bloque; clase: string }[]> = {
+const DISPOSICION: Record<Exclude<Props["variante"], "estudio">, { bloque: Bloque; clase: string }[]> = {
   clasico: [
     { bloque: "presentacion", clase: "@4xl:col-span-8 @4xl:row-span-2" },
     { bloque: "contacto", clase: "@4xl:col-span-4" },
@@ -170,7 +171,69 @@ function Subtitulo({ config }: { config: Config }) {
   );
 }
 
+/**
+ * Variante "estudio": foto a pantalla completa (galería y trabajos terminados, rotando) y abajo
+ * una presentación con mucho aire. Activa el tono sobrio en el resto de la página.
+ */
+function Estudio({ config }: { config: Config }) {
+  const { negocio, contenido } = config;
+  const conFoto = <T extends { src?: string | undefined }>(i: T | undefined): i is T & { src: string } => !!i?.src;
+  const desdeCasos = (contenido.casos ?? []).flatMap((c) => (conFoto(c.despues) ? [{ imagen: c.despues, leyenda: c.titulo }] : []));
+  const desdeGaleria = (contenido.galeria ?? []).flatMap((g) => (conFoto(g) ? [{ imagen: g, leyenda: g.epigrafe ?? g.alt }] : []));
+  const vistas = new Set<string>();
+  const diapositivas = [...desdeCasos, ...desdeGaleria].filter((d) => !vistas.has(d.imagen.src) && vistas.add(d.imagen.src)).slice(0, 5);
+
+  return (
+    <section id="inicio" aria-labelledby="inicio-titulo">
+      {diapositivas.length > 0 ? (
+        <PortadaRotativa nombre={negocio.nombre} eslogan={negocio.eslogan} diapositivas={diapositivas} />
+      ) : (
+        <div className="px-5 pb-16 pt-24 @4xl:px-10 @4xl:pt-36">
+          <h1 id="inicio-titulo">
+            <span className={`${rotulo} block text-tinta-suave`}>{negocio.nombre}</span>
+            <span className="mt-5 block max-w-[14ch] font-display text-display font-extralight">{negocio.eslogan}</span>
+          </h1>
+        </div>
+      )}
+
+      <div id="estudio" className="scroll-mt-18 px-5 py-24 @4xl:px-10 @4xl:py-36">
+        <div className="grid gap-10 @4xl:grid-cols-12">
+          <p className={`${rotulo} revelar text-tinta-suave @4xl:col-span-3`}>El estudio</p>
+          <div className="revelar @4xl:col-span-9">
+            {negocio.subtitulo && (
+              <p className="max-w-[30ch] font-display text-[clamp(1.75rem,1.1rem+2.6cqi,3.5rem)] font-extralight leading-[1.15]">{negocio.subtitulo}</p>
+            )}
+            <dl className="mt-16 grid gap-8 border-t border-borde pt-8 text-chico @2xl:grid-cols-3">
+              {negocio.direccion && (
+                <div>
+                  <dt className={`${rotulo} text-tinta-suave`}>Dónde</dt>
+                  <dd className="mt-2">{negocio.direccion}</dd>
+                </div>
+              )}
+              {negocio.horario && (
+                <div>
+                  <dt className={`${rotulo} text-tinta-suave`}>Cuándo</dt>
+                  <dd className="mt-2">{negocio.horario}</dd>
+                </div>
+              )}
+              <div>
+                <dt className={`${rotulo} text-tinta-suave`}>Contacto</dt>
+                <dd className="mt-2">
+                  <a href="#contacto" className="border-b border-tinta pb-0.5 hover:text-acento-texto">
+                    Escribinos
+                  </a>
+                </dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function Bento({ config, variante }: Props) {
+  if (variante === "estudio") return <Estudio config={config} />;
   const disposicion = DISPOSICION[variante];
   const conSubtituloAparte = disposicion.some((d) => d.bloque === "subtitulo");
   const bloques: Record<Bloque, ReactNode> = {
