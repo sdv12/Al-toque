@@ -126,10 +126,12 @@ function Abanico() {
 export function Hero() {
   return (
     <section aria-labelledby="hero-titulo" className={`${margen} pb-14 pt-4 @4xl:pb-20 @5xl:pt-10`}>
-      <div className="grid items-center gap-12 @5xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] @5xl:gap-10">
+      <div className="grid items-center gap-12 @5xl:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] @5xl:gap-10">
         <div>
-          <h1 id="hero-titulo" className={`${afiche} max-w-[13ch] text-[clamp(3.25rem,0.9rem+8.5cqi,8rem)] leading-[0.86] @5xl:text-[clamp(4rem,6.4cqi,7.5rem)]`}>
-            La solución para tu negocio, <span className="resaltado whitespace-nowrap">al toque.</span>
+          {/* En pantallas grandes, dos líneas: «La solución para tu negocio,» y «al toque.». */}
+          <h1 id="hero-titulo" className={`${afiche} text-[clamp(2.75rem,0.9rem+7cqi,4.5rem)] leading-[0.9] @5xl:text-[clamp(3rem,3.8cqi,5.75rem)]`}>
+            La solución para tu negocio, <br className="hidden @5xl:block" />
+            <span className="resaltado whitespace-nowrap">al toque.</span>
           </h1>
           <p className="mt-8 max-w-[38ch] text-subtitulo">
             Páginas web, turnos y herramientas de gestión. Soluciones simples, pensadas para negocios reales: peluquerías, comercios, alojamientos y
@@ -157,14 +159,14 @@ export function Necesidades() {
       <h2 id="necesidades-titulo" className={`${afiche} text-titulo`}>
         ¿Qué necesitás <span className="resaltado">hoy?</span>
       </h2>
-      <ul className="mt-10 grid gap-3 @3xl:grid-cols-2 @6xl:grid-cols-4">
+      <ul className="mt-10 grid gap-3 @3xl:grid-cols-2 @6xl:grid-cols-5">
         {NECESIDADES.map((n) => (
-          <li key={n.href}>
+          <li key={n.href} className="@3xl:last:col-span-2 @6xl:last:col-span-1">
             <a
               href={n.href}
               className="group flex h-full min-h-28 flex-col justify-between gap-4 rounded-base border-2 border-tinta bg-superficie p-5 transition-colors hover:bg-acento-relleno hover:text-sobre-acento"
             >
-              <span className={`${afiche} text-[clamp(1.6rem,1.2rem+1.4cqi,2.1rem)] leading-none`}>{n.texto}</span>
+              <span className={`${afiche} text-[clamp(1.5rem,1.2rem+1cqi,1.9rem)] leading-none`}>{n.texto}</span>
               <span className="flex items-center justify-between gap-3 text-chico">
                 {n.detalle}
                 <span aria-hidden className="grid size-9 shrink-0 place-items-center rounded-full border-2 border-current">
@@ -188,19 +190,20 @@ export function Necesidades() {
 /** Los rubros pasan solos en una sola línea; la lista va dos veces (la copia, oculta al lector). */
 export function Rubros() {
   const lista = (copia: boolean) => (
-    <ul aria-hidden={copia || undefined} className={`flex shrink-0 items-center ${afiche} text-[clamp(1.75rem,2.4cqi,3rem)] leading-none`}>
+    <ul aria-hidden={copia || undefined} className={`flex shrink-0 items-center ${afiche} text-[clamp(1.25rem,1.6cqi,2rem)] leading-none`}>
       {RUBROS.map((r) => (
-        <li key={r} className="flex items-center gap-6 whitespace-nowrap pr-6">
+        <li key={r} className="flex items-center gap-5 whitespace-nowrap pr-5">
           {r}
-          <span aria-hidden className="text-acento">
-            ✳
-          </span>
+          {/* Dibujado (no el carácter ✳): en los celulares ese carácter sale como emoji verde. */}
+          <svg aria-hidden viewBox="0 0 24 24" className="size-[0.8em] text-acento" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
+            <path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9 4.9 19.1" />
+          </svg>
         </li>
       ))}
     </ul>
   );
   return (
-    <section aria-label="Para qué rubros" className="overflow-hidden bg-tinta py-8 text-fondo @4xl:py-10">
+    <section aria-label="Para qué rubros" className="overflow-hidden bg-tinta py-4 text-fondo @4xl:py-5">
       <div className="marquesina">
         {lista(false)}
         {lista(true)}
@@ -787,26 +790,30 @@ export function Preguntas({ ids = PREGUNTAS_PORTADA }: { ids?: readonly string[]
   const lista = ids.map((id) => DUDAS.find((d) => d.id === id)).filter((d) => d !== undefined);
   return (
     <section id="preguntas" aria-labelledby="preguntas-titulo" className={`${diferida} ${margen} scroll-mt-4 bg-superficie-2 py-14 @4xl:py-24`}>
-      {/* Título arriba y la lista centrada, en una columna que no se estira de punta a punta. */}
-      <div className="mx-auto max-w-4xl">
-        <h2 id="preguntas-titulo" className={`${afiche} text-center text-[clamp(2.4rem,1.2rem+5cqi,4.25rem)] leading-[0.95]`}>
+      {/* En pantallas grandes, dos columnas de preguntas; cada una se abre en su lugar. */}
+      <div className="mx-auto max-w-7xl">
+        <h2 id="preguntas-titulo" className={`${afiche} text-center text-titulo`}>
           Preguntas frecuentes
         </h2>
-        <div className="mt-10 border-b-2 border-tinta">
-          {lista.map((f) => (
-            <details key={f.id} className="group border-t-2 border-tinta">
-              <summary className="flex min-h-16 cursor-pointer list-none items-center justify-between gap-6 py-5 text-subtitulo font-semibold [&::-webkit-details-marker]:hidden">
-                {f.pregunta}
-                <span aria-hidden className="grid size-10 shrink-0 place-items-center rounded-full border-2 border-tinta text-cuerpo transition-colors group-open:bg-acento-relleno">
-                  <span className="transition-transform group-open:rotate-45">+</span>
-                </span>
-              </summary>
-              <div className="max-w-medida space-y-2 pb-6 text-tinta-suave">
-                {f.respuesta().map((t) => (
-                  <p key={t}>{t}</p>
-                ))}
-              </div>
-            </details>
+        <div className="mt-10 grid gap-x-12 @5xl:grid-cols-2 @5xl:items-start">
+          {[lista.slice(0, Math.ceil(lista.length / 2)), lista.slice(Math.ceil(lista.length / 2))].map((columna, c) => (
+            <div key={c} className={`border-b-2 border-tinta ${c === 1 ? "-mt-0.5 @5xl:mt-0" : ""}`}>
+              {columna.map((f) => (
+                <details key={f.id} className="group border-t-2 border-tinta">
+                  <summary className="flex min-h-16 cursor-pointer list-none items-center justify-between gap-6 py-5 text-subtitulo font-semibold [&::-webkit-details-marker]:hidden">
+                    {f.pregunta}
+                    <span aria-hidden className="grid size-10 shrink-0 place-items-center rounded-full border-2 border-tinta text-cuerpo transition-colors group-open:bg-acento-relleno">
+                      <span className="transition-transform group-open:rotate-45">+</span>
+                    </span>
+                  </summary>
+                  <div className="max-w-medida space-y-2 pb-6 text-tinta-suave">
+                    {f.respuesta().map((t) => (
+                      <p key={t}>{t}</p>
+                    ))}
+                  </div>
+                </details>
+              ))}
+            </div>
           ))}
         </div>
         <p className="mt-6 text-center text-chico">
@@ -823,11 +830,11 @@ export function Cierre({ whatsapp }: { whatsapp: string | undefined }) {
   return (
     <section id="contacto" aria-labelledby="cierre-titulo" className="scroll-mt-4 bg-acento-relleno py-14 text-sobre-acento @4xl:py-20">
       <div className={margen}>
-        <h2 id="cierre-titulo" className={`${afiche} max-w-[16ch] text-[clamp(2.5rem,8cqi,6rem)] leading-[0.88]`}>
+        <h2 id="cierre-titulo" className={`${afiche} max-w-[22ch] text-[clamp(2.25rem,1rem+5cqi,5rem)] leading-[0.9]`}>
           Contanos qué necesita tu negocio
         </h2>
         <div className="mt-10 flex flex-wrap items-center justify-between gap-6 border-t-2 border-tinta pt-8">
-          <p className="max-w-[34ch] text-subtitulo">Te respondemos personas, con una propuesta para lo tuyo. Sin compromiso.</p>
+          <p className="max-w-[60ch] text-subtitulo">Te respondemos personas, con una propuesta para lo tuyo. Sin compromiso.</p>
           <div className="flex flex-wrap gap-3">
             <AbrirAlto className={boton.tinta}>Encontrar mi solución</AbrirAlto>
             {whatsapp && (
@@ -846,14 +853,14 @@ export function Pie() {
   return (
     <footer className={`${margen} bg-tinta py-10 text-fondo @4xl:py-12`}>
       {/* En el celular: marca arriba, Soluciones y Demos en dos columnas y Contacto abajo, para que no quede una lista larga. */}
-      <div className="grid gap-8 @4xl:flex @4xl:flex-wrap @4xl:items-end @4xl:justify-between">
-        <div>
+      <div className="grid gap-8 @4xl:grid-cols-12 @4xl:gap-x-6">
+        <div className="@4xl:col-span-4">
           <p className="text-[2.25rem]">
             <Marca sobreOscuro />
           </p>
           <p className="mt-2 text-chico opacity-80">Producto cordobés.</p>
         </div>
-        <div className="grid grid-cols-2 gap-x-6 gap-y-8 text-chico @4xl:grid-cols-3 @4xl:gap-x-12">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-8 text-chico @4xl:col-span-8 @4xl:grid-cols-3">
           <nav aria-label="Soluciones">
             <p className="text-mini font-semibold uppercase tracking-wider opacity-60">Soluciones</p>
             <ul className="mt-3 space-y-2">
@@ -891,7 +898,7 @@ export function Pie() {
         </div>
       </div>
       {/* Legales: el botón de arrepentimiento destacado (Res. SCI 424/2020) y el link de reclamos (Res. SCI 274/2021). */}
-      <nav aria-label="Legales" className="mt-8 grid grid-cols-2 items-center gap-x-6 gap-y-3 border-t border-fondo/20 pt-6 text-mini @4xl:mt-10 @4xl:flex @4xl:flex-wrap @4xl:text-chico">
+      <nav aria-label="Legales" className="mt-8 grid grid-cols-2 items-center gap-x-6 gap-y-3 border-t border-fondo/20 pt-6 text-mini @4xl:mt-12 @4xl:flex @4xl:flex-wrap @4xl:gap-x-8 @4xl:text-chico">
         <Link href="/arrepentimiento" className="col-span-2 inline-flex min-h-10 items-center justify-center rounded-control border-2 border-fondo px-4 font-semibold hover:bg-fondo hover:text-tinta @4xl:justify-start">
           Botón de arrepentimiento
         </Link>

@@ -4,6 +4,12 @@ Versionado semántico: PATCH = arreglos y ajustes; MINOR = funcionalidad nueva v
 MAJOR = cambios que rompen algo existente (formato de configs, flujo, backend).
 La versión se muestra en el footer de la home y en el configurador.
 
+## 1.21.0 · 2026-11-22
+- **Home más prolija en pantallas grandes**: el título principal entra en dos líneas, «¿Qué necesitás hoy?» muestra las cinco opciones en una fila y las preguntas frecuentes van en dos columnas.
+- **Títulos de sección un poco más chicos** en todo el sitio, y el cierre amarillo usa más ancho (título en dos líneas).
+- **Banda de rubros más fina**, con estrellas dibujadas: en el celular ya no salen como emoji verde.
+- **Pie alineado a una grilla**: marca a la izquierda y Soluciones, Demos y Contacto en columnas parejas.
+
 ## 1.20.0 · 2026-11-22
 - **«Ya están online» es un carrusel infinito**: una tarjeta centrada con un pedazo de la anterior y la siguiente. En la computadora tiene flechas a los costados y los bordes se difuminan; en el celular se desliza con el dedo, tiene puntos y un botón «Visitar el sitio». Ocupa menos alto en pantallas grandes.
 - **Home en el celular, más compacta**: menos espacio entre secciones y un pie ordenado en columnas (Soluciones y Demos lado a lado, Contacto y legales debajo).

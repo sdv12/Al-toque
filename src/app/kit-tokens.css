@@ -64,7 +64,7 @@
   --lk-t-display-alto: 0.84;
   --lk-t-display-tracking: -0.015em;
   --lk-t-display-peso: 850;
-  --lk-t-titulo: clamp(2.4rem, 1.2rem + 5cqi, 5.5rem);
+  --lk-t-titulo: clamp(2.1rem, 1.1rem + 3.6cqi, 4.25rem);
   --lk-t-titulo-alto: 0.9;
   --lk-t-subtitulo: clamp(1.2rem, 1.02rem + 0.8cqi, 1.6rem);
   --lk-t-subtitulo-alto: 1.3;
