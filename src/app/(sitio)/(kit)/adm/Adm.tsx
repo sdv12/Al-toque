@@ -144,7 +144,7 @@ function Demos({ grupos }: { grupos: GrupoDemos[] }) {
           <p className="mt-2 text-chico text-tinta-suave">{g.bajada}</p>
           <ul className="mt-6 grid gap-4 @2xl:grid-cols-2 @5xl:grid-cols-3">
             {g.items.map((d) => (
-              <li key={d.href}>
+              <li key={`${d.titulo}-${d.href}`}>
                 <a
                   href={d.href}
                   target="_blank"

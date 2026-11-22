@@ -1,5 +1,5 @@
 import { formatearPesos } from "@/core/lib/mensajes";
-import { ACTUALIZACION_PRECIOS, CAJA_PRO_A_MEDIDA, EXTRAS, ahorroWebTurnos, planAgenda, planCaja, planPerfil, planes, proximaActualizacion } from "@/core/lib/precios";
+import { ACTUALIZACION_PRECIOS, CAJA_PRO_A_MEDIDA, EXTRAS, ahorroWebTurnos, planAgenda, planCaja, planPerfil, planes, planesResto, proximaActualizacion } from "@/core/lib/precios";
 
 /*
  * Lo que Alto sabe contestar. Cada duda tiene palabras clave para encontrarla cuando la persona
@@ -183,6 +183,19 @@ export const DUDAS: Duda[] = [
     },
   },
   {
+    id: "resto",
+    pregunta: "¿Tienen algo para restaurantes, bares o cafés?",
+    claves: ["resto", "restaurante", "restaurant", "bodegon", "parrilla", "pizzeria", "cafe", "cafeteria", "bar", "cerveceria", "sushi", "hamburgueseria", "rotiseria", "carta", "menu", "comandas", "mesas", "mozo", "delivery"],
+    respuesta: () => {
+      const p = planesResto();
+      return [
+        `Sí: Al Toque Resto. «${p.carta.nombre}» es tu web con la carta, pedidos para retirar o con envío y reservas por turno: ${mes(p.carta.unico, p.carta.mensual)}.`,
+        `«${p.completo.nombre}» suma el panel del salón (mesas, comandas a cocina, cuenta dividida, caja, números y personal): ${mes(p.completo.unico, p.completo.mensual)}.`,
+        "Viene armado para bodegones, parrillas, pizzerías, cafés, bares, sushi, hamburgueserías y rotiserías. Probá la demo con tu tipo de local en /resto.",
+      ];
+    },
+  },
+  {
     id: "cajapro",
     pregunta: "¿Cuánto sale la caja pro?",
     claves: ["caja pro", "sucursales", "empleados", "stock", "lector", "codigo de barras"],
@@ -307,7 +320,7 @@ export const SIN_RESPUESTA = [
 ];
 
 /** En qué página está Alto: cambia el saludo, las dudas que muestra primero y lo que sugiere marcar. */
-export type ContextoAlto = "inicio" | "web" | "turnos" | "caja" | "tienda";
+export type ContextoAlto = "inicio" | "web" | "turnos" | "caja" | "resto" | "tienda";
 
 export const CONTEXTOS: Record<ContextoAlto, { saludo: string | null; vineta: string; dudas: string[]; funciones: string[] }> = {
   inicio: { saludo: null, vineta: "¿Te ayudo a encontrar la solución para tu negocio?", dudas: ["precio", "planes", "tiempo", "pago", "mensual", "baja"], funciones: [] },
@@ -328,6 +341,12 @@ export const CONTEXTOS: Record<ContextoAlto, { saludo: string | null; vineta: st
     vineta: "¿Te ayudo con la caja de tu negocio?",
     dudas: ["internet", "cajapro", "factura", "capacitacion", "precio"],
     funciones: ["cajaSimple"],
+  },
+  resto: {
+    saludo: "Estás mirando Al Toque Resto. Te ayudo a elegir entre la carta con la web o el panel completo, y te armo la demo con tu local.",
+    vineta: "¿Te ayudo con la web de tu restaurante?",
+    dudas: ["resto", "pedidos", "precio", "tiempo", "fotos"],
+    funciones: ["web", "menu", "pedidos"],
   },
   tienda: {
     saludo: "La tienda online todavía no está, pero ya podés vender con un catálogo y pedidos por WhatsApp. Si querés, te ayudo con eso.",

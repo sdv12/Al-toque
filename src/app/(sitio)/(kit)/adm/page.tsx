@@ -5,6 +5,7 @@ import Link from "next/link";
 import { PLANTILLAS_DE_RUBRO, registry } from "@/core/registry";
 import { DISENOS } from "@/agendas/lib/disenos";
 import { RUBROS, RUBROS_CAJA } from "@/cajas/rubros";
+import { LISTA_TIPOS } from "@/restos/lib/locales";
 import { ESTUDIO, FICHAS, PROYECTOS } from "../_home/contenido";
 import { fuentesHome } from "../_home/fuentes";
 import { Marca, margen } from "../_home/Secciones";
@@ -122,6 +123,28 @@ function demos(): GrupoDemos[] {
           texto: "Ferretería inventada con dos sucursales: factura, QR, stock, cuentas corrientes, permisos y auditoría.",
           consejo: "Entrá como Graciela (dueña) y después como Sofía (vendedora) para mostrar los permisos.",
           href: "/c/pro",
+        },
+      ],
+    },
+    {
+      id: "resto",
+      titulo: "Resto",
+      bajada: "Restaurantes inventados, uno por tipo de local. Guardan en el navegador; «Volver al ejemplo» (Ajustes → Copia y datos) los deja como nuevos.",
+      items: [
+        ...LISTA_TIPOS.map((t) => ({
+          titulo: t.ejemplo,
+          etiqueta: t.nombre,
+          texto: t.resumen,
+          href: `/resto/demo?tipo=${t.id}`,
+          imagen: `/muestras/resto-${t.diseno}.jpg`,
+        })),
+        {
+          titulo: "Panel del restaurante",
+          etiqueta: "Panel",
+          texto: "Salón por zonas, cocina, reservas, pedidos, caja, números, carta, editor de la web y ajustes.",
+          consejo: "Entrá con 1234 (encargada), mandá un plato a cocina y abrí otra pestaña con 3333 (cocina): la comanda llega sola.",
+          href: "/resto/demo?tipo=parrilla#/panel",
+          imagen: "/muestras/resto-panel.jpg",
         },
       ],
     },

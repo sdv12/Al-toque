@@ -74,6 +74,27 @@ el panel del negocio en `#/admin` (PIN de la demo: 1234) y «Probalo con tus dat
 en `src/agendas/` con su propio root layout (`src/app/(agenda)`) y sus CSS originales, sin Tailwind.
 Guarda todo en el navegador (`localStorage`): para clientes reales hace falta base de datos.
 
+## Resto al toque (restaurantes)
+
+`/resto/demo` es la web de un restaurante (`#/`) y su panel (`#/panel`; PIN 1234 encargada, 1111 mozo, 3333 cocina, 4444 caja). `?tipo=` elige el
+restaurante de ejemplo (`bodegon|parrilla|pizzeria|cafe|bar|sushi|hamburguesas|rotiseria`), `?d=` el
+diseño (`imprenta|pizarra|trattoria|cafe|nocturno|brasa|moderno`) y `?nombre=` el nombre del local.
+El código vive en `src/restos/`: `lib/` son las reglas puras con tests (`horarios.ts` = franjas por día,
+feriados, horarios para reservar y retirar, «abierto ahora»; `logica.ts` = salón, cupo y caja;
+`locales.ts` = los ocho tipos con su carta, opciones, promos y zonas; `semilla.ts` = el servicio en marcha de la demo y
+cuatro semanas de ventas; `permisos.ts` = qué ve cada rol; `respaldo.ts` = copia en archivo; `store.tsx` = acciones y
+migración de datos viejos;
+`contenidoWeb.ts` = historia, galería y eventos de ejemplo; `imagen.ts` = fotos achicadas en el navegador),
+`publico/` la web (con `Secciones.tsx` e `Imprimir.tsx`: carta A4 y QR por mesa con `qrcode`), `panel/` el panel
+(`Web.tsx` = editor con vista previa en un iframe de solo lectura) y `estilos/` sus CSS (sin Tailwind), con su propio root layout
+(`src/app/(resto)`). Guarda en el navegador (`localStorage`, una clave por restaurante).
+
+`/resto` es la página comercial (con «Armalo con tus datos»). Cada cliente vive en `/r/<slug>`, desde
+`configs/restos/<slug>.json` (`src/restos/cargar.ts`, `lib/publicado.ts`): la web pública muestra lo publicado y
+manda reservas y pedidos por WhatsApp; el panel (`#/panel`) guarda en el equipo del local. Para publicar:
+el cliente descarga su copia (panel → Ajustes → Copia y datos) y la manda; `pnpm publicar-resto <copia.json>
+<slug> <carta|completo>` la limpia, la valida y escribe el JSON; revisar `/r/<slug>`, commitear y push.
+
 ## Alto (asistente)
 
 Chat de preguntas rápidas en la home, `/caja` y `/agenda` (`src/app/(sitio)/(kit)/_alto/`). Las
@@ -189,9 +210,11 @@ src/
   ui/          Primitivas compartidas (placeholder de foto, raíz de tokens).
   app/         (sitio): home, configurador, /caja y /l/[slug]. (caja): /c/[slug] y /c/prueba.
   cajas/       Caja al toque: rubros, schema y la app de caja (simple/).
+  restos/      Resto al toque: web y panel de restaurante (lib/, publico/, panel/, estilos/).
 configs/       Una landing publicada por archivo.
 scripts/       publicar y capturas.
 configs/cajas/ Una caja publicada por archivo.
+configs/restos/ Un restaurante publicado por archivo (pnpm publicar-resto).
 assets/og/     Fuentes TTF de las plantillas para las imágenes de vista previa (OFL).
 ```
 

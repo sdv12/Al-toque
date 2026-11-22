@@ -79,12 +79,25 @@ describe("Alto: recomendación", () => {
     expect(recomendar(respuestas({ rubro: rubro("otro") })).productos.map((p) => p.id)).toEqual(["landing"]);
   });
 
-  it.each(RUBROS.map((x) => x.id))("el borrador del configurador para %s es una configuración válida", (id) => {
+  // Gastronomía no arma una página del configurador: va a Al Toque Resto (test aparte).
+  it.each(RUBROS.map((x) => x.id).filter((id) => id !== "gastronomia"))("el borrador del configurador para %s es una configuración válida", (id) => {
     const color = coloresPara(rubro(id))[0]!;
     const r = recomendar(respuestas({ rubro: rubro(id), funciones: ["web", "turnos", "recordatorios", "dominio", "panel"], color }));
     const v = migrateConfig(r.borrador);
     expect(v.ok ? [] : v.errores).toEqual([]);
     expect(r.borrador!.negocio.nombre).toBe("Lo de Ana");
+  });
+
+  it("gastronomía va a Al Toque Resto: con caja o panel, el plan completo", () => {
+    const web = recomendar(respuestas({ rubro: rubro("gastronomia"), funciones: ["web", "menu", "pedidos"] }));
+    expect(web.productos.map((p) => p.id)).toEqual(["resto"]);
+    expect(web.productos[0]!.titulo).toContain("Carta y web");
+    expect(web.borrador).toBeNull();
+    expect(web.productos[0]!.accion.href).toContain("/resto/demo?tipo=bodegon");
+    const todo = recomendar(respuestas({ rubro: rubro("gastronomia"), funciones: ["web", "cajaSimple", "turnos"] }));
+    expect(todo.productos.map((p) => p.id)).toEqual(["resto"]);
+    expect(todo.productos[0]!.titulo).toContain("Web + panel");
+    expect(todo.total.unico).toBeGreaterThan(web.total.unico);
   });
 });
 
@@ -153,7 +166,7 @@ describe("Alto: preguntas nuevas", () => {
 
   it("reacciona al rubro y da un consejo por la dificultad", () => {
     const modalidad = PREGUNTAS.find((x) => x.id === "modalidad")!;
-    expect(modalidad.texto({ rubro: rubro("gastronomia") }).join(" ")).toMatch(/menú/i);
+    expect(modalidad.texto({ rubro: rubro("gastronomia") }).join(" ")).toMatch(/carta/i);
     const prioridad = PREGUNTAS.find((x) => x.id === "prioridad")!;
     for (const d of Object.keys(DIFICULTADES) as (keyof typeof DIFICULTADES)[]) expect(prioridad.texto({ dificultades: [d] })[0]).toContain(CONSEJO[d]);
   });

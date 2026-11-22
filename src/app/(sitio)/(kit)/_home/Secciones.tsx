@@ -6,7 +6,7 @@ import { fuentes as fuentesAlojamiento } from "@/templates/alojamiento";
 import { fuentes as fuentesBarberia } from "@/templates/barberia";
 import { fuentes as fuentesGenerico } from "@/templates/generico";
 import { formatearPesos } from "@/core/lib/mensajes";
-import { niveles, planAgenda, planCaja, planPerfil, planes, preciosVigentesHasta, proximaActualizacion } from "@/core/lib/precios";
+import { niveles, planAgenda, planCaja, planPerfil, planes, preciosVigentesHasta, planesResto, proximaActualizacion } from "@/core/lib/precios";
 import { AbrirAlto } from "../_alto/AbrirAlto";
 import { TITULAR } from "../legales/datos";
 import { DUDAS } from "../_alto/dudas";
@@ -64,7 +64,7 @@ export function Marca({ className = "", sobreOscuro = false }: { className?: str
 }
 
 /** `desde`: en otras páginas que no son la portada, los links de secciones apuntan a "/#…". */
-export function Encabezado({ desde = "", actual }: { desde?: "" | "/"; actual?: "/web" | "/turnos" | "/caja" }) {
+export function Encabezado({ desde = "", actual }: { desde?: "" | "/"; actual?: "/web" | "/turnos" | "/caja" | "/resto" }) {
   return (
     <header className={`${margen} flex h-18 items-center justify-between gap-3 py-4`}>
       <Link href="/" aria-label="Al Toque, inicio" className="text-[1.6rem] @md:text-[2rem]">
@@ -472,6 +472,18 @@ function soluciones(): SolucionVista[] {
       imagen: { src: "/muestras/caja-vender.jpg", alt: "La caja de una verdulería en un celular", marco: "telefono" },
     },
     {
+      id: "resto",
+      nombre: "Al Toque Resto",
+      para: "Restaurantes, bares, cafés, pizzerías y rotiserías",
+      titulo: "Tu restaurante, al toque",
+      texto: "La web con tu carta, pedidos y reservas, y el panel para el salón, la cocina y la caja.",
+      incluye: ["Carta con pedidos para retirar o con envío", "Reservas por turno y QR por mesa", "Mesas, comandas, cuenta dividida y números"],
+      precio: precio(planesResto().carta, true),
+      ver: { href: "/resto", texto: "Conocer Al Toque Resto" },
+      demo: { href: "/resto/demo", texto: "Ver una demo" },
+      imagen: { src: "/muestras/resto-trattoria.jpg", alt: "La web de una pizzería hecha con Al Toque Resto, en un celular", marco: "telefono" },
+    },
+    {
       id: "tienda",
       nombre: "Al Toque Tienda",
       para: "Para vender por internet",
@@ -843,6 +855,7 @@ export function Pie() {
               <li><Link href="/web" className="underline-offset-4 hover:underline">Al Toque Web</Link></li>
               <li><Link href="/turnos" className="underline-offset-4 hover:underline">Al Toque Turnos</Link></li>
               <li><Link href="/caja" className="underline-offset-4 hover:underline">Al Toque Caja</Link></li>
+              <li><Link href="/resto" className="underline-offset-4 hover:underline">Al Toque Resto</Link></li>
               <li><Link href="/tienda" className="underline-offset-4 hover:underline">Al Toque Tienda (próximamente)</Link></li>
             </ul>
           </nav>

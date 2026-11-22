@@ -198,7 +198,11 @@ export default function AltoPanel({
           resumen: [`Le recomendó: ${rec.productos.map((p) => p.titulo).join(", ")}`, `Estimado: ${plataMes(rec.total.unico, rec.total.mensual)}${rec.productos.some((p) => p.aMedida) ? " + caja pro a presupuestar" : ""}`, ...resumenRespuestas(completas)],
           configuracion: { respuestas: { ...completas, rubro: completas.rubro.id }, recomendacion: rec.productos.map((p) => p.id), pagina: rec.borrador },
           codigo: codigo || "—",
-          nivel: rec.borrador ? nivelDe(rec.borrador).id : ({ agenda: "agenda", cajaSimple: "caja", cajaPro: "cajaPro", landing: "vidriera" } as const)[rec.productos[0]?.id ?? "landing"],
+          nivel: rec.borrador
+            ? nivelDe(rec.borrador).id
+            : rec.productos[0]?.id === "resto"
+              ? rec.productos[0].titulo.includes("Carta") ? "restoCarta" : "resto"
+              : ({ agenda: "agenda", cajaSimple: "caja", cajaPro: "cajaPro", landing: "vidriera" } as const)[rec.productos[0]?.id ?? "landing"],
         },
         porWhatsapp ? whatsapp : undefined,
       ),

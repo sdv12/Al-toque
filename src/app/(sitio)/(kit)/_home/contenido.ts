@@ -195,6 +195,7 @@ export const NECESIDADES = [
   { texto: "Quiero una página web", detalle: "Que me encuentren y me escriban", href: "/web" },
   { texto: "Quiero organizar mis turnos", detalle: "Que reserven solos, sin mensajes", href: "/turnos" },
   { texto: "Quiero controlar mi comercio", detalle: "Ventas, caja y fiado en orden", href: "/caja" },
+  { texto: "Tengo un restaurante o un bar", detalle: "Carta, pedidos, reservas y salón", href: "/resto" },
   { texto: "Quiero vender por internet", detalle: "Catálogo y pedidos online", href: "/tienda" },
 ] as const;
 

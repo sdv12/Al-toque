@@ -14,6 +14,7 @@ const NOMBRES: Record<string, string> = {
   Landing: "Página (configurador)",
   Caja: "Caja",
   Agenda: "Turnos",
+  Resto: "Resto",
   Consulta: "Alto",
   Tienda: "Lista de Tienda",
   perfil: "Perfil digital",
@@ -23,13 +24,15 @@ const NOMBRES: Record<string, string> = {
   caja: "Caja simple",
   cajaPro: "Caja pro",
   agenda: "Agenda sola",
+  restoCarta: "Resto · Carta y web",
+  resto: "Resto · Web + panel",
   tienda: "Tienda (lista)",
   "/": "Portada",
   otro: "Otro",
   otra: "Otra",
 };
 const nombre = (k: string) => NOMBRES[k] ?? k;
-const COLUMNAS = ["Landing", "Consulta", "Agenda", "Caja", "Tienda"] as const;
+const COLUMNAS = ["Landing", "Consulta", "Agenda", "Caja", "Resto", "Tienda"] as const;
 const FECHA = new Intl.DateTimeFormat("es-AR", { day: "numeric", month: "short", timeZone: "UTC" });
 const semana = (iso: string) => `Semana del ${FECHA.format(new Date(`${iso}T12:00:00Z`))}`;
 

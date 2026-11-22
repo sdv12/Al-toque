@@ -341,3 +341,25 @@ const AGENDA = { unico: 280_000, mensual: 60_000 };
 export function planAgenda() {
   return { ...AGENDA };
 }
+
+/**
+ * Resto al toque (restaurantes, bares, cafés, rotiserías).
+ * - Carta y web: la web del restaurante con carta, horarios, eventos y galería; las reservas y los
+ *   pedidos llegan por WhatsApp; editor, QR de la carta y carta para imprimir. A la altura de
+ *   «Listo para usar», porque viene armada por tipo de local.
+ * - Web + panel: además el panel del salón (mesas, comandas a cocina, cuenta dividida, caja, números
+ *   y personal con permisos). El mensual cubre hosting, soporte, actualizaciones y, cuando llegue la
+ *   nube, la base de datos compartida entre los equipos del local.
+ */
+const RESTO_CARTA = { unico: 250_000, mensual: 15_000 };
+const RESTO_COMPLETO = { unico: 450_000, mensual: 75_000 };
+
+export const PLANES_RESTO = {
+  carta: { nombre: "Carta y web", ...RESTO_CARTA },
+  completo: { nombre: "Web + panel", ...RESTO_COMPLETO },
+} as const;
+export type IdPlanResto = keyof typeof PLANES_RESTO;
+
+export function planesResto() {
+  return { carta: { ...PLANES_RESTO.carta }, completo: { ...PLANES_RESTO.completo } };
+}

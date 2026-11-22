@@ -3,6 +3,8 @@
 import { useState, useSyncExternalStore } from "react";
 import { RUBROS } from "../_alto/alto";
 import { afiche } from "../_home/estilos";
+import { LISTA_TIPOS } from "@/restos/lib/locales";
+import type { IdTipo } from "@/restos/lib/tipos";
 import { PRODUCTOS, linkDemo, mensajeDemo, type Producto } from "./demos-mandar";
 
 /*
@@ -17,7 +19,8 @@ export function MandarDemo() {
   const [rubro, setRubro] = useState(RUBROS[0]!.id);
   const [producto, setProducto] = useState<Producto>("web");
   const [copiado, setCopiado] = useState<string | null>(null);
-  const ruta = linkDemo(producto, rubro, nombre);
+  const [tipoResto, setTipoResto] = useState<IdTipo>("bodegon");
+  const ruta = linkDemo(producto, rubro, nombre, tipoResto);
   const origen = useSyncExternalStore(nada, () => window.location.origin, () => "");
   const url = ruta ? `${origen}${ruta}` : null;
   const mensaje = url ? mensajeDemo(producto, nombre, url) : "";
@@ -73,8 +76,20 @@ export function MandarDemo() {
                 </label>
               ))}
             </div>
-            <p className="mt-2 text-mini text-tinta-suave">Turnos y caja aparecen si el rubro los usa.</p>
+            <p className="mt-2 text-mini text-tinta-suave">Turnos, caja y resto aparecen si el rubro los usa (resto: gastronomía).</p>
           </fieldset>
+          {producto === "resto" && (
+            <label className="block">
+              <span className="mb-1 block text-chico font-semibold">Tipo de local</span>
+              <select className={control} value={tipoResto} onChange={(e) => setTipoResto(e.target.value as IdTipo)}>
+                {LISTA_TIPOS.map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.nombre}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
         </div>
 
         <div className="flex flex-col gap-4 rounded-base border-2 border-tinta bg-superficie-2 p-6">

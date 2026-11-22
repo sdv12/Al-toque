@@ -4,6 +4,41 @@ Versionado semántico: PATCH = arreglos y ajustes; MINOR = funcionalidad nueva v
 MAJOR = cambios que rompen algo existente (formato de configs, flujo, backend).
 La versión se muestra en el footer de la home y en el configurador.
 
+## 1.19.0 · 2026-11-22
+- **Resto al toque (R1), en `/resto/demo`**: la web de un restaurante + su panel, configurable por local. Ocho tipos con su restaurante de ejemplo completo (bodegón, parrilla, pizzería y pastas, café, bar o cervecería, sushi, hamburguesería y rotisería sin salón), cada uno con su carta, horarios, mesas, textos y diseño. Todos los restaurantes de ejemplo son inventados.
+- **Siete diseños que cambian la forma de la página**, no solo los colores: Imprenta y Pizarra (de La Vaquita) y cinco nuevos, Trattoria, Café, Nocturno, Brasa y Moderno. Además, un color principal propio.
+- **La web del restaurante**: abierto o cerrado según el horario real (también pasada la medianoche), ocupación del salón en vivo, carta con secciones, etiquetas (sin TACC, vegetariano, vegano, picante) y filtro, reservas por turno con cupo según las mesas, pedidos para retirar o con envío (costo, mínimo y zona), tienda (almacén, café en grano, growlers), horarios, cómo llegar y términos.
+- **El panel**: salón con mesas, cuentas, servicio de mesa por persona, descuentos, propina y cambio de mesa; reservas con confirmación y recordatorio por WhatsApp; pedidos en tablero con aviso de «listo» o «salió»; caja con comisiones de Mercado Pago, gastos y cierre con arqueo; carta con «Hay / Se terminó», etiquetas y orden de secciones.
+- **Panel completo (R2)**:
+  - **Personal con PIN y rol**: encargado, mozo, cocina y caja, y cada uno ve solo lo suyo. En la demo, 1234 entra como encargada, 1111 como mozo, 3333 como cocina y 4444 como caja.
+  - **Salón por zonas** (salón, vereda, patio, barra), mesas juntas para grupos grandes y el mozo de cada mesa.
+  - **Comandas**: el mozo manda a cocina o barra lo que falta (las bebidas van a la barra). La pantalla de cocina tiene columnas, minutos de espera y alerta de demora, y la mesa avisa cuando hay algo para servir. Los pedidos entran solos a la cocina.
+  - **Cuenta dividida**: en partes iguales o «cada uno lo suyo», cada parte con su forma de pago. El descuento queda guardado en la mesa.
+  - **Opciones de cada plato** (punto, guarnición, tamaño, gustos) con su extra de precio, en la web y en el panel, más una aclaración por plato.
+  - **Platos que salen algunos días** (el locro de fin de semana) y **promos con horario** (happy hour, menú del mediodía, martes de pizza): la web muestra el precio tachado y el aviso mientras corre.
+  - **Lista de espera**: se anota en el local o desde la web cuando el salón está lleno, se avisa por WhatsApp y se sienta en una mesa.
+  - **Reservas**: días o turnos sin reservas por la web (evento privado) sin cerrar el local. **Envíos**: zonas o barrios con su costo y su mínimo.
+  - **Números**: vendido, ticket promedio, por persona, propinas, día por día, por turno, por mozo, cómo pagaron, y lo que más y menos sale (con cuatro semanas inventadas en la demo).
+  - **Copia de seguridad** en archivo para guardar o pasar todo a otra computadora. Los datos de R1 se migran solos.
+- **Editor de la web (R3)**, en el panel → Web, con vista previa en celular o computadora que se actualiza sola:
+  - **Secciones**: cuáles se ven, en qué orden y con qué título (ocupación, carta, reservas, eventos, galería, historia, reseñas, dónde y cuándo). Si a una le falta contenido, el editor avisa por qué no se ve.
+  - **Textos** del encabezado y «Nuestra historia» en párrafos.
+  - **Fotos**: logo (reemplaza las iniciales en la web y el panel), portada (cada diseño la ubica distinto) y foto de la historia, más una galería de hasta 12 fotos con ampliación. Se achican solas al subirlas, y se ve cuánto espacio queda en el navegador.
+  - **Eventos** con fecha, hora y precio (los que pasaron se ocultan solos) y **reseñas reales** con estrellas y de dónde vienen. No trae reseñas inventadas: la sección aparece cuando se carga la primera.
+  - **Diseño**: el diseño, el color y ahora también la **tipografía** (seis combinaciones), más el **mapa** de Google, que se carga solo si lo tocan.
+  - **QR por mesa** para imprimir: al escanearlo, el cliente ve la carta y puede **llamar al mozo o pedir la cuenta**, y el aviso llega al salón. **Carta para imprimir** en A4, con o sin precios, o para guardar en PDF.
+- Arreglo: al abrir otra pestaña (la vista previa, la cocina), ya no se pisan cambios recientes con lo que esa pestaña leyó al abrir.
+- **Al Toque Resto a la venta (R4)**:
+  - **Página `/resto`** con los ocho tipos de local, los siete diseños, la web, el panel, las preguntas y «Armalo con tus datos» (tipo, nombre, diseño y plan → la demo con eso y el pedido por WhatsApp con código RS1).
+  - **Dos planes**: «Carta y web» ($ 250.000 + $ 15.000 por mes: web con carta, pedidos y reservas por WhatsApp, eventos, galería, QR y editor) y «Web + panel» ($ 450.000 + $ 75.000 por mes: suma salón, cocina, cuenta dividida, caja, números y personal).
+  - **El espacio de cada cliente en `/r/<nombre>`**, desde `configs/restos/<nombre>.json`. Mientras no esté la nube, las reservas y los pedidos de la web llegan por WhatsApp con el mensaje armado, la web no guarda nada en el navegador de quien la visita y el panel trabaja en el equipo del local. El plan «Carta y web» muestra solo carta, web y ajustes.
+  - **`pnpm publicar-resto <copia.json> <nombre> <carta|completo>`**: publica la copia que manda el cliente. Saca la operación de la demo y no publica sin WhatsApp del local ni con el PIN de la demo.
+  - **Alto recomienda Resto a gastronomía** (el plan según lo que pida), con su duda y su saludo en `/resto`. **Portada**: Resto en las soluciones, en «¿Qué necesitás?» y en el pie. **/adm**: demos de Resto y «Mandar una demo» con el tipo de local; los pedidos de Resto se cuentan aparte.
+  - Términos y privacidad suman Resto: qué incluye, que por ahora los pedidos llegan por WhatsApp y que las reseñas tienen que ser reales.
+- Arreglo en /adm: dos demos con el mismo link repetían la clave de la lista.
+- **Ajustes, todo editable**: datos y textos del local, horarios por día con varias franjas, feriados y vacaciones, reglas de reservas, retiro y envíos, funciones que se prenden y apagan (salón, ocupación en la web, reservas, retiro, envíos, caja, tienda), diseño y color, servicio de mesa, comisiones y PIN.
+- Por ahora guarda en el navegador, como la caja simple: la nube llega con la Fase 5.
+
 ## 1.18.0 · 2026-11-21
 - **Configurador más claro**: arriba siempre dice en qué nivel está tu página (Perfil digital, Listo para usar, Personalizado o Web + Turnos). En Bloques avisa cuántos bloques te quedan en el Perfil digital y, antes de pasarte, cuánto suma pasar a Personalizado.
 - **Tu dirección**: en Precio elegís entre la dirección de Al Toque sin costo (tunegocio.altoque-cba.com.ar, con tu nombre) o dominio propio a tu nombre.

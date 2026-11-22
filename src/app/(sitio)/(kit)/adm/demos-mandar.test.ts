@@ -15,6 +15,8 @@ describe("mandar una demo", () => {
     expect(linkDemo("caja", "verduleria", "Lo de Juan")).toBe("/caja?rubro=verduleria&nombre=Lo+de+Juan");
     expect(linkDemo("caja", "alojamiento", "x")).toBeNull();
     expect(linkDemo("turnos", "verduleria", "x")).toBeNull();
+    expect(linkDemo("resto", "gastronomia", "La Birra", "bar")).toBe("/resto/demo?tipo=bar&nombre=La+Birra");
+    expect(linkDemo("resto", "barberia", "x")).toBeNull();
   });
 
   it("el mensaje lleva el link y el nombre", () => {

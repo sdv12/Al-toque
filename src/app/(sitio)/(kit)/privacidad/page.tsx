@@ -31,7 +31,7 @@ const SECCIONES: Seccion[] = [
     cuerpo: (
       <ul>
         <li>
-          <strong>Pedidos del configurador, de /caja y de la agenda:</strong> nombre del negocio y los datos que cargues para tu página o sistema (WhatsApp,
+          <strong>Pedidos del configurador, de /caja, de /resto y de la agenda:</strong> nombre del negocio y los datos que cargues para tu página o sistema (WhatsApp,
           dirección, horarios, servicios, precios, redes, textos).
         </li>
         <li>
@@ -117,7 +117,7 @@ const SECCIONES: Seccion[] = [
         </p>
         <ul>
           <li>El borrador del configurador y la configuración de la caja de prueba.</li>
-          <li>Los datos de ejemplo de las demos de cajas y turnos.</li>
+          <li>Los datos de ejemplo de las demos de cajas, turnos y restaurantes (incluidas las fotos que subas a la demo).</li>
           <li>Si ya cerraste avisos (precios, bienvenida de Alto) y lo que pensás invertir, si lo elegís en el configurador.</li>
           <li>La página por la que entraste, solo durante la visita.</li>
         </ul>
@@ -125,7 +125,10 @@ const SECCIONES: Seccion[] = [
           Cuando mandás un pedido contamos, <strong>sin ningún dato tuyo</strong>, por qué página entraste, desde cuál pediste y qué elegiste: son
           números para saber qué se pide más.
         </p>
-        <p>La copia de seguridad de la caja es un archivo que guardás vos (en tu equipo, tu WhatsApp, Drive o correo): nunca nos llega.</p>
+        <p>
+          La copia de seguridad de la caja o del restaurante es un archivo que guardás vos (en tu equipo, tu WhatsApp, Drive o correo): solo nos llega si nos
+          la mandás para publicar tu restaurante.
+        </p>
         <p>Lo podés borrar cuando quieras desde la configuración de tu navegador o con «Empezar de cero» en cada demo.</p>
       </>
     ),
@@ -135,7 +138,8 @@ const SECCIONES: Seccion[] = [
     titulo: "Datos de los clientes de nuestros clientes",
     cuerpo: (
       <p>
-        Si sos cliente de un negocio que usa nuestra agenda, caja o formularios, el responsable de tus datos es <strong>ese negocio</strong>; nosotros solo
+        Si sos cliente de un negocio que usa nuestra agenda, caja, web de restaurante o formularios (por ejemplo, al reservar una mesa o hacer un pedido),
+        el responsable de tus datos es <strong>ese negocio</strong>; nosotros solo
         los procesamos por su cuenta como encargados (art. 25 de la Ley 25.326). Para ejercer tus derechos, dirigite al negocio; si nos escribís, le
         pasamos tu pedido.
       </p>

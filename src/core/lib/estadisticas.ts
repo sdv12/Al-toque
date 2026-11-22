@@ -4,13 +4,13 @@
  * se normaliza contra listas cerradas: un valor raro cuenta como "otro", nunca se guarda tal cual.
  */
 
-export const TIPOS = ["Landing", "Caja", "Agenda", "Consulta", "Tienda"] as const;
+export const TIPOS = ["Landing", "Caja", "Agenda", "Resto", "Consulta", "Tienda"] as const;
 export type TipoEvento = (typeof TIPOS)[number];
 
-export const NIVELES = ["perfil", "vidriera", "medida", "sistema", "caja", "cajaPro", "agenda", "tienda"] as const;
+export const NIVELES = ["perfil", "vidriera", "medida", "sistema", "caja", "cajaPro", "agenda", "restoCarta", "resto", "tienda"] as const;
 
 /** Páginas por las que se entra o desde las que se pide (las demás cuentan como "otra"). */
-const PAGINAS = ["/", "/web", "/turnos", "/turnos/demo", "/caja", "/tienda", "/configurador", "/estudio", "/c/pro", "/c/prueba"] as const;
+const PAGINAS = ["/", "/web", "/turnos", "/turnos/demo", "/caja", "/resto", "/resto/demo", "/tienda", "/configurador", "/estudio", "/c/pro", "/c/prueba"] as const;
 
 export function normalizarPagina(ruta: unknown): string {
   if (typeof ruta !== "string") return "otra";

@@ -70,6 +70,10 @@ const SECCIONES: Seccion[] = [
           cobros con QR.
         </li>
         <li>
+          <strong>Resto:</strong> la web de un restaurante, bar o café con su carta, pedidos y reservas («Carta y web») y, si se contrata, el panel del
+          salón con mesas, comandas, cuenta, caja, números y personal («Web + panel»).
+        </li>
+        <li>
           <strong>Sistema:</strong> cualquier servicio que guarda datos en un servidor (agenda real, caja pro, recordatorios, panel, seña online).
         </li>
         <li>
@@ -104,6 +108,11 @@ const SECCIONES: Seccion[] = [
           </li>
           <li>
             <strong>Caja pro:</strong> configuración de sucursales, usuarios y permisos, carga inicial y puesta en marcha de los módulos contratados.
+          </li>
+          <li>
+            <strong>Resto:</strong> carga inicial de la carta, horarios, mesas y diseño a partir de lo que nos pases (o de la copia que armes en la demo);
+            publicación de la web; en «Web + panel», el personal con sus permisos y una explicación de uso. Los cambios de carta y de la web se publican
+            dentro de las 48 horas hábiles de recibir la copia, mientras no esté la versión en la nube.
           </li>
         </ul>
         <p>
@@ -364,6 +373,11 @@ const SECCIONES: Seccion[] = [
         </li>
         <li>
           La caja simple <strong>no es un controlador fiscal ni emite comprobantes válidos</strong>: es una herramienta de gestión.
+        </li>
+        <li>
+          En <strong>Resto</strong>, mientras no esté la versión en la nube, el panel guarda la información en el equipo del local y las reservas y pedidos
+          de la web llegan por WhatsApp: el Cliente los confirma y los carga. Resguardar la copia de seguridad es responsabilidad del Cliente. La caja de
+          Resto tampoco es un controlador fiscal. Las reseñas que se publican tienen que ser reales y de clientes del local.
         </li>
         <li>
           En la <strong>caja pro</strong> con facturación, los comprobantes se emiten con el CUIT, el punto de venta y el certificado del Cliente. El Cliente

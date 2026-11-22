@@ -4,7 +4,8 @@ import { COLORES_CAJA, type ColorCaja } from "@/cajas/config";
 import { RUBROS as RUBROS_CAJA_DEF, type RubroCaja } from "@/cajas/rubros";
 import { configsPorDefecto } from "@/core/defaults";
 import { formatearPesos } from "@/core/lib/mensajes";
-import { CAJA_PRO_A_MEDIDA, EXTRAS, PRESUPUESTOS, ahorroWebTurnos, cotizar, cotizarCaja, planAgenda, planPerfil, type IdExtra, type IdPresupuesto, type Monto } from "@/core/lib/precios";
+import { CAJA_PRO_A_MEDIDA, EXTRAS, PRESUPUESTOS, ahorroWebTurnos, cotizar, cotizarCaja, planAgenda, planPerfil, planesResto, type IdExtra, type IdPresupuesto, type Monto } from "@/core/lib/precios";
+import { linkDemoResto } from "@/restos/lib/publicado";
 import { registry, type Plantilla } from "@/core/registry";
 import type { LandingConfig } from "@/core/schema/landing-config";
 
@@ -140,7 +141,7 @@ export const COMENTARIO_RUBRO: Record<string, string> = {
   fotografia: "¡Genial! La galería es la protagonista en fotografía.",
   musica: "¡Lindo! Horarios de clases y una clase de prueba para que se animen.",
   autos: "Bien. Turnos por horario y avisar cuándo está listo el auto ahorra muchas llamadas.",
-  gastronomia: "¡Rico! Menú claro, horarios y pedidos por WhatsApp funcionan muy bien.",
+  gastronomia: "¡Rico! Para gastronomía tenemos Al Toque Resto: carta, pedidos y reservas, y si querés, el panel del salón.",
   tienda: "¡Bien! Un catálogo con pedidos por WhatsApp y una caja para el local.",
   construccion: "Perfecto. Fotos de obras terminadas y un formulario para pedir presupuesto.",
   eventos: "¡Lindo! Fotos de eventos, fechas y una consulta rápida para reservar.",
@@ -279,7 +280,7 @@ export function funcionesSugeridas(r: Omit<Respuestas, "funciones" | "color">): 
 
 /* ───────────── Recomendación ───────────── */
 
-export type IdProducto = "landing" | "agenda" | "cajaSimple" | "cajaPro";
+export type IdProducto = "landing" | "agenda" | "cajaSimple" | "cajaPro" | "resto";
 
 export interface Producto {
   id: IdProducto;
@@ -303,10 +304,10 @@ export interface Recomendacion {
 }
 
 const ORDEN: Record<Prioridad, IdProducto[]> = {
-  conozcan: ["landing", "agenda", "cajaSimple", "cajaPro"],
-  turnos: ["agenda", "landing", "cajaSimple", "cajaPro"],
-  ventas: ["cajaPro", "cajaSimple", "landing", "agenda"],
-  todo: ["landing", "agenda", "cajaPro", "cajaSimple"],
+  conozcan: ["resto", "landing", "agenda", "cajaSimple", "cajaPro"],
+  turnos: ["resto", "agenda", "landing", "cajaSimple", "cajaPro"],
+  ventas: ["resto", "cajaPro", "cajaSimple", "landing", "agenda"],
+  todo: ["resto", "landing", "agenda", "cajaPro", "cajaSimple"],
 };
 
 export function recomendar(r: Respuestas): Recomendacion {
@@ -321,6 +322,23 @@ export function recomendar(r: Respuestas): Recomendacion {
   let borrador: LandingConfig | null = null;
   const recordatorios = q.has("recordatorios") || d.has("ausencias");
   const profesion = r.rubro.profesion ?? "peluqueria";
+
+  // Gastronomía: Al Toque Resto reemplaza la página, la agenda y la caja simple (trae carta, reservas y caja).
+  if (r.rubro.id === "gastronomia" && (quiereLanding || quiereAgenda || quiereCaja)) {
+    const completo = quiereCaja || quierePro || quiereAgenda || q.has("panel");
+    const planes = planesResto();
+    const plan = completo ? planes.completo : planes.carta;
+    const porque = ["Tu web con la carta, pedidos para retirar o con envío y reservas por turno, armada para tu tipo de local."];
+    if (completo) porque.push("Con el panel del salón: mesas, comandas a cocina, cuenta dividida, caja y números.");
+    else porque.push("Las reservas y los pedidos te llegan armados por WhatsApp.");
+    if (q.has("promos")) porque.push("Con promos por horario: happy hour, menú del mediodía o el día de pizza.");
+    if (r.zona === "turistas") porque.push("Con galería, eventos, reseñas y cómo llegar, para los que no te conocen.");
+    if (quierePro) aparte.push("Si además necesitás factura electrónica o varias sucursales, lo presupuestamos aparte.");
+    if (r.fotos === "no") aparte.push("Sin fotos propias arrancamos con el diseño y coordinamos unas buenas de tus platos cuando puedas.");
+    if (r.plazo === "ya") aparte.push("Como lo necesitás ya, arrancamos con la carta y la web y sumamos el resto después.");
+    productos.push({ id: "resto", titulo: `Al Toque Resto · ${plan.nombre}`, porque, precio: { unico: plan.unico, mensual: plan.mensual }, accion: { texto: "Ver la demo", href: linkDemoResto({ tipo: "bodegon", nombre }) } });
+    return { productos, total: { unico: plan.unico, mensual: plan.mensual }, borrador: null, aparte };
+  }
 
   if (quiereLanding) {
     const extras: IdExtra[] = [];

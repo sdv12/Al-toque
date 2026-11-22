@@ -10,7 +10,7 @@ import { linkWhatsApp } from "@/core/lib/mensajes";
  */
 
 export type Pedido = {
-  tipo: "Landing" | "Caja" | "Agenda" | "Consulta";
+  tipo: "Landing" | "Caja" | "Agenda" | "Resto" | "Consulta";
   negocio: string;
   /** Plantilla de la landing, o rubro y módulos de la caja. */
   detalle: string;

@@ -36,6 +36,7 @@ const TEMAS: Record<string, Tema> = {
   estudio: { fondo: "bg-fondo text-tinta", primario: "bg-tinta text-fondo", secundario: "border-tinta hover:bg-tinta hover:text-fondo", vineta: "bg-tinta", suave: "text-tinta-suave" },
   turnos: { fondo: "bg-acento-relleno text-sobre-acento", primario: "bg-tinta text-fondo", secundario: "border-tinta hover:bg-tinta hover:text-fondo", vineta: "bg-tinta", suave: "opacity-80" },
   caja: { fondo: "bg-superficie text-tinta", primario: "bg-tinta text-fondo", secundario: "border-tinta hover:bg-tinta hover:text-fondo", vineta: "bg-acento", suave: "text-tinta-suave" },
+  resto: { fondo: "bg-tinta text-fondo", primario: "bg-acento-relleno text-sobre-acento", secundario: "border-fondo text-fondo hover:bg-fondo hover:text-tinta", vineta: "bg-acento-relleno", suave: "opacity-75" },
   tienda: { fondo: "bg-superficie-2 text-tinta border-dashed", primario: "bg-tinta text-fondo", secundario: "border-tinta hover:bg-tinta hover:text-fondo", vineta: "bg-acento", suave: "text-tinta-suave" },
 };
 
