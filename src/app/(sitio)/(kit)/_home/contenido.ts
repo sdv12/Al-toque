@@ -193,7 +193,7 @@ export const PASOS = [
 /** Selector de necesidades: cada una lleva a su solución. */
 export const NECESIDADES = [
   { texto: "Quiero una página web", detalle: "Que me encuentren y me escriban", href: "/web" },
-  { texto: "Quiero organizar mis turnos", detalle: "Que reserven solos, sin mensajes", href: "/turnos" },
+  { texto: "Quiero organizar mis turnos", detalle: "Reservas online, sin ida y vuelta de mensajes", href: "/turnos" },
   { texto: "Quiero controlar mi comercio", detalle: "Ventas, caja y fiado en orden", href: "/caja" },
   { texto: "Tengo un restaurante o un bar", detalle: "Carta, pedidos, reservas y salón", href: "/resto" },
   { texto: "Quiero vender por internet", detalle: "Catálogo y pedidos online", href: "/tienda" },
@@ -204,12 +204,12 @@ export const NECESIDADES = [
  * Nada de números de clientes ni testimonios hasta tenerlos de verdad.
  */
 export const CONFIANZA = [
-  { titulo: "La probás antes de pagar", texto: "Todas las demos se usan sin registrarse y sin dar datos. Pagás cuando sabés qué te llevás." },
-  { titulo: "Personas que te responden", texto: "Soporte por WhatsApp o correo con respuesta dentro de las 48 horas hábiles. Hablás con quien lo hizo." },
-  { titulo: "Pensado para el celular", texto: "Se diseña y se prueba en pantallas de celular, que es donde te miran tus clientes y donde vas a usarlo vos." },
-  { titulo: "Tu dominio, a tu nombre", texto: "La dirección de tu página se registra a tu nombre: es tuya aunque algún día te vayas." },
-  { titulo: "Sin permanencia", texto: "Te das de baja cuando quieras, sin penalidad, y te llevás tu contenido y tus datos. Y tenés 10 días para arrepentirte." },
-  { titulo: "Seguro y al día", texto: "Conexión cifrada, proveedores reconocidos y actualizaciones de seguridad incluidas en el mensual." },
+  { titulo: "Probalo antes de contratar", texto: "Todas las demos están abiertas: no hace falta registrarse ni dejar datos. Contratás cuando ya sabés lo que vas a recibir." },
+  { titulo: "Atención personalizada", texto: "Soporte por WhatsApp o correo, con respuesta dentro de las 48 horas hábiles. Te atiende el mismo equipo que hizo tu página." },
+  { titulo: "Pensado para el celular", texto: "Cada página se diseña y se prueba en celulares: es donde la ven tus clientes y desde donde vas a administrarla." },
+  { titulo: "El dominio es tuyo", texto: "La dirección de tu página se registra a tu nombre y sigue siendo tuya aunque dejes el servicio." },
+  { titulo: "Sin permanencia", texto: "Podés darte de baja cuando quieras, sin penalidades, y llevarte tu contenido y tus datos. Además, tenés 10 días para arrepentirte de la contratación." },
+  { titulo: "Seguridad incluida", texto: "Conexión cifrada, proveedores reconocidos y actualizaciones de seguridad incluidas en el abono mensual." },
 ];
 
 /** Las preguntas frecuentes de la portada salen de las dudas de Alto (una sola fuente). */

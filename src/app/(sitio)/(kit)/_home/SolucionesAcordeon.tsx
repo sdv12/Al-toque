@@ -78,7 +78,7 @@ export function SolucionesAcordeon({ items, whatsapp }: { items: SolucionVista[]
       onPointerEnter={tocar}
       onFocusCapture={tocar}
       onTouchStart={tocar}
-      className="mt-14 flex flex-col gap-3 @4xl:min-h-[38rem] @4xl:flex-row"
+      className="mt-8 flex flex-col gap-3 @4xl:mt-14 @4xl:min-h-[38rem] @4xl:flex-row"
     >
       {items.map((x, i) => {
         const activa = i === abierta;
@@ -155,7 +155,7 @@ export function SolucionesAcordeon({ items, whatsapp }: { items: SolucionVista[]
                   <p data-precios className="mt-6">
                     {x.precio.desde && <span className="text-chico">desde </span>}
                     <span className={`${afiche} text-[clamp(2rem,1.4rem+1.8cqi,2.6rem)] leading-none tabular-nums`}>{x.precio.unico}</span>
-                    <span className={`ml-1.5 text-chico ${tema.suave}`}>+ {x.precio.mensual} por mes</span>
+                    <span className={`ml-1.5 inline-block whitespace-nowrap text-chico ${tema.suave}`}>+ {x.precio.mensual} por mes</span>
                   </p>
                 )}
                 <div className="mt-6 flex flex-wrap gap-3">

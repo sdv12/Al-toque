@@ -12,6 +12,7 @@ import { TITULAR } from "../legales/datos";
 import { DUDAS } from "../_alto/dudas";
 import { BENEFICIOS, CONFIANZA, ESTUDIO, FICHAS, NECESIDADES, PASOS, PASOS_WEB, PREGUNTAS_PORTADA, PROYECTOS, RUBROS } from "./contenido";
 import { Navegador, Telefono } from "./Marcos";
+import { CarruselProyectos } from "./CarruselProyectos";
 import { SolucionesAcordeon, type SolucionVista } from "./SolucionesAcordeon";
 
 const FUENTES: Record<Plantilla, string> = {
@@ -34,6 +35,7 @@ export { afiche, margen };
  * así que tampoco descarga antes de tiempo las tipografías de las plantillas que usan.
  */
 const diferida = "[content-visibility:auto] [contain-intrinsic-size:auto_900px]";
+const enlacePie = "underline-offset-4 hover:underline";
 
 export const boton = {
   tinta:
@@ -123,7 +125,7 @@ function Abanico() {
 
 export function Hero() {
   return (
-    <section aria-labelledby="hero-titulo" className={`${margen} pb-20 pt-4 @5xl:pt-10`}>
+    <section aria-labelledby="hero-titulo" className={`${margen} pb-14 pt-4 @4xl:pb-20 @5xl:pt-10`}>
       <div className="grid items-center gap-12 @5xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] @5xl:gap-10">
         <div>
           <h1 id="hero-titulo" className={`${afiche} max-w-[13ch] text-[clamp(3.25rem,0.9rem+8.5cqi,8rem)] leading-[0.86] @5xl:text-[clamp(4rem,6.4cqi,7.5rem)]`}>
@@ -151,7 +153,7 @@ export function Hero() {
 
 export function Necesidades() {
   return (
-    <section aria-labelledby="necesidades-titulo" className={`${margen} py-20`}>
+    <section aria-labelledby="necesidades-titulo" className={`${margen} pb-4 pt-14 @4xl:py-20`}>
       <h2 id="necesidades-titulo" className={`${afiche} text-titulo`}>
         ¿Qué necesitás <span className="resaltado">hoy?</span>
       </h2>
@@ -210,11 +212,9 @@ export function Rubros() {
 /* ───────────── Proyectos ───────────── */
 
 /** Disposición destacada: los dos primeros grandes, el resto en una fila de tres. */
-const TAMANO_PROYECTO = ["@4xl:col-span-3", "@4xl:col-span-3", "@4xl:col-span-2", "@4xl:col-span-2", "@4xl:col-span-2"];
-
 export function Proyectos() {
   return (
-    <section id="proyectos" aria-labelledby="proyectos-titulo" className={`${diferida} ${margen} scroll-mt-4 py-24`}>
+    <section id="proyectos" aria-labelledby="proyectos-titulo" className={`${diferida} ${margen} scroll-mt-4 py-14 @4xl:py-24`}>
       <div className="grid gap-6 @5xl:grid-cols-12 @5xl:items-end">
         <h2 id="proyectos-titulo" className={`${afiche} text-titulo @5xl:col-span-7`}>
           Ya están <span className="resaltado">online</span>
@@ -223,37 +223,42 @@ export function Proyectos() {
           Algunos sitios que hicimos para negocios y proyectos de Córdoba. Entrá y recorrelos: están funcionando.
         </p>
       </div>
-      <ul className="mt-14 grid gap-x-6 gap-y-12 @4xl:grid-cols-6">
-        {PROYECTOS.map((p, i) => {
+      <CarruselProyectos etiqueta="Sitios que ya están online">
+        {PROYECTOS.map((p) => {
           const dominio = new URL(p.url).host;
           return (
-            <li key={p.id} className={`min-w-0 ${TAMANO_PROYECTO[i] ?? "@4xl:col-span-2"}`}>
-              <a href={p.url} target="_blank" rel="noopener noreferrer" className="group block">
-                <Navegador
-                  src={`/proyectos/${p.id}.jpg`}
-                  alt={`Portada del sitio de ${p.nombre}`}
-                  url={dominio}
-                  sizes={i < 2 ? "(min-width: 896px) 46vw, 92vw" : "(min-width: 896px) 30vw, 92vw"}
-                  className="transition-transform duration-200 group-hover:-translate-y-1"
-                />
-                <div className="mt-4 flex items-start justify-between gap-4">
-                  <div className="min-w-0">
-                    <p className="text-chico text-tinta-suave">{p.rubro}</p>
-                    <h3 className={`${afiche} mt-1 text-[clamp(1.75rem,1.3rem+1.6cqi,2.5rem)] leading-none`}>{p.nombre}</h3>
-                    <p className="mt-2 text-chico">{p.texto}</p>
-                  </div>
-                  <span aria-hidden className="grid size-10 shrink-0 place-items-center rounded-full border-2 border-tinta transition-colors group-hover:bg-acento-relleno">
-                    <svg viewBox="0 0 20 20" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M6 14 14 6M8 6h6v6" />
-                    </svg>
-                  </span>
+            <a key={p.id} href={p.url} target="_blank" rel="noopener noreferrer" className="group block">
+              <Navegador
+                src={`/proyectos/${p.id}.jpg`}
+                alt={`Portada del sitio de ${p.nombre}`}
+                url={dominio}
+                sizes="(min-width: 896px) 52rem, 86vw"
+                className="transition-transform duration-200 group-hover:-translate-y-1"
+              />
+              {/* En el celular: texto centrado y un botón abajo; en pantallas grandes, la flecha al costado. */}
+              <div className="mt-5 flex flex-col items-center gap-4 text-center @4xl:mt-4 @4xl:flex-row @4xl:items-start @4xl:justify-between @4xl:text-left">
+                <div className="min-w-0">
+                  <p className="text-chico text-tinta-suave">{p.rubro}</p>
+                  <h3 className={`${afiche} mt-1 text-[clamp(1.75rem,1.3rem+1.6cqi,2.5rem)] leading-none`}>{p.nombre}</h3>
+                  <p className="mt-2 text-chico">{p.texto}</p>
                 </div>
-                <span className="sr-only"> (se abre el sitio en otra pestaña)</span>
-              </a>
-            </li>
+                <span aria-hidden className={`${boton.tinta} gap-2 @4xl:hidden`}>
+                  Visitar el sitio
+                  <svg viewBox="0 0 20 20" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M6 14 14 6M8 6h6v6" />
+                  </svg>
+                </span>
+                <span aria-hidden className="hidden size-10 shrink-0 place-items-center rounded-full border-2 border-tinta transition-colors group-hover:bg-acento-relleno @4xl:grid">
+                  <svg viewBox="0 0 20 20" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M6 14 14 6M8 6h6v6" />
+                  </svg>
+                </span>
+              </div>
+              <span className="sr-only"> (se abre el sitio en otra pestaña)</span>
+            </a>
           );
         })}
-      </ul>
+      </CarruselProyectos>
     </section>
   );
 }
@@ -262,7 +267,7 @@ export function Proyectos() {
 
 export function Plantillas() {
   return (
-    <section id="plantillas" aria-labelledby="plantillas-titulo" className={`${margen} scroll-mt-4 py-24`}>
+    <section id="plantillas" aria-labelledby="plantillas-titulo" className={`${margen} scroll-mt-4 py-14 @4xl:py-24`}>
       <div className="grid gap-6 @5xl:grid-cols-12 @5xl:items-end">
         <h2 id="plantillas-titulo" className={`${afiche} text-titulo @5xl:col-span-7`}>
           No es la misma página <span className="resaltado">con otro color</span>
@@ -440,7 +445,7 @@ function soluciones(): SolucionVista[] {
       nombre: "Al Toque Estudio",
       para: "Arquitectos, diseñadores, constructoras y profesionales",
       titulo: "Tu obra, a pantalla completa",
-      texto: "Una página sobria y elegante para mostrar tu trabajo: fotos grandes, cada proyecto con su ficha y consultas directas por WhatsApp.",
+      texto: "Una página sobria y elegante, donde tu trabajo habla por vos y cada visita puede terminar en una consulta.",
       incluye: ["Portada con fotos que pasan solas", "Proyectos con antes y después", "Servicios y contacto que terminan en tu WhatsApp"],
       precio: precio(vidriera!, true),
       ver: { href: `/web#ficha-${ESTUDIO.id}`, texto: "Conocer Al Toque Estudio" },
@@ -451,8 +456,8 @@ function soluciones(): SolucionVista[] {
       id: "turnos",
       nombre: "Al Toque Turnos",
       para: "Peluquerías, estética, clases, talleres y estudios",
-      titulo: "Que te reserven solos",
-      texto: "Tus clientes eligen servicio, día y horario libre, a cualquier hora. Con o sin página web.",
+      titulo: "Reservas online, a toda hora",
+      texto: "Tus clientes eligen el servicio y el horario sin tener que escribirte, y cada reserva te llega lista para confirmar. Funciona con o sin página web.",
       incluye: ["Agenda con horarios libres", "Panel con la agenda, la caja y tus números", "Nueve diseños para elegir"],
       precio: precio(planAgenda(), false),
       ver: { href: "/turnos", texto: "Conocer Al Toque Turnos" },
@@ -464,7 +469,7 @@ function soluciones(): SolucionVista[] {
       nombre: "Al Toque Caja",
       para: "Verdulerías, almacenes, kioscos y dietéticas",
       titulo: "Tu comercio, en orden",
-      texto: "Vender por kilo o por unidad, el vuelto, el fiado y el cierre del día, en el celular que ya tenés.",
+      texto: "Cobrás en segundos, por kilo o por unidad, y al final del día sabés cuánto vendiste sin hacer cuentas. Funciona en el celular que ya tenés.",
       incluye: ["Productos de tu rubro ya cargados", "Efectivo, transferencia, QR y fiado", "Apertura, arqueo y cierre"],
       precio: precio(planCaja(), true),
       ver: { href: "/caja", texto: "Conocer Al Toque Caja" },
@@ -476,7 +481,7 @@ function soluciones(): SolucionVista[] {
       nombre: "Al Toque Resto",
       para: "Restaurantes, bares, cafés, pizzerías y rotiserías",
       titulo: "Tu restaurante, al toque",
-      texto: "La web con tu carta, pedidos y reservas, y el panel para el salón, la cocina y la caja.",
+      texto: "Todo tu local en un solo lugar: lo que ven tus clientes y lo que usa tu equipo, conectados entre sí.",
       incluye: ["Carta con pedidos para retirar o con envío", "Reservas por turno y QR por mesa", "Mesas, comandas, cuenta dividida y números"],
       precio: precio(planesResto().carta, true),
       ver: { href: "/resto", texto: "Conocer Al Toque Resto" },
@@ -498,7 +503,7 @@ function soluciones(): SolucionVista[] {
 
 export function Soluciones({ whatsapp }: { whatsapp: string | undefined }) {
   return (
-    <section id="soluciones" aria-labelledby="soluciones-titulo" className={`${diferida} ${margen} scroll-mt-4 py-24`}>
+    <section id="soluciones" aria-labelledby="soluciones-titulo" className={`${diferida} ${margen} scroll-mt-4 pb-6 pt-14 @4xl:py-24`}>
       <div className="grid gap-6 @5xl:grid-cols-12 @5xl:items-end">
         <h2 id="soluciones-titulo" className={`${afiche} text-titulo @5xl:col-span-7`}>
           Una solución para <span className="resaltado">cada necesidad</span>
@@ -540,7 +545,7 @@ function ListaPasos({ pasos }: { pasos: readonly { titulo: string; texto: string
 
 export function ComoFunciona() {
   return (
-    <section id="como-funciona" aria-labelledby="como-titulo" className={`${diferida} scroll-mt-4 bg-superficie-2 py-24`}>
+    <section id="como-funciona" aria-labelledby="como-titulo" className={`${diferida} scroll-mt-4 bg-superficie-2 py-14 @4xl:py-24`}>
       <div className={margen}>
         <h2 id="como-titulo" className={`${afiche} text-titulo`}>
           Elegí, personalizá <span className="resaltado">y publicá</span>
@@ -554,7 +559,7 @@ export function ComoFunciona() {
 /** Cómo se arma una página con el configurador (en /web), con el video. */
 export function ComoFuncionaWeb() {
   return (
-    <section id="como-funciona" aria-labelledby="como-titulo" className={`${diferida} scroll-mt-4 bg-superficie-2 py-24`}>
+    <section id="como-funciona" aria-labelledby="como-titulo" className={`${diferida} scroll-mt-4 bg-superficie-2 py-14 @4xl:py-24`}>
       <div className={margen}>
         <h2 id="como-titulo" className={`${afiche} text-titulo`}>
           Tres pasos <span className="resaltado">y listo</span>
@@ -600,7 +605,7 @@ const MENSUAL = {
 export function Precios() {
   const lista = niveles();
   return (
-    <section id="precios" data-precios aria-labelledby="precios-titulo" className={`${diferida} ${margen} scroll-mt-4 py-24`}>
+    <section id="precios" data-precios aria-labelledby="precios-titulo" className={`${diferida} ${margen} scroll-mt-4 py-14 @4xl:py-24`}>
       <div className="grid gap-6 @5xl:grid-cols-12 @5xl:items-end">
         <h2 id="precios-titulo" className={`${afiche} text-titulo @5xl:col-span-7`}>
           Un nivel para <span className="resaltado">cada momento</span>
@@ -700,7 +705,7 @@ const GUIA_WEB = [
 
 export function GuiaWeb() {
   return (
-    <section aria-labelledby="guia-titulo" className={`${margen} py-16`}>
+    <section aria-labelledby="guia-titulo" className={`${margen} py-12 @4xl:py-16`}>
       <h2 id="guia-titulo" className={`${afiche} text-titulo`}>
         ¿Qué necesitás de <span className="resaltado">tu página?</span>
       </h2>
@@ -727,11 +732,11 @@ export function GuiaWeb() {
 
 export function Beneficios() {
   return (
-    <section aria-labelledby="beneficios-titulo" className={`${diferida} ${margen} py-24`}>
+    <section aria-labelledby="beneficios-titulo" className={`${diferida} ${margen} py-14 @4xl:py-24`}>
       <h2 id="beneficios-titulo" className={`${afiche} max-w-5xl text-titulo`}>
         Lo que trae <span className="resaltado">cada página</span>
       </h2>
-      <ul className="mt-14 grid gap-x-12 @4xl:grid-cols-2">
+      <ul className="mt-8 grid gap-x-12 @4xl:mt-14 @4xl:grid-cols-2">
         {BENEFICIOS.map((b, i) => (
           <li key={b.titulo} className="grid gap-2 border-t-2 border-tinta py-7 @xl:grid-cols-[3rem_minmax(0,1fr)]">
             <span aria-hidden className="text-chico font-semibold tabular-nums text-tinta-suave">
@@ -752,11 +757,11 @@ export function Beneficios() {
 
 export function Confianza() {
   return (
-    <section aria-labelledby="confianza-titulo" className={`${diferida} ${margen} py-24`}>
+    <section aria-labelledby="confianza-titulo" className={`${diferida} ${margen} py-14 @4xl:py-24`}>
       <h2 id="confianza-titulo" className={`${afiche} max-w-5xl text-titulo`}>
-        Lo que te <span className="resaltado">aseguramos</span>
+        Nuestro <span className="resaltado">compromiso</span>
       </h2>
-      <ul className="mt-14 grid gap-x-12 @4xl:grid-cols-2 @6xl:grid-cols-3">
+      <ul className="mt-8 grid gap-x-12 @4xl:mt-14 @4xl:grid-cols-2 @6xl:grid-cols-3">
         {CONFIANZA.map((b) => (
           <li key={b.titulo} className="border-t-2 border-tinta py-7">
             <h3 className={`${afiche} text-[clamp(1.6rem,1.1rem+1.8cqi,2.2rem)] leading-none`}>{b.titulo}</h3>
@@ -781,7 +786,7 @@ export function Confianza() {
 export function Preguntas({ ids = PREGUNTAS_PORTADA }: { ids?: readonly string[] }) {
   const lista = ids.map((id) => DUDAS.find((d) => d.id === id)).filter((d) => d !== undefined);
   return (
-    <section id="preguntas" aria-labelledby="preguntas-titulo" className={`${diferida} ${margen} scroll-mt-4 bg-superficie-2 py-24`}>
+    <section id="preguntas" aria-labelledby="preguntas-titulo" className={`${diferida} ${margen} scroll-mt-4 bg-superficie-2 py-14 @4xl:py-24`}>
       {/* Título arriba y la lista centrada, en una columna que no se estira de punta a punta. */}
       <div className="mx-auto max-w-4xl">
         <h2 id="preguntas-titulo" className={`${afiche} text-center text-[clamp(2.4rem,1.2rem+5cqi,4.25rem)] leading-[0.95]`}>
@@ -816,7 +821,7 @@ export function Preguntas({ ids = PREGUNTAS_PORTADA }: { ids?: readonly string[]
 
 export function Cierre({ whatsapp }: { whatsapp: string | undefined }) {
   return (
-    <section id="contacto" aria-labelledby="cierre-titulo" className="scroll-mt-4 bg-acento-relleno py-24 text-sobre-acento @5xl:py-20">
+    <section id="contacto" aria-labelledby="cierre-titulo" className="scroll-mt-4 bg-acento-relleno py-14 text-sobre-acento @4xl:py-20">
       <div className={margen}>
         <h2 id="cierre-titulo" className={`${afiche} max-w-[16ch] text-[clamp(2.5rem,8cqi,6rem)] leading-[0.88]`}>
           Contanos qué necesita tu negocio
@@ -839,58 +844,58 @@ export function Cierre({ whatsapp }: { whatsapp: string | undefined }) {
 
 export function Pie() {
   return (
-    <footer className={`${margen} bg-tinta py-12 text-fondo`}>
-      <div className="flex flex-wrap items-end justify-between gap-8">
+    <footer className={`${margen} bg-tinta py-10 text-fondo @4xl:py-12`}>
+      {/* En el celular: marca arriba, Soluciones y Demos en dos columnas y Contacto abajo, para que no quede una lista larga. */}
+      <div className="grid gap-8 @4xl:flex @4xl:flex-wrap @4xl:items-end @4xl:justify-between">
         <div>
           <p className="text-[2.25rem]">
             <Marca sobreOscuro />
           </p>
-          <p className="mt-3 text-chico opacity-80">Producto cordobés. Hecho por sdv12 y jrd9 - 2026</p>
-          <p className="mt-1 text-mini tabular-nums opacity-60">v{process.env.NEXT_PUBLIC_VERSION}</p>
+          <p className="mt-2 text-chico opacity-80">Producto cordobés.</p>
         </div>
-        <div className="grid gap-8 text-chico @xl:grid-cols-3">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-8 text-chico @4xl:grid-cols-3 @4xl:gap-x-12">
           <nav aria-label="Soluciones">
-            <p className="font-semibold opacity-70">Soluciones</p>
+            <p className="text-mini font-semibold uppercase tracking-wider opacity-60">Soluciones</p>
             <ul className="mt-3 space-y-2">
-              <li><Link href="/web" className="underline-offset-4 hover:underline">Al Toque Web</Link></li>
-              <li><Link href="/turnos" className="underline-offset-4 hover:underline">Al Toque Turnos</Link></li>
-              <li><Link href="/caja" className="underline-offset-4 hover:underline">Al Toque Caja</Link></li>
-              <li><Link href="/resto" className="underline-offset-4 hover:underline">Al Toque Resto</Link></li>
-              <li><Link href="/tienda" className="underline-offset-4 hover:underline">Al Toque Tienda (próximamente)</Link></li>
+              <li><Link href="/web" className={enlacePie}>Al Toque Web</Link></li>
+              <li><Link href="/turnos" className={enlacePie}>Al Toque Turnos</Link></li>
+              <li><Link href="/caja" className={enlacePie}>Al Toque Caja</Link></li>
+              <li><Link href="/resto" className={enlacePie}>Al Toque Resto</Link></li>
+              <li><Link href="/tienda" className={enlacePie}>Al Toque Tienda</Link> <span className="text-mini opacity-60">(pronto)</span></li>
             </ul>
           </nav>
           <nav aria-label="Demos">
-            <p className="font-semibold opacity-70">Demos</p>
+            <p className="text-mini font-semibold uppercase tracking-wider opacity-60">Demos</p>
             <ul className="mt-3 space-y-2">
               {PLANTILLAS.map((p) => (
                 <li key={p}>
-                  <Link href={`/l/${FICHAS[p].slug}`} className="underline-offset-4 hover:underline">
-                    Página de {registry[p].meta.rubro.toLowerCase()}
+                  <Link href={`/l/${FICHAS[p].slug}`} className={enlacePie}>
+                    {registry[p].meta.rubro}
                   </Link>
                 </li>
               ))}
-              <li><Link href={ESTUDIO.ruta} className="underline-offset-4 hover:underline">Página de estudio</Link></li>
-              <li><Link href="/turnos/demo" className="underline-offset-4 hover:underline">Agenda de turnos</Link></li>
-              <li><Link href="/c/demo-verduleria" className="underline-offset-4 hover:underline">Caja simple</Link></li>
-              <li><Link href="/c/pro" className="underline-offset-4 hover:underline">Caja pro</Link></li>
+              <li><Link href={ESTUDIO.ruta} className={enlacePie}>Estudio</Link></li>
+              <li><Link href="/turnos/demo" className={enlacePie}>Agenda de turnos</Link></li>
+              <li><Link href="/c/demo-verduleria" className={enlacePie}>Caja simple</Link></li>
+              <li><Link href="/c/pro" className={enlacePie}>Caja pro</Link></li>
             </ul>
           </nav>
-          <nav aria-label="Contacto">
-            <p className="font-semibold opacity-70">Contacto</p>
+          <nav aria-label="Contacto" className="col-span-2 border-t border-fondo/20 pt-6 @4xl:col-span-1 @4xl:border-0 @4xl:pt-0">
+            <p className="text-mini font-semibold uppercase tracking-wider opacity-60">Contacto</p>
             <ul className="mt-3 space-y-2">
-              <li><Link href="/#contacto" className="underline-offset-4 hover:underline">Contanos qué necesitás</Link></li>
-              <li><a href={`mailto:${TITULAR.email}`} className="underline-offset-4 hover:underline">{TITULAR.email}</a></li>
-              <li><Link href="/configurador" className="underline-offset-4 hover:underline">Configurador de páginas</Link></li>
+              <li><Link href="/#contacto" className={enlacePie}>Contanos qué necesitás</Link></li>
+              <li><a href={`mailto:${TITULAR.email}`} className={enlacePie}>{TITULAR.email}</a></li>
+              <li><Link href="/configurador" className={enlacePie}>Configurador de páginas</Link></li>
             </ul>
           </nav>
         </div>
       </div>
       {/* Legales: el botón de arrepentimiento destacado (Res. SCI 424/2020) y el link de reclamos (Res. SCI 274/2021). */}
-      <nav aria-label="Legales" className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-fondo/20 pt-6 text-chico">
-        <Link href="/arrepentimiento" className="inline-flex min-h-10 items-center rounded-control border-2 border-fondo px-4 font-semibold hover:bg-fondo hover:text-tinta">
+      <nav aria-label="Legales" className="mt-8 grid grid-cols-2 items-center gap-x-6 gap-y-3 border-t border-fondo/20 pt-6 text-mini @4xl:mt-10 @4xl:flex @4xl:flex-wrap @4xl:text-chico">
+        <Link href="/arrepentimiento" className="col-span-2 inline-flex min-h-10 items-center justify-center rounded-control border-2 border-fondo px-4 font-semibold hover:bg-fondo hover:text-tinta @4xl:justify-start">
           Botón de arrepentimiento
         </Link>
-        <Link href="/terminos" className="underline-offset-4 hover:underline">
+        <Link href="/terminos" className="col-span-2 underline-offset-4 hover:underline">
           Términos y condiciones (contrato de adhesión)
         </Link>
         <Link href="/privacidad" className="underline-offset-4 hover:underline">
@@ -902,10 +907,13 @@ export function Pie() {
         <Link href="/legales" className="underline-offset-4 hover:underline">
           Información legal
         </Link>
-        <a href="https://www.argentina.gob.ar/produccion/defensadelconsumidor/formulario" target="_blank" rel="noopener noreferrer" className="underline-offset-4 hover:underline">
+        <a href="https://www.argentina.gob.ar/produccion/defensadelconsumidor/formulario" target="_blank" rel="noopener noreferrer" className="col-span-2 underline-offset-4 hover:underline">
           Defensa de las y los Consumidores. Para reclamos ingrese aquí
         </a>
       </nav>
+      <p className="mt-6 text-mini opacity-60">
+        Hecho por sdv12 y jrd9 · 2026 · <span className="tabular-nums">v{process.env.NEXT_PUBLIC_VERSION}</span>
+      </p>
     </footer>
   );
 }

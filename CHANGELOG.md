@@ -4,6 +4,11 @@ Versionado semántico: PATCH = arreglos y ajustes; MINOR = funcionalidad nueva v
 MAJOR = cambios que rompen algo existente (formato de configs, flujo, backend).
 La versión se muestra en el footer de la home y en el configurador.
 
+## 1.20.0 · 2026-11-22
+- **«Ya están online» es un carrusel infinito**: una tarjeta centrada con un pedazo de la anterior y la siguiente. En la computadora tiene flechas a los costados y los bordes se difuminan; en el celular se desliza con el dedo, tiene puntos y un botón «Visitar el sitio». Ocupa menos alto en pantallas grandes.
+- **Home en el celular, más compacta**: menos espacio entre secciones y un pie ordenado en columnas (Soluciones y Demos lado a lado, Contacto y legales debajo).
+- **Textos más cuidados**: «Reservas online, a toda hora» en Turnos, «Nuestro compromiso» en lugar de «Lo que te aseguramos», y descripciones de Turnos, Caja, Estudio y Resto que ya no repiten lo que dice la lista de debajo.
+
 ## 1.19.0 · 2026-11-22
 - **Resto al toque (R1), en `/resto/demo`**: la web de un restaurante + su panel, configurable por local. Ocho tipos con su restaurante de ejemplo completo (bodegón, parrilla, pizzería y pastas, café, bar o cervecería, sushi, hamburguesería y rotisería sin salón), cada uno con su carta, horarios, mesas, textos y diseño. Todos los restaurantes de ejemplo son inventados.
 - **Siete diseños que cambian la forma de la página**, no solo los colores: Imprenta y Pizarra (de La Vaquita) y cinco nuevos, Trattoria, Café, Nocturno, Brasa y Moderno. Además, un color principal propio.
