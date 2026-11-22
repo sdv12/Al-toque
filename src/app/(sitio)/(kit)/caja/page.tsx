@@ -63,13 +63,13 @@ export default function CajaPagina() {
       <main id="contenido">
         <section aria-labelledby="caja-titulo" className={`${margen} pb-14 pt-10 @3xl:pt-16`}>
           <p className="text-chico font-semibold">Al Toque Caja · Para {RUBROS_CAJA.map((r) => RUBROS[r].nombre.toLowerCase()).join(", ").replace(/, ([^,]*)$/, " y $1")}</p>
-          <h1 id="caja-titulo" className={`${afiche} mt-3 text-[clamp(3.25rem,1.6rem+8cqi,8rem)] leading-[0.86]`}>
+          <h1 id="caja-titulo" className={`${afiche} mt-3 text-[clamp(2.75rem,0.9rem+7cqi,4.5rem)] leading-[0.9] @5xl:text-[clamp(3rem,3.8cqi,5.75rem)]`}>
             La caja de tu negocio. <span className="resaltado">Al toque.</span>
           </h1>
           <div className="mt-8 grid gap-6 @4xl:grid-cols-12 @4xl:items-end">
             <p className="max-w-medida text-subtitulo @4xl:col-span-7">
-              Vender, precios, fiado y el cierre del día, con botones grandes y en el celular que ya tenés. Armala acá abajo y probala con tus cosas: es
-              gratis y no pide registrarse.
+              Ventas, precios, fiado y cierre del día en el celular que ya tenés, con botones grandes y simples. Armala acá abajo y probala gratis, sin
+              registrarte.
             </p>
             <p className="@4xl:col-span-5 @4xl:text-right" data-precios>
               <span className="block text-chico">desde</span>
@@ -80,15 +80,16 @@ export default function CajaPagina() {
           </div>
         </section>
 
-        <div className={margen}>
+        <div className={`${margen} mb-10`}>
           <p role="note" className="flex gap-3 rounded-base border-2 border-tinta bg-superficie-2 p-5 text-chico">
             <span aria-hidden className="grid size-8 shrink-0 place-items-center rounded-full bg-acento-relleno font-bold text-sobre-acento">
               !
             </span>
             <span>
-              <strong className="font-semibold">Dónde quedan tus datos.</strong> La caja simple guarda todo en el equipo donde la usás: por eso anda sin
-              internet y es barata. Por eso tiene <strong className="font-semibold">«Guardar una copia»</strong>: la mandás a tu WhatsApp, Drive o mail y,
-              si el equipo se rompe o se pierde, la recuperás en otro. Te lo recuerda una vez por semana. Si necesitás todo en la nube, mirá la caja pro.
+              <strong className="font-semibold">Dónde se guardan tus datos.</strong> La caja simple guarda la información en el celular o la computadora
+              donde la usás: por eso funciona sin internet y tiene un costo menor. Para no perder nada, usá{" "}
+              <strong className="font-semibold">«Guardar una copia»</strong> y enviala a tu WhatsApp, Drive o correo; si el equipo se rompe o se pierde,
+              la recuperás en otro. La caja te lo recuerda una vez por semana. Si preferís tener todo en la nube, te conviene la caja pro.
             </span>
           </p>
         </div>

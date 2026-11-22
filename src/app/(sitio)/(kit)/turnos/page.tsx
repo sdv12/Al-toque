@@ -78,14 +78,14 @@ export default function TurnosPagina() {
       <main id="contenido">
         <section aria-labelledby="agenda-titulo" className={`${margen} pt-10 pb-16 @3xl:pt-16`}>
           <p className="text-chico font-semibold">Al Toque Turnos · Para {rubros} rubros: belleza, clases, talleres, estudios, servicios y más</p>
-          <h1 id="agenda-titulo" className={`${afiche} mt-3 text-[clamp(3.25rem,1.6rem+8cqi,8rem)] leading-[0.86]`}>
+          <h1 id="agenda-titulo" className={`${afiche} mt-3 text-[clamp(2.75rem,0.9rem+7cqi,4.5rem)] leading-[0.9] @5xl:text-[clamp(3rem,3.8cqi,5.75rem)]`}>
             Dejá de coordinar <span className="resaltado">a mano.</span>
           </h1>
           <div className="mt-8 grid gap-8 @4xl:grid-cols-12 @4xl:items-end">
             <div className="@4xl:col-span-7">
               <p className="max-w-medida text-subtitulo">
-                Tus clientes reservan solos desde un link, a cualquier hora. Vos ves la agenda, cobrás y mirás los números desde el celular. Probalo con tu
-                rubro, tus servicios y tus horarios: es gratis y no pide registrarse.
+                Tus clientes reservan online desde un link, y vos gestionás la agenda, los cobros y los números desde el celular. Podés probarla gratis
+                con tus servicios y horarios, sin registrarte.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link href="/turnos/demo#/probar" className={boton.tinta}>

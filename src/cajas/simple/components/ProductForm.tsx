@@ -130,10 +130,14 @@ export default function ProductForm({
             <button
               type="button"
               onClick={() => setEditing("price")}
-              className="flex min-h-16 items-center justify-between rounded-2xl border-2 border-borde bg-white px-4 text-left"
+              className="flex min-h-16 items-center justify-between gap-3 rounded-2xl border-2 border-borde bg-white px-4 text-left"
             >
-              <span className="text-3xl font-extrabold tabular-nums">{price ? formatMoney(price) : "Tocá para poner"}</span>
-              <span className="text-lg font-bold text-acento">✏️ Cambiar</span>
+              {price ? (
+                <span className="text-3xl font-extrabold tabular-nums">{formatMoney(price)}</span>
+              ) : (
+                <span className="text-xl font-semibold text-gris">Tocá para cargar el precio</span>
+              )}
+              <span className="shrink-0 text-lg font-bold text-acento">{price ? "✏️ Cambiar" : <span aria-hidden>✏️</span>}</span>
             </button>
           </div>
 
@@ -144,10 +148,14 @@ export default function ProductForm({
             <button
               type="button"
               onClick={() => setEditing("cost")}
-              className="flex min-h-16 items-center justify-between rounded-2xl border-2 border-borde bg-white px-4 text-left"
+              className="flex min-h-16 items-center justify-between gap-3 rounded-2xl border-2 border-borde bg-white px-4 text-left"
             >
-              <span className="text-2xl font-bold tabular-nums">{cost ? formatMoney(cost) : "Sin poner"}</span>
-              <span className="text-lg font-bold text-acento">✏️ Cambiar</span>
+              {cost ? (
+                <span className="text-2xl font-bold tabular-nums">{formatMoney(cost)}</span>
+              ) : (
+                <span className="text-xl font-semibold text-gris">Tocá para cargar lo que el costo</span>
+              )}
+              <span className="shrink-0 text-lg font-bold text-acento">{cost ? "✏️ Cambiar" : <span aria-hidden>✏️</span>}</span>
             </button>
             {price && cost ? <Profit price={price} cost={cost} /> : null}
           </div>
@@ -159,10 +167,14 @@ export default function ProductForm({
             <button
               type="button"
               onClick={() => setEditing("crate")}
-              className="flex min-h-16 items-center justify-between rounded-2xl border-2 border-borde bg-white px-4 text-left"
+              className="flex min-h-16 items-center justify-between gap-3 rounded-2xl border-2 border-borde bg-white px-4 text-left"
             >
-              <span className="text-2xl font-bold">{crate ? formatAmount(unit, crate) : "Sin poner"}</span>
-              <span className="text-lg font-bold text-acento">✏️ Cambiar</span>
+              {crate ? (
+                <span className="text-2xl font-bold">{formatAmount(unit, crate)}</span>
+              ) : (
+                <span className="text-xl font-semibold text-gris">Tocá para cargar la cantidad</span>
+              )}
+              <span className="shrink-0 text-lg font-bold text-acento">{crate ? "✏️ Cambiar" : <span aria-hidden>✏️</span>}</span>
             </button>
           </div>}
 

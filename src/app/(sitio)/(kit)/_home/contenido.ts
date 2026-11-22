@@ -86,22 +86,6 @@ export const ESTUDIO = {
   ],
 } as const;
 
-/** Cómo funciona Al Toque Web (configurador). */
-export const PASOS_WEB = [
-  {
-    titulo: "Elegí la plantilla de tu rubro",
-    texto: "Barbería y estética, casas de campo, un estudio o una general para cualquier oficio. Cada una está armada distinto.",
-  },
-  {
-    titulo: "Modificá a tu gusto y mirá cómo queda",
-    texto: "Textos, colores, secciones, precios, horarios y fotos. La vista previa se actualiza mientras escribís, en compu y en celular.",
-  },
-  {
-    titulo: "Enviala por WhatsApp",
-    texto: "Con un click nos llega tu configuración, con la que podemos armar tu landing en un lapso de pocos días.",
-  },
-];
-
 export const BENEFICIOS = [
   {
     titulo: "Los pedidos te llegan por WhatsApp",

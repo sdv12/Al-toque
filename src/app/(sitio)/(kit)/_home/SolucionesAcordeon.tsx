@@ -43,7 +43,8 @@ const TEMAS: Record<string, Tema> = {
 const botonBase = "inline-flex min-h-12 items-center justify-center rounded-control px-6 text-cuerpo font-semibold transition-transform hover:-translate-y-0.5";
 
 export function SolucionesAcordeon({ items, whatsapp }: { items: SolucionVista[]; whatsapp: string | undefined }) {
-  const [abierta, setAbierta] = useState(0);
+  // Una sola abierta a la vez; null = todas cerradas (la «×» de la abierta la cierra).
+  const [abierta, setAbierta] = useState<number | null>(0);
   const [solo, setSolo] = useState(true);
   const raiz = useRef<HTMLDivElement>(null);
   const base = useId();
@@ -59,7 +60,7 @@ export function SolucionesAcordeon({ items, whatsapp }: { items: SolucionVista[]
     const vista = new IntersectionObserver(
       ([e]) => {
         clearInterval(reloj);
-        if (e?.isIntersecting) reloj = setInterval(() => setAbierta((a) => (a + 1) % items.length), PASO_MS);
+        if (e?.isIntersecting) reloj = setInterval(() => setAbierta((a) => ((a ?? -1) + 1) % items.length), PASO_MS);
       },
       { threshold: 0.4 },
     );
@@ -109,7 +110,7 @@ export function SolucionesAcordeon({ items, whatsapp }: { items: SolucionVista[]
                 aria-controls={panel}
                 onClick={() => {
                   tocar();
-                  setAbierta(i);
+                  setAbierta(activa ? null : i);
                 }}
                 className={`flex w-full items-center gap-4 p-5 text-left outline-offset-[-4px] @4xl:p-6 ${
                   activa ? "@4xl:pb-0" : "@4xl:h-full @4xl:flex-col @4xl:items-start @4xl:justify-between"

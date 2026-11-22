@@ -10,7 +10,7 @@ import { niveles, planAgenda, planCaja, planPerfil, planes, preciosVigentesHasta
 import { AbrirAlto } from "../_alto/AbrirAlto";
 import { TITULAR } from "../legales/datos";
 import { DUDAS } from "../_alto/dudas";
-import { BENEFICIOS, CONFIANZA, ESTUDIO, FICHAS, NECESIDADES, PASOS, PASOS_WEB, PREGUNTAS_PORTADA, PROYECTOS, RUBROS } from "./contenido";
+import { BENEFICIOS, CONFIANZA, ESTUDIO, FICHAS, NECESIDADES, PASOS, PREGUNTAS_PORTADA, PROYECTOS, RUBROS } from "./contenido";
 import { Navegador, Telefono } from "./Marcos";
 import { CarruselProyectos } from "./CarruselProyectos";
 import { SolucionesAcordeon, type SolucionVista } from "./SolucionesAcordeon";
@@ -23,10 +23,6 @@ const FUENTES: Record<Plantilla, string> = {
 
 const DOMINIO = "altoque-cba.com.ar";
 
-/**
- * Video de demo para "Tres pasos y listo" (mp4 en public/). Si no hay o no carga, se ve la captura.
- */
-const VIDEO_CONFIGURADOR: string | undefined = "/Demo/Demo_plantillas.mp4";
 import { afiche, margen } from "./estilos";
 export { afiche, margen };
 
@@ -532,14 +528,16 @@ export function Soluciones({ whatsapp }: { whatsapp: string | undefined }) {
 /** Pasos numerados (portada y /web). */
 function ListaPasos({ pasos }: { pasos: readonly { titulo: string; texto: string }[] }) {
   return (
-    <ol className="mt-14 grid gap-10 @4xl:grid-cols-3 @4xl:gap-8">
+    <ol className="mt-10 grid gap-8 @4xl:mt-14 @4xl:grid-cols-3 @4xl:gap-8">
       {pasos.map((paso, i) => (
-        <li key={paso.titulo} className="border-t-2 border-tinta pt-6">
-          <span aria-hidden className={`${afiche} block text-[clamp(4.5rem,3rem+6cqi,8rem)] leading-[0.8]`}>
+        <li key={paso.titulo} className="grid grid-cols-[auto_minmax(0,1fr)] items-start gap-x-5 border-t-2 border-tinta pt-6">
+          <span aria-hidden className={`${afiche} w-[0.6em] text-[clamp(3rem,2.4rem+2cqi,4.25rem)] leading-[0.8] tabular-nums`}>
             {i + 1}
           </span>
-          <h3 className="mt-5 text-subtitulo font-semibold">{paso.titulo}</h3>
-          <p className="mt-2 text-tinta-suave">{paso.texto}</p>
+          <div>
+            <h3 className="text-subtitulo font-semibold">{paso.titulo}</h3>
+            <p className="mt-2 text-tinta-suave">{paso.texto}</p>
+          </div>
         </li>
       ))}
     </ol>
@@ -554,34 +552,6 @@ export function ComoFunciona() {
           Elegí, personalizá <span className="resaltado">y publicá</span>
         </h2>
         <ListaPasos pasos={PASOS} />
-      </div>
-    </section>
-  );
-}
-
-/** Cómo se arma una página con el configurador (en /web), con el video. */
-export function ComoFuncionaWeb() {
-  return (
-    <section id="como-funciona" aria-labelledby="como-titulo" className={`${diferida} scroll-mt-4 bg-superficie-2 py-14 @4xl:py-24`}>
-      <div className={margen}>
-        <h2 id="como-titulo" className={`${afiche} text-titulo`}>
-          Tres pasos <span className="resaltado">y listo</span>
-        </h2>
-        <ListaPasos pasos={PASOS_WEB} />
-        {/* Visor de video: 16:9, a lo sumo 1000 px de ancho (≈ 600 px de alto con la barra); en angosto, todo el ancho. */}
-        <figure className="mx-auto mt-16 max-w-[1000px]">
-          <Navegador
-            src="/muestras/configurador.jpg"
-            video={VIDEO_CONFIGURADOR}
-            alt="El configurador: panel de edición a la izquierda y la página en vivo a la derecha"
-            url={`${DOMINIO}/configurador`}
-            sizes="(min-width: 1080px) 1000px, 94vw"
-            aspecto="16 / 9"
-          />
-          <figcaption className="mt-4 text-chico text-tinta-suave">
-            El configurador: a la izquierda editás, a la derecha ves tu página como la va a ver tu cliente.
-          </figcaption>
-        </figure>
       </div>
     </section>
   );
@@ -606,7 +576,8 @@ const MENSUAL = {
 };
 
 export function Precios() {
-  const lista = niveles();
+  // Web + Turnos se presenta en /turnos: acá quedan solo los niveles de la página.
+  const lista = niveles().filter((n) => n.id !== "sistema");
   return (
     <section id="precios" data-precios aria-labelledby="precios-titulo" className={`${diferida} ${margen} scroll-mt-4 py-14 @4xl:py-24`}>
       <div className="grid gap-6 @5xl:grid-cols-12 @5xl:items-end">
@@ -619,7 +590,7 @@ export function Precios() {
           <p>Mientras la armás en el configurador, ves el precio al instante.</p>
         </div>
       </div>
-      <ul className="mt-14 grid gap-4 @3xl:grid-cols-2 @6xl:grid-cols-5">
+      <ul className="mt-14 grid gap-4 @3xl:grid-cols-2 @6xl:grid-cols-4">
         {lista.map((p) => {
           const destacado = p.id === "vidriera";
           const oscuro = p.id === "premium";

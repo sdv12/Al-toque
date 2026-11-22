@@ -4,7 +4,7 @@ import { Alto } from "../_alto/Alto";
 import { AbrirAlto } from "../_alto/AbrirAlto";
 import { AvisoPrecios } from "../_home/AvisoPrecios";
 import { fuentesHome } from "../_home/fuentes";
-import { Beneficios, Cierre, ComoFuncionaWeb, Encabezado, GuiaWeb, Pie, Plantillas, Precios, Preguntas, afiche, boton, margen } from "../_home/Secciones";
+import { Beneficios, Encabezado, GuiaWeb, Pie, Plantillas, Precios, Preguntas, afiche, boton, margen } from "../_home/Secciones";
 
 export const metadata: Metadata = {
   title: "Al Toque Web · Tu página para tu negocio",
@@ -29,8 +29,10 @@ export default function Web() {
       <main id="contenido">
         <section aria-labelledby="web-titulo" className={`${margen} pb-8 pt-6`}>
           <p className="text-chico font-semibold text-tinta-suave">Al Toque Web</p>
-          <h1 id="web-titulo" className={`${afiche} mt-3 max-w-[16ch] text-[clamp(3rem,1rem+7cqi,7rem)] leading-[0.86]`}>
-            Tu negocio, con página propia. <span className="resaltado whitespace-nowrap">Al toque.</span>
+          {/* Mismo título y tamaño que la portada (sin los teléfonos). */}
+          <h1 id="web-titulo" className={`${afiche} mt-3 text-[clamp(2.75rem,0.9rem+7cqi,4.5rem)] leading-[0.9] @5xl:text-[clamp(3rem,3.8cqi,5.75rem)]`}>
+            La solución para tu negocio, <br className="hidden @5xl:block" />
+            <span className="resaltado whitespace-nowrap">al toque.</span>
           </h1>
           <p className="mt-8 max-w-[44ch] text-subtitulo">
             Elegí una plantilla pensada para tu rubro, cambiale textos, colores y precios, y mirá cómo queda mientras la armás. Nos la mandás y la
@@ -51,11 +53,9 @@ export default function Web() {
         </section>
         <GuiaWeb />
         <Plantillas />
-        <ComoFuncionaWeb />
         <Precios />
         <Beneficios />
         <Preguntas ids={["planes", "perfil", "subdominio", "tiempo", "fotos", "pedidos", "cambios", "mensual", "migrar", "saber"]} />
-        <Cierre whatsapp={whatsapp} />
       </main>
       <Pie />
       <AvisoPrecios />

@@ -4,6 +4,14 @@ Versionado semántico: PATCH = arreglos y ajustes; MINOR = funcionalidad nueva v
 MAJOR = cambios que rompen algo existente (formato de configs, flujo, backend).
 La versión se muestra en el footer de la home y en el configurador.
 
+## 1.21.1 · 2026-11-22
+- **/web más directa**: el mismo título que la portada, sin «Tres pasos y listo» ni el cierre amarillo, y sin el plan Web + Turnos en los precios (está en /turnos).
+- **Títulos de /turnos y /caja** con el mismo tamaño que la portada, y descripciones más claras y cortas.
+- **Soluciones**: la «×» de la tarjeta abierta la cierra; nunca hay dos abiertas a la vez.
+- **«Elegí, personalizá y publicá»**: números más chicos y el texto al lado.
+- **/caja**: aviso sobre dónde se guardan los datos reescrito, y en la caja simple los campos vacíos dicen «Tocá para cargar el precio» (y lo que te cuesta, o la cantidad).
+- Ya no se muestra el aviso técnico de WhatsApp sin configurar en /caja ni en /resto.
+
 ## 1.21.0 · 2026-11-22
 - **Home más prolija en pantallas grandes**: el título principal entra en dos líneas, «¿Qué necesitás hoy?» muestra las cinco opciones en una fila y las preguntas frecuentes van en dos columnas.
 - **Títulos de sección un poco más chicos** en todo el sitio, y el cierre amarillo usa más ancho (título en dos líneas).

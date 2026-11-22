@@ -176,7 +176,6 @@ export function ArmarResto({ whatsapp }: { whatsapp: string | undefined }) {
             No pudimos enviarlo. Probá de nuevo en un rato.
           </p>
         )}
-        {!whatsapp && <p className="mt-3 text-chico text-tinta-suave">Falta configurar NEXT_PUBLIC_OWNER_WHATSAPP.</p>}
         <AvisoDatos accion="Lo quiero" className="mt-3" />
         <p className="mt-3 text-mini text-tinta-suave">Precios de referencia en pesos argentinos, vigentes hasta el {preciosVigentesHasta()} (se actualizan cada tres meses).</p>
       </div>
