@@ -88,7 +88,7 @@ export function HeaderEstudio({ nombre, enlaces }: { nombre: string; enlaces: { 
                 <a
                   href="#contacto"
                   className={`${rotulo} inline-flex min-h-10 items-center border px-5 transition-colors duration-300 ${
-                    claro ? "border-[#f7f5f1]/60 hover:bg-[#f7f5f1] hover:text-[#141412]" : "border-tinta hover:bg-tinta hover:text-fondo"
+                    claro ? "border-[#f7f5f1]/60 hover:bg-[#f7f5f1] hover:text-[#141412]" : "border-acento-relleno bg-acento-relleno text-sobre-acento hover:opacity-90"
                   }`}
                 >
                   Hablemos
@@ -197,7 +197,7 @@ export function PortadaRotativa({
           </h1>
           {bajada && <p className="mt-6 max-w-[46ch] text-cuerpo text-[#f7f5f1]/85">{bajada}</p>}
           <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4">
-            <a href="#casos" className={`${rotulo} group inline-flex min-h-12 items-center gap-3 bg-[#f7f5f1] px-6 text-[#141412] transition-colors hover:bg-[#f7f5f1]/85`}>
+            <a href="#casos" className={`${rotulo} group inline-flex min-h-12 items-center gap-3 bg-acento-relleno px-6 text-sobre-acento transition-opacity hover:opacity-90`}>
               Ver proyectos <Flecha className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
             </a>
             <a href="#contacto" className={`${rotulo} border-b border-[#f7f5f1]/60 pb-1 transition-colors hover:border-[#f7f5f1]`}>
@@ -228,7 +228,7 @@ export function PortadaRotativa({
                     <span className="absolute inset-x-0 top-1/2 h-px bg-[#f7f5f1]/30 group-hover:bg-[#f7f5f1]/60" />
                     <span
                       key={i === actual ? `a-${actual}-${corre}` : "q"}
-                      className="absolute inset-x-0 top-1/2 h-px origin-left bg-[#f7f5f1]"
+                      className="absolute inset-x-0 top-1/2 h-0.5 -translate-y-px origin-left bg-acento"
                       style={
                         i === actual
                           ? corre
@@ -312,7 +312,7 @@ export function GaleriaProyectos({ casos, whatsapp, negocio }: { casos: Caso[]; 
                 type="button"
                 aria-pressed={activo}
                 onClick={() => setFiltro(cat)}
-                className={`${rotulo} min-h-10 border-b py-1 transition-colors ${activo ? "border-tinta text-tinta" : "border-transparent text-tinta-suave hover:text-tinta"}`}
+                className={`${rotulo} min-h-10 border-b py-1 transition-colors ${activo ? "border-acento text-tinta" : "border-transparent text-tinta-suave hover:text-tinta"}`}
               >
                 {cat ?? "Todos"} <sup className="tabular-nums">{cantidad}</sup>
               </button>
@@ -340,7 +340,7 @@ export function GaleriaProyectos({ casos, whatsapp, negocio }: { casos: Caso[]; 
                     <p className="font-display text-subtitulo font-light">{c.titulo}</p>
                     {c.cliente && <p className="mt-1 text-chico text-tinta-suave">{c.cliente}</p>}
                   </div>
-                  <span className="text-mini tabular-nums text-tinta-suave">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="text-mini tabular-nums text-acento-texto">{String(i + 1).padStart(2, "0")}</span>
                 </div>
               </button>
             </li>
@@ -406,7 +406,7 @@ export function GaleriaProyectos({ casos, whatsapp, negocio }: { casos: Caso[]; 
                   href={linkWhatsApp(whatsapp, `Hola ${negocio}! Vi el proyecto "${caso.titulo}" y quería consultarles por algo parecido.`)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`${rotulo} inline-flex min-h-12 items-center justify-center gap-3 bg-tinta px-6 text-fondo transition-colors hover:bg-acento-relleno hover:text-sobre-acento`}
+                  className={`${rotulo} inline-flex min-h-12 items-center justify-center gap-3 bg-acento-relleno px-6 text-sobre-acento transition-opacity hover:opacity-90`}
                 >
                   <IconoWhatsApp className="size-4" /> Quiero algo así
                 </a>
@@ -460,7 +460,7 @@ export function IndiceServicios({ servicios, fotos, whatsapp, negocio }: { servi
                   onFocus={() => setActivo(i)}
                   className="grid w-full grid-cols-[2.5rem_minmax(0,1fr)_auto] items-baseline gap-4 py-6 text-left @3xl:grid-cols-[3.5rem_minmax(0,1fr)_auto]"
                 >
-                  <span className="text-mini tabular-nums text-tinta-suave">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="text-mini tabular-nums text-acento-texto">{String(i + 1).padStart(2, "0")}</span>
                   <span className={`font-display text-subtitulo font-light transition-transform duration-500 @3xl:text-[clamp(1.5rem,1rem+1.6cqi,2.25rem)] ${abierto ? "translate-x-2" : ""}`}>{s.nombre}</span>
                   <span aria-hidden className={`grid size-8 place-items-center rounded-full border transition-all duration-500 ${abierto ? "rotate-45 border-tinta" : "border-borde"}`}>
                     <svg viewBox="0 0 12 12" className="size-2.5">
@@ -479,14 +479,14 @@ export function IndiceServicios({ servicios, fotos, whatsapp, negocio }: { servi
                     {s.descripcion && <p className="max-w-[48ch] text-tinta-suave">{s.descripcion}</p>}
                     <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
                       <p className="text-chico">
-                        <span className={`${rotulo} mr-3 text-tinta-suave`}>Valor</span>
+                        <span className={`${rotulo} mr-3 text-acento-texto`}>Valor</span>
                         <span className="tabular-nums">{formatearPrecio(s)}</span>
                       </p>
                       <a
                         href={linkWhatsApp(whatsapp, `Hola ${negocio}! Quería consultar por: ${s.nombre}.`)}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={`${rotulo} group inline-flex items-center gap-2 border-b border-tinta pb-1`}
+                        className={`${rotulo} group inline-flex items-center gap-2 border-b-2 border-acento pb-1`}
                       >
                         Consultar <Flecha className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
                       </a>
@@ -536,7 +536,7 @@ export function TestimoniosRotativos({ testimonios }: { testimonios: Testimonio[
           >
             <blockquote className="font-display text-titulo font-extralight">“{t.texto}”</blockquote>
             <figcaption className="mt-8">
-              <span className={rotulo}>{t.autor}</span>
+              <span className={`${rotulo} text-acento-texto`}>{t.autor}</span>
               {t.detalle && <span className="mt-1 block text-chico text-tinta-suave">{t.detalle}</span>}
             </figcaption>
           </figure>

@@ -216,7 +216,7 @@ export const registry = {
       bento: {
         etiqueta: "Home bento",
         descripcion: "Bloques de distinto tamaño con lo más importante.",
-        variantes: { clasico: "Clásico", denso: "Denso", asimetrico: "Asimétrico", estudio: "Estudio (foto a pantalla completa)" },
+        variantes: { clasico: "Clásico", denso: "Denso", estudio: "Estudio (foto a pantalla completa)" },
         inicio: true,
       },
       casos: {

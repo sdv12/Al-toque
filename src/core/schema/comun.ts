@@ -1,4 +1,5 @@
 import { REDES, esUrlDeRed } from "../lib/redes";
+import { CLAVE_TEXTO, IDS_FUENTES_TEXTO, MAX_TEXTOS_PROPIOS, TAMANO_MAX, TAMANO_MIN } from "../lib/textos-propios";
 import { WHATSAPP_AR } from "../lib/whatsapp";
 import { z } from "./z";
 
@@ -48,6 +49,18 @@ export const estiloSchema = z.object({
   fondo: hexSchema.optional(),
   /** Escala todos los textos de la plantilla. Sin indicar = normal. */
   texto: z.enum(TAMANOS_TEXTO).optional(),
+  /** Textos sueltos con tamaño, color o tipografía propios (ver core/lib/textos-propios.ts). */
+  textos: z
+    .record(
+      z.string().regex(CLAVE_TEXTO, "Ubicación de texto inválida"),
+      z.object({
+        tamano: z.number().int().min(TAMANO_MIN).max(TAMANO_MAX).optional(),
+        color: hexSchema.optional(),
+        fuente: z.enum(IDS_FUENTES_TEXTO).optional(),
+      }),
+    )
+    .refine((t) => Object.keys(t).length <= MAX_TEXTOS_PROPIOS, `Máximo ${MAX_TEXTOS_PROPIOS} textos con estilo propio`)
+    .optional(),
 });
 
 export const negocioSchema = z.object({

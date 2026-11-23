@@ -74,11 +74,32 @@ export function erroresDeZod(error: z.ZodError): ErrorConfig[] {
 }
 
 /** Punto de entrada único para leer configs (JSON de archivo, localStorage o base). */
+/**
+ * Variantes que se sacaron del catálogo, con la que las reemplaza. Así un borrador o una
+ * configuración vieja que la use sigue abriendo en vez de fallar la validación.
+ */
+const VARIANTES_RETIRADAS: Record<string, Record<string, Record<string, string>>> = {
+  generico: { bento: { asimetrico: "clasico" } },
+};
+
+function reemplazarVariantesRetiradas(valor: Objeto): Objeto {
+  const mapa = typeof valor.plantilla === "string" ? VARIANTES_RETIRADAS[valor.plantilla] : undefined;
+  if (!mapa || !Array.isArray(valor.secciones)) return valor;
+  return {
+    ...valor,
+    secciones: valor.secciones.map((s: unknown) => {
+      if (!esObjeto(s) || typeof s.tipo !== "string" || typeof s.variante !== "string") return s;
+      const nueva = mapa[s.tipo]?.[s.variante];
+      return nueva ? { ...s, variante: nueva } : s;
+    }),
+  };
+}
+
 export function migrateConfig(crudo: unknown): ResultadoConfig {
   const migrada = aplicarMigraciones(crudo, migraciones, VERSION_ACTUAL);
   if (!migrada.ok) return migrada;
 
-  const parseada = landingConfigSchema.safeParse(migrada.valor);
+  const parseada = landingConfigSchema.safeParse(reemplazarVariantesRetiradas(migrada.valor));
   if (!parseada.success) return { ok: false, errores: erroresDeZod(parseada.error) };
 
   return migrada.desde === VERSION_ACTUAL

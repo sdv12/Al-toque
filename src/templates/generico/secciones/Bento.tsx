@@ -31,14 +31,6 @@ const DISPOSICION: Record<Exclude<Props["variante"], "estudio">, { bloque: Bloqu
     { bloque: "servicios", clase: "@4xl:col-span-3 @4xl:row-span-2" },
     { bloque: "testimonio", clase: "@4xl:col-span-4" },
   ],
-  asimetrico: [
-    { bloque: "presentacion", clase: "@4xl:col-span-5 @4xl:row-span-3" },
-    { bloque: "trabajo", clase: "@4xl:col-span-7 @4xl:row-span-2" },
-    { bloque: "servicios", clase: "@4xl:col-span-4" },
-    { bloque: "contacto", clase: "@4xl:col-span-3" },
-    { bloque: "testimonio", clase: "@4xl:col-span-8" },
-    { bloque: "datos", clase: "@4xl:col-span-4" },
-  ],
 };
 
 function Flecha() {

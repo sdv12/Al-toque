@@ -1,7 +1,7 @@
 "use client";
 
 import * as Tabs from "@radix-ui/react-tabs";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { nivelDe } from "@/core/lib/precios";
 import { registry } from "@/core/registry";
 import { useBorrador, type Pestana } from "./estado";
@@ -13,7 +13,8 @@ import { PestanaPlantilla } from "./pestanas/PestanaPlantilla";
 import { PestanaPrecio, totalCorto } from "./pestanas/PestanaPrecio";
 import { PestanaSecciones } from "./pestanas/PestanaSecciones";
 import { PestanaTextos } from "./pestanas/PestanaTextos";
-import { Preview, type Dispositivo } from "./Preview";
+import { PanelTexto } from "./PanelTexto";
+import { Preview, type Dispositivo, type TextoElegido } from "./Preview";
 
 const PESTANAS: { id: Pestana; texto: string }[] = [
   { id: "plantilla", texto: "Plantilla" },
@@ -47,6 +48,20 @@ export default function Configurador() {
   const [dispositivo, setDispositivo] = useState<Dispositivo>("escritorio");
   // Mobile: hoja inferior plegable sobre el preview.
   const [hojaAbierta, setHojaAbierta] = useState(true);
+  // «Seleccionar texto»: tocar un texto de la vista previa abre su editor a la izquierda.
+  const [seleccionando, setSeleccionando] = useState(false);
+  const [elegido, setElegido] = useState<TextoElegido | null>(null);
+  // Al abrir la pestaña «Textos», el tooltip de «Seleccionar texto» se muestra solo unos segundos.
+  const [ayudaTextos, setAyudaTextos] = useState(false);
+  useEffect(() => {
+    if (!ayudaTextos) return;
+    const t = setTimeout(() => setAyudaTextos(false), 6000);
+    return () => clearTimeout(t);
+  }, [ayudaTextos]);
+  const elegirTexto = useCallback((t: TextoElegido) => {
+    setElegido(t);
+    setHojaAbierta(true);
+  }, []);
 
   const errorDe = (ruta: string) => errores.find((e) => e.ruta === ruta)?.mensaje;
   const irA = (p: Pestana) => {
@@ -61,9 +76,7 @@ export default function Configurador() {
           <h1 className="truncate text-chico font-semibold">Configurador</h1>
           <p className="truncate text-mini text-tinta-suave">
             {registry[config.plantilla].meta.nombre} ·{" "}
-            <span aria-live="polite">
-              {guardado === "guardado" ? "Borrador guardado" : guardado === "pendiente" ? "Guardando…" : "Sin guardado local"}
-            </span>
+            <span aria-live="polite">{guardado === "guardado" ? "Borrador guardado" : guardado === "pendiente" ? "Guardando…" : "Sin guardado local"}</span>
             <span className="tabular-nums"> · v{process.env.NEXT_PUBLIC_VERSION}</span>
           </p>
         </div>
@@ -78,6 +91,33 @@ export default function Configurador() {
           </span>
           <span className="block text-chico font-semibold tabular-nums">{totalCorto(config)}</span>
         </button>
+        {/* Tooltip propio: aparece al pasar el mouse o al llegar con el teclado. */}
+        <span className="group relative shrink-0">
+          <button
+            type="button"
+            aria-describedby="ayuda-seleccionar-texto"
+            aria-pressed={seleccionando}
+            onClick={() => {
+              setSeleccionando((s) => !s);
+              setElegido(null);
+              setAyudaTextos(false);
+            }}
+            className={`shrink-0 rounded-control border px-3 py-1.5 text-chico ${
+              seleccionando ? "border-tinta bg-acento-relleno text-sobre-acento" : "border-borde hover:border-tinta-suave"
+            }`}
+          >
+            {seleccionando ? "Terminar de editar textos" : "Seleccionar texto"}
+          </button>
+          <span
+            id="ayuda-seleccionar-texto"
+            role="tooltip"
+            className={`pointer-events-none absolute right-0 top-full z-50 mt-2 w-64 rounded-control bg-tinta px-3 py-2 text-mini text-fondo shadow-lg transition-opacity duration-150 ${
+              ayudaTextos ? "visible opacity-100" : "invisible opacity-0"
+            } group-hover:visible group-hover:opacity-100 group-has-[:focus-visible]:visible group-has-[:focus-visible]:opacity-100`}
+          >
+            Con esta herramienta podés personalizar los textos: tocá uno en la vista previa y cambiale el tamaño, el color o la tipografía.
+          </span>
+        </span>
         <fieldset className="hidden @5xl:block">
           <legend className="sr-only">Tamaño de la vista previa</legend>
           <div className="flex rounded-control border border-borde p-0.5">
@@ -96,7 +136,10 @@ export default function Configurador() {
       <div className="flex min-h-0 flex-1 flex-col @5xl:grid @5xl:grid-cols-[26rem_minmax(0,1fr)]">
         <Tabs.Root
           value={pestana}
-          onValueChange={(v) => setPestana(v as Pestana)}
+          onValueChange={(v) => {
+            setPestana(v as Pestana);
+            setAyudaTextos(v === "textos" && !seleccionando);
+          }}
           className={`order-2 z-20 flex shrink-0 flex-col border-t border-borde bg-fondo shadow-[0_-12px_32px_-12px_rgb(0_0_0/0.25)] transition-[height] duration-200 @5xl:order-1 @5xl:h-auto @5xl:min-h-0 @5xl:border-r @5xl:border-t-0 @5xl:shadow-none ${
             hojaAbierta ? "h-[58dvh]" : "h-[6.5rem]"
           }`}
@@ -128,32 +171,49 @@ export default function Configurador() {
             ))}
           </Tabs.List>
           <div className="min-h-0 flex-1 overflow-y-auto">
-            <Tabs.Content value="plantilla">
-              <PestanaPlantilla config={config} usarEjemplo={usarEjemplo} reemplazar={reemplazar} pendiente={pendiente} resolverPendiente={resolverPendiente} />
-            </Tabs.Content>
-            <Tabs.Content value="estilo">
-              <PestanaEstilo key={`${config.plantilla}-${config.estilo.modo ?? ""}`} config={config} editar={editar} />
-            </Tabs.Content>
-            <Tabs.Content value="secciones">
-              {config.plantilla === "libre" ? <PestanaBloques config={config} editar={editar} /> : <PestanaSecciones config={config} editar={editar} />}
-            </Tabs.Content>
-            <Tabs.Content value="textos">
-              <PestanaTextos config={config} editar={editar} errorDe={errorDe} />
-            </Tabs.Content>
-            <Tabs.Content value="contenido">
-              <PestanaContenido config={config} editar={editar} errorDe={errorDe} />
-            </Tabs.Content>
-            <Tabs.Content value="precio">
-              <PestanaPrecio config={config} editar={editar} />
-            </Tabs.Content>
-            <Tabs.Content value="enviar">
-              <PestanaEnviar config={config} errores={errores} reemplazar={reemplazar} irA={irA} admin={admin} />
-            </Tabs.Content>
+            {elegido ? (
+              <PanelTexto key={elegido.clave} config={config} editar={editar} elegido={elegido} cerrar={() => setElegido(null)} />
+            ) : (
+              <>
+                {seleccionando && (
+                  <p role="status" className="m-5 mb-0 rounded-base border-2 border-tinta bg-superficie p-4 text-chico">
+                    Tocá un texto de la vista previa para cambiarle el tamaño, el color o la tipografía.
+                  </p>
+                )}
+                <Tabs.Content value="plantilla">
+                  <PestanaPlantilla
+                    config={config}
+                    usarEjemplo={usarEjemplo}
+                    reemplazar={reemplazar}
+                    pendiente={pendiente}
+                    resolverPendiente={resolverPendiente}
+                  />
+                </Tabs.Content>
+                <Tabs.Content value="estilo">
+                  <PestanaEstilo key={`${config.plantilla}-${config.estilo.modo ?? ""}`} config={config} editar={editar} />
+                </Tabs.Content>
+                <Tabs.Content value="secciones">
+                  {config.plantilla === "libre" ? <PestanaBloques config={config} editar={editar} /> : <PestanaSecciones config={config} editar={editar} />}
+                </Tabs.Content>
+                <Tabs.Content value="textos">
+                  <PestanaTextos config={config} editar={editar} errorDe={errorDe} />
+                </Tabs.Content>
+                <Tabs.Content value="contenido">
+                  <PestanaContenido config={config} editar={editar} errorDe={errorDe} />
+                </Tabs.Content>
+                <Tabs.Content value="precio">
+                  <PestanaPrecio config={config} editar={editar} />
+                </Tabs.Content>
+                <Tabs.Content value="enviar">
+                  <PestanaEnviar config={config} errores={errores} reemplazar={reemplazar} irA={irA} admin={admin} />
+                </Tabs.Content>
+              </>
+            )}
           </div>
         </Tabs.Root>
 
         <div className="order-1 min-h-0 flex-1 @5xl:order-2 @5xl:h-full">
-          <Preview config={config} dispositivo={dispositivo} />
+          <Preview config={config} dispositivo={dispositivo} seleccion={{ activa: seleccionando, elegido: elegido?.clave ?? null, onElegir: elegirTexto }} />
         </div>
       </div>
     </div>

@@ -18,7 +18,7 @@ function EncabezadoEstudio({ id, numero, rotulo: etiqueta, titulo, bajada }: { i
   return (
     <div className="revelar grid gap-6 @4xl:grid-cols-12">
       <p className={`${rotulo} text-tinta-suave @4xl:col-span-3`}>
-        <span className="tabular-nums">{numero}</span> — {etiqueta}
+        <span className="tabular-nums text-acento-texto">{numero}</span> — {etiqueta}
       </p>
       <div className="flex flex-col gap-6 @4xl:col-span-9 @4xl:flex-row @4xl:items-end @4xl:justify-between">
         <h2 id={id} className="max-w-[16ch] font-display text-titulo font-extralight">

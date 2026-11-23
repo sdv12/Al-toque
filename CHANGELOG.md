@@ -4,6 +4,11 @@ Versionado semántico: PATCH = arreglos y ajustes; MINOR = funcionalidad nueva v
 MAJOR = cambios que rompen algo existente (formato de configs, flujo, backend).
 La versión se muestra en el footer de la home y en el configurador.
 
+## 1.22.0 · 2026-11-23
+- **Editar cualquier texto desde la vista previa del configurador**: con «Seleccionar texto» se toca un texto de la página y a la izquierda se le cambia el tamaño (en píxeles), el color y la tipografía (ocho a elegir), o se quitan los cambios. Funciona en todas las plantillas y la página publicada se ve igual. El botón tiene un tooltip que aparece al abrir la pestaña «Textos».
+- **Estudio**: el color de acento ahora se ve (portada, filtros, proyectos, servicios, testimonios y formulario) y el modo claro u oscuro funciona: elegir un modo vuelve al fondo de la plantilla en ese modo.
+- La home bento ya no ofrece la variante «Asimétrico»; los borradores que la usaban abren como «Clásico».
+
 ## 1.21.1 · 2026-11-22
 - **/web más directa**: el mismo título que la portada, sin «Tres pasos y listo» ni el cierre amarillo, y sin el plan Web + Turnos en los precios (está en /turnos).
 - **Títulos de /turnos y /caja** con el mismo tamaño que la portada, y descripciones más claras y cortas.

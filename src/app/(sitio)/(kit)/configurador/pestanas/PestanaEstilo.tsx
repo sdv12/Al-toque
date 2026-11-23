@@ -41,6 +41,15 @@ export function PestanaEstilo({ config, editar }: Props) {
       else c.estilo.fondo = valor.toLowerCase();
     });
   };
+  // El fondo propio define si la página es clara u oscura: al elegir un modo se vuelve al fondo
+  // de la plantilla en ese modo (si no, el cambio no se vería).
+  const elegirModo = (m: Modo) => {
+    setHexFondo(paletaDe(config.plantilla, m).fondo);
+    editar((c) => {
+      c.estilo.modo = m;
+      delete c.estilo.fondo;
+    });
+  };
   const usarFondoDePlantilla = () => {
     setHexFondo(fondoPlantilla);
     editar((c) => void delete c.estilo.fondo);
@@ -192,7 +201,13 @@ export function PestanaEstilo({ config, editar }: Props) {
 
       <Bloque
         titulo="Modo"
-        descripcion={meta.modos.length > 1 ? undefined : `${meta.nombre} es ${TEXTO_MODO[meta.modos[0]].toLowerCase()} por diseño.`}
+        descripcion={
+          meta.modos.length > 1
+            ? config.estilo.fondo
+              ? "Ahora manda tu color de fondo. Si elegís un modo, se vuelve al fondo de la plantilla en ese modo."
+              : undefined
+            : `${meta.nombre} es ${TEXTO_MODO[meta.modos[0]].toLowerCase()} por diseño.`
+        }
       >
         {meta.modos.length > 1 && (
           <fieldset>
@@ -205,7 +220,7 @@ export function PestanaEstilo({ config, editar }: Props) {
                     name="modo"
                     value={m}
                     checked={(config.estilo.modo ?? meta.modos[0]) === m}
-                    onChange={() => editar((c) => void (c.estilo.modo = m))}
+                    onChange={() => elegirModo(m)}
                     className="peer sr-only"
                   />
                   <span className="block rounded-control border border-borde bg-superficie px-3 py-2 text-center text-chico peer-checked:border-tinta peer-checked:shadow-[inset_0_0_0_1px_var(--lk-texto)] peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-foco">

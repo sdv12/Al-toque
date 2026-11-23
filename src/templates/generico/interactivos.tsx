@@ -108,7 +108,7 @@ export function FormularioContacto({ negocio, temas, sobrio }: { negocio: { nomb
     : "mt-1.5 block w-full rounded-control border-2 border-borde bg-fondo px-4 py-3 text-cuerpo text-tinta focus:border-tinta";
   const etiqueta = sobrio ? "text-mini font-medium uppercase tracking-[0.18em] text-tinta-suave" : "text-chico font-semibold";
   const enviarClase = sobrio
-    ? "inline-flex min-h-12 w-full items-center justify-center gap-3 bg-tinta px-8 text-mini font-medium uppercase tracking-[0.22em] text-fondo transition-colors hover:bg-acento-relleno hover:text-sobre-acento @xl:w-auto"
+    ? "inline-flex min-h-12 w-full items-center justify-center gap-3 bg-acento-relleno px-8 text-mini font-medium uppercase tracking-[0.22em] text-sobre-acento transition-opacity hover:opacity-90 @xl:w-auto"
     : `${boton.primario} w-full @xl:w-auto`;
   return (
     <form onSubmit={enviar} className={sobrio ? "space-y-7" : "space-y-4"}>

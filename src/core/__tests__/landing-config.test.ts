@@ -4,6 +4,7 @@ import { estudioEjemplo } from "../defaults/estudio";
 import { libreEjemplo } from "../defaults/libre";
 import { PLANTILLAS_DE_RUBRO, type SeccionConfig } from "../registry";
 import { landingConfigSchema, type ConfigDe } from "../schema/landing-config";
+import { migrateConfig } from "../schema/migrate";
 
 const clonar = <P extends keyof typeof configsPorDefecto>(p: P): ConfigDe<P> => structuredClone(configsPorDefecto[p]);
 
@@ -22,6 +23,14 @@ describe("landingConfigSchema", () => {
     const r = landingConfigSchema.safeParse(estudioEjemplo);
     expect(r.success ? [] : r.error.issues).toEqual([]);
     expect(JSON.parse(JSON.stringify(estudioEjemplo)).demo).toBeUndefined();
+  });
+
+  it("un borrador con la home bento «Asimétrico» (retirada) abre como «Clásico»", () => {
+    const viejo = structuredClone(configsPorDefecto.generico) as { secciones: { tipo: string; variante: string }[] };
+    viejo.secciones.find((x) => x.tipo === "bento")!.variante = "asimetrico";
+    const r = migrateConfig(viejo);
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.config.secciones.find((x) => x.tipo === "bento")?.variante).toBe("clasico");
   });
 
   describe("plantilla a tu medida", () => {
