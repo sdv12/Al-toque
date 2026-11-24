@@ -327,7 +327,7 @@ export const registry = {
       nombre: "Estudio jurídico",
       rubro: "Abogados",
       descripcion:
-        "Cinco diseños con estructura propia: clásico, editorial, contemporáneo, expediente y boutique nocturna. Áreas de práctica, equipo, cómo trabajan, reuniones presenciales o por videollamada y preguntas frecuentes.",
+        "El clásico en cuatro combinaciones de color y seis diseños con estructura propia: editorial, contemporáneo, expediente, código, mármol y boutique nocturna. Áreas de práctica, equipo, cómo trabajan, reuniones presenciales o por videollamada y preguntas frecuentes.",
       modos: ["claro"],
       paletas: {
         claro: { fondo: "#f6f2ea", superficie: "#fffdf8", texto: "#1b2533", textoSuave: "#545b69" },
@@ -345,10 +345,15 @@ export const registry = {
         etiqueta: "Diseño y portada",
         descripcion: "Elegí el diseño: cada uno arma toda la página a su manera.",
         variantes: {
-          clasico: "Clásico",
+          clasico: "Clásico azul tinta",
+          "clasico-bordo": "Clásico bordó",
+          "clasico-verde": "Clásico verde inglés",
+          "clasico-piedra": "Clásico piedra",
           editorial: "Editorial",
           moderno: "Contemporáneo",
           expediente: "Expediente",
+          codigo: "Código",
+          marmol: "Mármol",
           nocturno: "Boutique nocturna",
         },
         inicio: true,

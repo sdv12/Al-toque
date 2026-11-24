@@ -138,7 +138,7 @@ export const COMENTARIO_RUBRO: Record<string, string> = {
   comercio: "Perfecto. Con empleados, lo que más sirve es saber quién vendió qué.",
   veterinaria: "¡Qué lindo! Turnos para baño y consultas, y los datos de cada mascota.",
   tatuajes: "¡Buenísimo! El portfolio de trabajos y la seña para reservar son clave.",
-  abogados: "Muy bien. Para un estudio jurídico tenemos cinco diseños sobrios, con áreas, equipo y reuniones presenciales o por videollamada.",
+  abogados: "Muy bien. Para un estudio jurídico tenemos diez diseños sobrios, con áreas, equipo y reuniones presenciales o por videollamada.",
   estudio: "Perfecto. Un estudio serio necesita una página clara y un turno para la primera consulta.",
   fotografia: "¡Genial! La galería es la protagonista en fotografía.",
   musica: "¡Lindo! Horarios de clases y una clase de prueba para que se animen.",

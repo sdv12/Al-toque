@@ -49,7 +49,7 @@ export const FICHAS: Record<Plantilla, Ficha> = {
   juridico: {
     slug: "demo-juridico",
     fuenteDisplay: "var(--fuente-ju-cormorant)",
-    bajada: "Cinco diseños para estudios jurídicos: clásico, editorial, contemporáneo, expediente y nocturno.",
+    bajada: "El clásico en cuatro colores y seis diseños propios: editorial, contemporáneo, expediente, código, mármol y nocturno.",
     destacados: [
       "Áreas de práctica y equipo con especialidad y matrícula.",
       "Reuniones presenciales o por videollamada, con día y hora, confirmadas por WhatsApp.",
