@@ -1,5 +1,5 @@
 /*
- * Estudio jurídico — cinco diseños con estructura propia. Usan los tokens del kit (--lk-*): la raíz
+ * Estudio jurídico — el clásico en cuatro colores y seis diseños con estructura propia. Usan los tokens del kit (--lk-*): la raíz
  * tiene la paleta del diseño «Clásico» (la que el registry espeja; hay un test) y cada diseño pisa
  * la suya en `[data-diseno]`. Si el cliente elige otro acento, LandingJuridico hereda el de la raíz.
  */
@@ -65,6 +65,49 @@
 [data-diseno="clasico"] {
   /* La paleta de la raíz. */
   --ju-detalle: #a8834a;
+}
+
+/* Las otras tres combinaciones del clásico (misma estructura, otra paleta y tipografía). */
+[data-diseno="clasico-bordo"] {
+  --lk-fondo: #f7f1ec; --lk-superficie: #fffbf7; --lk-superficie-2: #eee2d9;
+  --lk-texto: #2a1a1d; --lk-texto-suave: #5f4b4f; --lk-borde: #dccbc2;
+  --lk-acento: #7a2431; --lk-acento-texto: #7a2431; --lk-acento-relleno: #7a2431; --lk-sobre-acento: #ffffff;
+  --lk-fuente-display: var(--fuente-ju-newsreader), Georgia, serif;
+  --ju-detalle: #a98249;
+}
+[data-diseno="clasico-verde"] {
+  --lk-fondo: #f1f3ec; --lk-superficie: #fbfcf8; --lk-superficie-2: #e1e6da;
+  --lk-texto: #18261f; --lk-texto-suave: #4c5a52; --lk-borde: #cfd6c8;
+  --lk-acento: #2f5442; --lk-acento-texto: #2f5442; --lk-acento-relleno: #2f5442; --lk-sobre-acento: #ffffff;
+  --lk-fuente-display: var(--fuente-ju-source-serif), Georgia, serif;
+  --ju-detalle: #94783f;
+}
+[data-diseno="clasico-piedra"] {
+  --lk-fondo: #efedea; --lk-superficie: #faf9f7; --lk-superficie-2: #e2dfda;
+  --lk-texto: #1f2124; --lk-texto-suave: #55585e; --lk-borde: #d1cdc6;
+  --lk-acento: #33363b; --lk-acento-texto: #33363b; --lk-acento-relleno: #33363b; --lk-sobre-acento: #ffffff;
+  --lk-fuente-display: var(--fuente-ju-bodoni), Didot, serif;
+  --lk-fuente-cuerpo: var(--fuente-ju-jost), system-ui, sans-serif;
+  --ju-detalle: #8a7458;
+}
+
+[data-diseno="codigo"] {
+  --lk-fondo: #f6f4ee; --lk-superficie: #fffefb; --lk-superficie-2: #e9e5da;
+  --lk-texto: #161616; --lk-texto-suave: #545250; --lk-borde: #cfc9bc;
+  --lk-acento: #1f3f73; --lk-acento-texto: #1f3f73; --lk-acento-relleno: #1f3f73; --lk-sobre-acento: #ffffff;
+  --lk-fuente-display: var(--fuente-ju-source-serif), Georgia, serif;
+  --lk-fuente-cuerpo: var(--fuente-ju-source-serif), Georgia, serif;
+  --ju-detalle: #b8955a;
+}
+
+[data-diseno="marmol"] {
+  --lk-fondo: #f2f0eb; --lk-superficie: #fbfaf7; --lk-superficie-2: #e4e0d7;
+  --lk-texto: #23211e; --lk-texto-suave: #5a564f; --lk-borde: #d2ccc0;
+  --lk-acento: #5e4a2c; --lk-acento-texto: #5e4a2c; --lk-acento-relleno: #5e4a2c; --lk-sobre-acento: #ffffff;
+  --lk-fuente-display: var(--fuente-ju-cinzel), "Trajan Pro", serif;
+  --lk-fuente-cuerpo: var(--fuente-ju-cormorant), Georgia, serif;
+  --lk-t-cuerpo: 1.125rem;
+  --ju-detalle: #a88a56;
 }
 
 [data-diseno="editorial"] {
@@ -173,3 +216,24 @@
 
 /* Nocturno: líneas de bronce. */
 .ju-bronce { background: linear-gradient(90deg, transparent, var(--ju-detalle), transparent); height: 1px; }
+
+/* Código: artículos numerados solos (CSS counters), notas al margen e incisos. */
+[data-diseno="codigo"] { counter-reset: articulo; }
+.ju-art { counter-increment: articulo; }
+.ju-art-n::before { content: "Art. " counter(articulo) "°"; }
+.ju-inciso { counter-increment: inciso; }
+.ju-incisos { counter-reset: inciso; }
+.ju-inciso::before { content: counter(inciso, lower-alpha) ") "; font-style: italic; color: var(--lk-acento); }
+
+/* Mármol: veta suave, columnas estriadas y frontón. */
+.ju-marmol {
+  background-color: var(--lk-fondo);
+  background-image:
+    radial-gradient(120% 60% at 10% 0%, color-mix(in srgb, var(--lk-texto) 5%, transparent), transparent 60%),
+    linear-gradient(115deg, transparent 40%, color-mix(in srgb, var(--lk-texto) 4%, transparent) 42%, transparent 45%),
+    linear-gradient(160deg, transparent 62%, color-mix(in srgb, var(--ju-detalle) 10%, transparent) 63%, transparent 66%);
+}
+.ju-estrias {
+  background-image: repeating-linear-gradient(90deg, color-mix(in srgb, var(--lk-texto) 9%, transparent) 0 2px, transparent 2px 14px);
+}
+.ju-fronton { clip-path: polygon(50% 0, 100% 100%, 0 100%); }

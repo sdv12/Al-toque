@@ -4,6 +4,11 @@ Versionado semántico: PATCH = arreglos y ajustes; MINOR = funcionalidad nueva v
 MAJOR = cambios que rompen algo existente (formato de configs, flujo, backend).
 La versión se muestra en el footer de la home y en el configurador.
 
+## 1.24.0 · 2026-11-24
+- **Botón «Diseños» en las demos** de Salón de belleza y Estudio jurídico, como en la página de estilista: el original con sus combinaciones de color y los diseños con estructura propia, para probarlos todos sin salir de la demo.
+- **Estudio jurídico con diez diseños**: el clásico en cuatro colores (azul tinta, bordó, verde inglés y piedra) y seis con estructura propia: editorial, contemporáneo, expediente, nocturno y dos nuevos, **Código** (artículos numerados, incisos y notas al margen) y **Mármol** (frontón, columnas y escalinata).
+- **Soluciones de la home**: se suman **Al Toque Belleza** (peluquerías, uñas, estética y spa) y **Al Toque Legal** (abogados y estudios jurídicos), con su demo.
+
 ## 1.23.0 · 2026-11-24
 - **Nueva plantilla «Salón de belleza»** para peluquerías, uñas y estética, con los diez diseños de la página de estilista: rosa empolvado, salvia, lila, arena, turnero, revista, muestrario, vidriera, corcho y setentas. Cada uno arma la página a su manera; se eligen en el configurador. Demo en /l/demo-estetica y ficha en /web.
 - **Nueva plantilla «Estudio jurídico»** para abogados, con cinco diseños: clásico, editorial, contemporáneo, expediente y boutique nocturna. Áreas de práctica, equipo con matrícula, cómo trabajan, preguntas, contacto y pedido de reunión (en el estudio o por videollamada, con día y hora, confirmada por WhatsApp). Demo en /l/demo-juridico y ficha en /web.

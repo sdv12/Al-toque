@@ -1,7 +1,7 @@
 "use client";
 
 /*
- * Lo que comparten los cinco diseños: los datos del estudio armados desde la config, el pedido de
+ * Lo que comparten todos los diseños: los datos del estudio armados desde la config, el pedido de
  * reunión (sobre useBooking del core), las preguntas, el plano y el pie. Todo se pinta con los
  * tokens del kit (--lk-*), así cada diseño lo tiñe con su paleta sin reescribirlo.
  */
