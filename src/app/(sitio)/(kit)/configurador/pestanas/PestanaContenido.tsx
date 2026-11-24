@@ -26,7 +26,7 @@ function coleccionesDe(config: LandingConfig): Set<ClaveContenido> {
 
 /** La agenda de turnos se edita en las plantillas con reserva y en "a tu medida" con el bloque de turnos. */
 function usaTurnos(config: LandingConfig): boolean {
-  if (config.plantilla === "barberia" || config.plantilla === "consultorio") return true;
+  if (config.plantilla === "barberia" || config.plantilla === "consultorio" || config.plantilla === "juridico") return true;
   return config.plantilla === "libre" && (config.secciones as readonly { tipo: string }[]).some((s) => s.tipo === "turnos");
 }
 
@@ -34,6 +34,9 @@ export function PestanaContenido({ config, editar, errorDe }: Props) {
   const usadas = coleccionesDe(config);
   const c = config.contenido;
   const esConsultorio = config.plantilla === "consultorio";
+  const esJuridico = config.plantilla === "juridico";
+  /** Rubros con matrícula y reuniones presenciales o virtuales. */
+  const conMatricula = esConsultorio || esJuridico;
   const editarLineas = (clave: "obrasSociales" | "primeraConsulta", lista: string[]) =>
     editar((b) => {
       b.contenido[clave] = lista;
@@ -118,7 +121,7 @@ export function PestanaContenido({ config, editar, errorDe }: Props) {
                   <Interruptor etiqueta="Mostrar como «desde»" marcado={!!s.precioDesde} onCambio={(v) => set({ precioDesde: v })} />
                   <CampoTexto etiqueta="Categoría" ayuda="Agrupa la carta (ej.: Pelo, Barba, Combos)." valor={s.categoria ?? ""} onCambio={(v) => set({ categoria: v || undefined })} />
                   <CampoArea etiqueta="Descripción" filas={2} maxLength={200} valor={s.descripcion ?? ""} onCambio={(v) => set({ descripcion: v || undefined })} />
-                  {esConsultorio && (
+                  {conMatricula && (
                     <div className="grid grid-cols-2 gap-3">
                       <Selector
                         etiqueta="Modalidad"
@@ -130,7 +133,7 @@ export function PestanaContenido({ config, editar, errorDe }: Props) {
                         ]}
                         onCambio={(v) => set({ modalidad: v })}
                       />
-                      <Selector
+                      {esConsultorio && <Selector
                         etiqueta="Cobertura"
                         valor={s.cobertura ?? "ambas"}
                         opciones={[
@@ -139,7 +142,7 @@ export function PestanaContenido({ config, editar, errorDe }: Props) {
                           { valor: "ambas", texto: "Las dos" },
                         ]}
                         onCambio={(v) => set({ cobertura: v })}
-                      />
+                      />}
                     </div>
                   )}
                   {(c.equipo?.length ?? 0) > 0 && (
@@ -179,7 +182,7 @@ export function PestanaContenido({ config, editar, errorDe }: Props) {
             items={c.equipo ?? []}
             resumen={(p) => p.nombre || "Sin nombre"}
             textoAgregar="Agregar persona"
-            onAgregar={() => editarLista("equipo", (l) => void l.push({ id: nuevoId("persona"), nombre: "Nombre Apellido", rol: "Barbero", especialidad: "" }))}
+            onAgregar={() => editarLista("equipo", (l) => void l.push({ id: nuevoId("persona"), nombre: "Nombre Apellido", rol: esJuridico ? "Abogada" : esConsultorio ? "Profesional" : "Barbero", especialidad: "" }))}
             onQuitar={(i) =>
               editar((b) => {
                 const id = b.contenido.equipo?.[i]?.id;
@@ -202,10 +205,10 @@ export function PestanaContenido({ config, editar, errorDe }: Props) {
                     <CampoTexto etiqueta="Rol" valor={p.rol} onCambio={(v) => set({ rol: v })} error={errorDe(`${ruta}.rol`)} />
                     <CampoTexto etiqueta="Especialidad" valor={p.especialidad} onCambio={(v) => set({ especialidad: v })} />
                   </div>
-                  {esConsultorio && (
+                  {conMatricula && (
                     <CampoTexto
                       etiqueta="Matrícula"
-                      placeholder="MP 12.345 · ME 6.789"
+                      placeholder={esJuridico ? "M.P. 1-12345" : "MP 12.345 · ME 6.789"}
                       ayuda="Se muestra junto al nombre y en el pie de la página."
                       valor={p.matricula ?? ""}
                       maxLength={30}
@@ -237,7 +240,10 @@ export function PestanaContenido({ config, editar, errorDe }: Props) {
       )}
 
       {usadas.has("primeraConsulta") && (
-        <Bloque titulo="Primera consulta" descripcion="Qué tiene que traer o saber el paciente. Una indicación por línea.">
+        <Bloque
+          titulo={esJuridico ? "Cómo trabajamos" : "Primera consulta"}
+          descripcion={esJuridico ? "Los pasos desde la primera reunión. Uno por línea." : "Qué tiene que traer o saber el paciente. Una indicación por línea."}
+        >
           <CampoLineas
             etiqueta="Indicaciones"
             filas={6}

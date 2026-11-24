@@ -1,0 +1,175 @@
+/*
+ * Estudio jurídico — cinco diseños con estructura propia. Usan los tokens del kit (--lk-*): la raíz
+ * tiene la paleta del diseño «Clásico» (la que el registry espeja; hay un test) y cada diseño pisa
+ * la suya en `[data-diseno]`. Si el cliente elige otro acento, LandingJuridico hereda el de la raíz.
+ */
+[data-plantilla="juridico"] {
+  --lk-fondo: #f6f2ea;
+  --lk-superficie: #fffdf8;
+  --lk-superficie-2: #ece5d8;
+  --lk-texto: #1b2533;
+  --lk-texto-suave: #545b69;
+  --lk-borde: #d9d0bf;
+  --lk-acento: #22385c;
+  --lk-acento-texto: #22385c;
+  --lk-acento-relleno: #22385c;
+  --lk-sobre-acento: #ffffff;
+  --lk-foco: var(--lk-acento-texto);
+
+  --lk-fuente-display: var(--fuente-ju-cormorant), Georgia, serif;
+  --lk-fuente-cuerpo: var(--fuente-ju-franklin), system-ui, sans-serif;
+  --lk-fuente-nota: var(--lk-fuente-cuerpo);
+
+  --lk-t-display: clamp(2.6rem, 1.4rem + 6cqi, 6rem);
+  --lk-t-display-alto: 0.98;
+  --lk-t-display-tracking: -0.01em;
+  --lk-t-display-peso: 600;
+  --lk-t-titulo: clamp(1.9rem, 1.3rem + 2.6cqi, 3.2rem);
+  --lk-t-titulo-alto: 1.08;
+  --lk-t-subtitulo: clamp(1.15rem, 1.05rem + 0.6cqi, 1.4rem);
+  --lk-t-subtitulo-alto: 1.35;
+  --lk-t-cuerpo: 1rem;
+  --lk-t-cuerpo-alto: 1.65;
+  --lk-t-chico: 0.9375rem;
+  --lk-t-chico-alto: 1.55;
+  --lk-t-mini: 0.8125rem;
+  --lk-t-mini-alto: 1.4;
+  --lk-medida: 40rem;
+
+  --lk-radio: 0;
+  --lk-radio-control: 0;
+  --lk-borde-ancho: 1px;
+
+  --lk-placeholder-fondo: var(--lk-superficie-2);
+  --lk-placeholder-trama: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--lk-texto) 5%, transparent) 25%,
+    transparent 25% 50%,
+    color-mix(in srgb, var(--lk-texto) 5%, transparent) 50% 75%,
+    transparent 75%
+  ) 0 0 / 16px 16px;
+
+  /* Un segundo color por diseño (filetes, sellos). */
+  --ju-detalle: #a8834a;
+}
+
+/* ───────────── Paletas y tipografías de cada diseño ───────────── */
+[data-plantilla="juridico"] [data-diseno] {
+  font-family: var(--lk-fuente-cuerpo);
+  color: var(--lk-texto);
+  background: var(--lk-fondo);
+  overflow-x: clip;
+}
+[data-plantilla="juridico"] [data-diseno] :where(h1, h2, h3) { font-family: var(--lk-fuente-display); }
+
+[data-diseno="clasico"] {
+  /* La paleta de la raíz. */
+  --ju-detalle: #a8834a;
+}
+
+[data-diseno="editorial"] {
+  --lk-fondo: #f3f0e8; --lk-superficie: #fbfaf6; --lk-superficie-2: #e6e1d5;
+  --lk-texto: #111111; --lk-texto-suave: #4d4d4d; --lk-borde: #111111;
+  --lk-acento: #b3261e; --lk-acento-texto: #a3221b; --lk-acento-relleno: #b3261e; --lk-sobre-acento: #ffffff;
+  --lk-fuente-display: var(--fuente-ju-newsreader), Georgia, serif;
+  --lk-fuente-cuerpo: var(--fuente-ju-instrument), system-ui, sans-serif;
+  --ju-detalle: #111111;
+}
+
+[data-diseno="moderno"] {
+  --lk-fondo: #f2f4f6; --lk-superficie: #ffffff; --lk-superficie-2: #e6eaef;
+  --lk-texto: #0f1b2a; --lk-texto-suave: #4f5d70; --lk-borde: #d7dde5;
+  --lk-acento: #0f6b5c; --lk-acento-texto: #0d6152; --lk-acento-relleno: #0f6b5c; --lk-sobre-acento: #ffffff;
+  --lk-fuente-display: var(--fuente-ju-manrope), system-ui, sans-serif;
+  --lk-fuente-cuerpo: var(--fuente-ju-manrope), system-ui, sans-serif;
+  --lk-radio: 18px; --lk-radio-control: 12px;
+  --ju-detalle: #c9e6df;
+}
+
+[data-diseno="expediente"] {
+  --lk-fondo: #e6d8bd; --lk-superficie: #fbf6ea; --lk-superficie-2: #d8c7a6;
+  --lk-texto: #2a2118; --lk-texto-suave: #5e4f3d; --lk-borde: #a8916a;
+  --lk-acento: #9b2f1f; --lk-acento-texto: #8e2b1c; --lk-acento-relleno: #9b2f1f; --lk-sobre-acento: #ffffff;
+  --lk-fuente-display: var(--fuente-ju-courier), "Courier New", monospace;
+  --lk-fuente-cuerpo: var(--fuente-ju-source-serif), Georgia, serif;
+  --lk-radio: 3px; --lk-radio-control: 2px;
+  --ju-detalle: #2f4a7a;
+}
+
+[data-diseno="nocturno"] {
+  --lk-fondo: #111916; --lk-superficie: #19231f; --lk-superficie-2: #222e29;
+  --lk-texto: #eee8da; --lk-texto-suave: #b3ad9e; --lk-borde: #34413b;
+  --lk-acento: #c4a46b; --lk-acento-texto: #cfb27c; --lk-acento-relleno: #c4a46b; --lk-sobre-acento: #111916;
+  --lk-fuente-display: var(--fuente-ju-bodoni), Didot, serif;
+  --lk-fuente-cuerpo: var(--fuente-ju-jost), system-ui, sans-serif;
+  --ju-detalle: #c4a46b;
+}
+
+/* ───────────── Piezas ───────────── */
+.ju-etiqueta { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; }
+.ju-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 2.9rem;
+  padding: 0.7rem 1.4rem; font-weight: 600; font-size: 0.95rem; text-decoration: none; cursor: pointer;
+  border: 1px solid transparent; border-radius: var(--lk-radio-control);
+  transition: background-color .2s, color .2s, border-color .2s;
+}
+.ju-btn:disabled { opacity: .45; cursor: not-allowed; }
+.ju-btn-lleno { background: var(--lk-acento-relleno); color: var(--lk-sobre-acento); }
+.ju-btn-lleno:hover:not(:disabled) { background: color-mix(in srgb, var(--lk-acento-relleno) 85%, var(--lk-texto)); }
+.ju-btn-borde { border-color: currentColor; color: inherit; background: transparent; }
+.ju-btn-borde:hover { background: color-mix(in srgb, currentColor 8%, transparent); }
+.ju-campo {
+  display: block; width: 100%; border: 1px solid var(--lk-borde); background: var(--lk-superficie); color: var(--lk-texto);
+  padding: 0.65rem 0.8rem; border-radius: var(--lk-radio-control); font: inherit;
+}
+[data-diseno="editorial"] .ju-campo { border-color: color-mix(in srgb, var(--lk-texto) 35%, transparent); }
+.ju-opcion {
+  display: block; border: 1px solid var(--lk-borde); background: var(--lk-superficie); border-radius: var(--lk-radio-control);
+  transition: border-color .15s, background-color .15s;
+}
+[data-diseno="editorial"] .ju-opcion { border-color: color-mix(in srgb, var(--lk-texto) 30%, transparent); }
+.peer:checked + .ju-opcion {
+  border-color: var(--lk-acento);
+  background: color-mix(in srgb, var(--lk-acento) 10%, var(--lk-superficie));
+  box-shadow: inset 0 0 0 1px var(--lk-acento);
+}
+.peer:focus-visible + .ju-opcion { outline: 2px solid var(--lk-foco); outline-offset: 2px; }
+.ju-mapa {
+  position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden;
+  background-color: var(--lk-superficie);
+  background-image:
+    linear-gradient(90deg, color-mix(in srgb, var(--lk-borde) 70%, transparent) 1px, transparent 1px),
+    linear-gradient(color-mix(in srgb, var(--lk-borde) 70%, transparent) 1px, transparent 1px),
+    linear-gradient(115deg, transparent 46%, color-mix(in srgb, var(--lk-acento) 30%, transparent) 46% 51%, transparent 51%),
+    linear-gradient(25deg, transparent 60%, var(--lk-borde) 60% 63%, transparent 63%);
+  background-size: 30px 30px, 30px 30px, 100% 100%, 100% 100%;
+}
+
+/* Clásico: sello con el texto en círculo y filetes dobles. */
+.ju-filete-doble { border-top: 3px double var(--ju-detalle); }
+.ju-sello { color: var(--ju-detalle); }
+
+/* Editorial: capitular. */
+.ju-capitular::first-letter {
+  float: left; font-family: var(--lk-fuente-display); font-size: 4.2em; line-height: 0.82; padding: 0.06em 0.1em 0 0; color: var(--lk-acento);
+}
+
+/* Expediente: papel rayado, perforaciones y sello de goma. */
+.ju-papel {
+  background-color: var(--lk-superficie);
+  background-image: repeating-linear-gradient(transparent 0 31px, color-mix(in srgb, var(--ju-detalle) 14%, transparent) 31px 32px);
+}
+.ju-perforado { position: relative; }
+.ju-perforado::before {
+  content: ""; position: absolute; left: 14px; top: 0; bottom: 0; width: 12px;
+  background: radial-gradient(circle 5px at 6px 50%, var(--lk-fondo) 98%, transparent) 0 0 / 12px 64px repeat-y;
+}
+.ju-sello-goma {
+  display: inline-block; border: 3px double currentColor; color: var(--lk-acento); padding: 0.35rem 0.8rem;
+  font-family: var(--lk-fuente-display); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  transform: rotate(-6deg); opacity: 0.85; mix-blend-mode: multiply;
+}
+.ju-guiones { background-image: radial-gradient(currentColor 0.9px, transparent 1.2px); background-size: 6px 6px; background-position: 0 70%; background-repeat: repeat-x; opacity: .5; }
+
+/* Nocturno: líneas de bronce. */
+.ju-bronce { background: linear-gradient(90deg, transparent, var(--ju-detalle), transparent); height: 1px; }

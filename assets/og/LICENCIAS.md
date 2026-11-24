@@ -15,6 +15,8 @@ bajo la SIL Open Font License 1.1, que permite redistribuirlas junto al software
 | generico-cuerpo.ttf | Instrument Sans | 400 |
 | estetica-display.ttf | Bodoni Moda (la del diseño Revista) | 500 |
 | estetica-cuerpo.ttf | Jost (la del diseño Salvia) | 400 |
+| juridico-display.ttf | Bodoni Moda (la del diseño Boutique nocturna) | 500 |
+| juridico-cuerpo.ttf | Jost (la del diseño Boutique nocturna) | 400 |
 | libre-display.ttf | Schibsted Grotesk | 800 |
 | libre-cuerpo.ttf | Source Sans 3 | 400 |
 

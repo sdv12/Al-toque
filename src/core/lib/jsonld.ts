@@ -8,6 +8,7 @@ const TIPO_SCHEMA_ORG: Record<Plantilla, string> = {
   alojamiento: "LodgingBusiness",
   generico: "LocalBusiness",
   estetica: "BeautySalon",
+  juridico: "LegalService",
   libre: "LocalBusiness",
 };
 

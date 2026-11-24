@@ -4,6 +4,7 @@ import { PLANTILLAS_DE_RUBRO as PLANTILLAS, paletaDe, registry } from "@/core/re
 type Plantilla = (typeof PLANTILLAS)[number];
 import { fuentes as fuentesAlojamiento } from "@/templates/alojamiento";
 import { fuentes as fuentesEstetica } from "@/templates/estetica";
+import { fuentes as fuentesJuridico } from "@/templates/juridico";
 import { fuentes as fuentesBarberia } from "@/templates/barberia";
 import { fuentes as fuentesGenerico } from "@/templates/generico";
 import { formatearPesos } from "@/core/lib/mensajes";
@@ -21,6 +22,7 @@ const FUENTES: Record<Plantilla, string> = {
   alojamiento: fuentesAlojamiento,
   generico: fuentesGenerico,
   estetica: fuentesEstetica,
+  juridico: fuentesJuridico,
 };
 
 const DOMINIO = "altoque-cba.com.ar";

@@ -28,6 +28,7 @@ const DEMOS = [
   { plantilla: "alojamiento", slug: "demo-casas" },
   { plantilla: "generico", slug: "demo-portfolio" },
   { plantilla: "estetica", slug: "demo-estetica" },
+  { plantilla: "juridico", slug: "demo-juridico" },
   // Estudio no es una plantilla aparte (es Portfolio modular sobrio), pero tiene su ficha en /web.
   { plantilla: "estudio", slug: "demo-arquitectos", ruta: "/estudio" },
 ];

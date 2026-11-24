@@ -4,6 +4,7 @@ import { alojamientoDefault } from "./alojamiento";
 import { barberiaDefault } from "./barberia";
 import { consultorioDefault } from "./consultorio";
 import { esteticaDefault } from "./estetica";
+import { juridicoDefault } from "./juridico";
 import { genericoDefault } from "./generico";
 import { libreDefault } from "./libre";
 
@@ -14,5 +15,6 @@ export const configsPorDefecto: { [P in Plantilla]: ConfigDe<P> } = {
   alojamiento: alojamientoDefault,
   generico: genericoDefault,
   estetica: esteticaDefault,
+  juridico: juridicoDefault,
   libre: libreDefault,
 };

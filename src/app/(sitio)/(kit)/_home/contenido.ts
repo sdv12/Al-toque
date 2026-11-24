@@ -5,7 +5,7 @@ type Plantilla = (typeof PLANTILLAS_DE_RUBRO)[number];
 /** Textos de la home pública. Solo afirmaciones que el producto cumple hoy. */
 
 /** Rubros de Al Toque. Salud no va: es de Sala de Espera, la marca de ese rubro. */
-export const RUBROS = ["Peluquerías", "Estética", "Alojamientos", "Comercios", "Oficios", "Talleres", "Clases", "Lo que tengas"];
+export const RUBROS = ["Peluquerías", "Estética", "Estudios jurídicos", "Alojamientos", "Comercios", "Oficios", "Talleres", "Clases", "Lo que tengas"];
 
 type Ficha = {
   slug: string;
@@ -44,6 +44,16 @@ export const FICHAS: Record<Plantilla, Ficha> = {
       "Cartel de «abierto ahora» con el horario del día y la espera.",
       "Servicios con duración y precio, y consulta directa por WhatsApp.",
       "Trabajos, dónde queda y el Instagram del salón.",
+    ],
+  },
+  juridico: {
+    slug: "demo-juridico",
+    fuenteDisplay: "var(--fuente-ju-cormorant)",
+    bajada: "Cinco diseños para estudios jurídicos: clásico, editorial, contemporáneo, expediente y nocturno.",
+    destacados: [
+      "Áreas de práctica y equipo con especialidad y matrícula.",
+      "Reuniones presenciales o por videollamada, con día y hora, confirmadas por WhatsApp.",
+      "Cómo trabajan, preguntas frecuentes y el aviso de que no es asesoramiento.",
     ],
   },
   generico: {

@@ -131,19 +131,17 @@
 
 /* ───────────── Base de los diseños ───────────── */
 
-[data-diseno] {
+[data-plantilla="estetica"] [data-diseno] {
   font-family: var(--lk-fuente-cuerpo);
   color: rgb(var(--c-tinta));
   background-color: rgb(var(--c-fondo));
   overflow-x: clip;
 }
-[data-diseno] h1,
-[data-diseno] h2,
-[data-diseno] h3 {
+[data-plantilla="estetica"] [data-diseno] :where(h1, h2, h3) {
   font-family: var(--lk-fuente-display);
   margin: 0;
 }
-[data-diseno] ::selection {
+[data-plantilla="estetica"] [data-diseno] ::selection {
   background-color: rgb(var(--c-acento));
   color: rgb(var(--c-tinta));
 }

@@ -322,6 +322,75 @@ export const registry = {
     },
   }),
 
+  juridico: definirPlantilla({
+    meta: {
+      nombre: "Estudio jurídico",
+      rubro: "Abogados",
+      descripcion:
+        "Cinco diseños con estructura propia: clásico, editorial, contemporáneo, expediente y boutique nocturna. Áreas de práctica, equipo, cómo trabajan, reuniones presenciales o por videollamada y preguntas frecuentes.",
+      modos: ["claro"],
+      paletas: {
+        claro: { fondo: "#f6f2ea", superficie: "#fffdf8", texto: "#1b2533", textoSuave: "#545b69" },
+      },
+      acentos: [
+        { nombre: "El del diseño", hex: "#22385c" },
+        { nombre: "Bordó", hex: "#7a2431" },
+        { nombre: "Verde inglés", hex: "#2f5442" },
+        { nombre: "Grafito", hex: "#33363b" },
+        { nombre: "Petróleo", hex: "#1f5866" },
+      ],
+    },
+    secciones: {
+      portada: {
+        etiqueta: "Diseño y portada",
+        descripcion: "Elegí el diseño: cada uno arma toda la página a su manera.",
+        variantes: {
+          clasico: "Clásico",
+          editorial: "Editorial",
+          moderno: "Contemporáneo",
+          expediente: "Expediente",
+          nocturno: "Boutique nocturna",
+        },
+        inicio: true,
+      },
+      areas: {
+        etiqueta: "Áreas de práctica",
+        descripcion: "En qué temas trabajan, con una descripción corta de cada uno.",
+        variantes: { diseno: "Según el diseño" },
+        requiere: ["servicios"],
+      },
+      equipo: {
+        etiqueta: "Equipo",
+        descripcion: "Abogadas y abogados con su especialidad y matrícula.",
+        variantes: { diseno: "Según el diseño" },
+        requiere: ["equipo"],
+      },
+      proceso: {
+        etiqueta: "Cómo trabajamos",
+        descripcion: "Los pasos desde la primera reunión (una línea por paso).",
+        variantes: { diseno: "Según el diseño" },
+        requiere: ["primeraConsulta"],
+      },
+      reunion: {
+        etiqueta: "Pedir una reunión",
+        descripcion: "Tema, con quién, día y hora, presencial o por videollamada: se confirma por WhatsApp.",
+        variantes: { diseno: "Según el diseño" },
+        requiere: ["servicios"],
+      },
+      preguntas: {
+        etiqueta: "Preguntas frecuentes",
+        descripcion: "Honorarios, plazos, qué traer a la primera reunión.",
+        variantes: { diseno: "Según el diseño" },
+        requiere: ["faq"],
+      },
+      contacto: {
+        etiqueta: "Contacto y dirección",
+        descripcion: "Dirección, horario, cómo llegar y WhatsApp.",
+        variantes: { diseno: "Según el diseño" },
+      },
+    },
+  }),
+
   /**
    * "A tu medida": arranca en blanco (solo header y footer) y se arma agregando bloques.
    * Los bloques marcados `sistema` necesitan backend real y suman costo (ver lib/precios).
@@ -437,10 +506,10 @@ type Registro = typeof registry;
 
 export type Plantilla = keyof Registro;
 
-export const PLANTILLAS = ["barberia", "consultorio", "alojamiento", "generico", "estetica", "libre"] as const satisfies readonly Plantilla[];
+export const PLANTILLAS = ["barberia", "consultorio", "alojamiento", "generico", "estetica", "juridico", "libre"] as const satisfies readonly Plantilla[];
 
 /** Plantillas con estructura propia y demo (las que se muestran en Al Toque Web). */
-export const PLANTILLAS_DE_RUBRO = ["barberia", "estetica", "alojamiento", "generico"] as const satisfies readonly Plantilla[];
+export const PLANTILLAS_DE_RUBRO = ["barberia", "estetica", "juridico", "alojamiento", "generico"] as const satisfies readonly Plantilla[];
 
 /**
  * Plantillas que Al Toque no ofrece: salud queda para Sala de Espera, la marca de ese rubro. El
