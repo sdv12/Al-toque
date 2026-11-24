@@ -38,7 +38,7 @@ const PROYECTOS = [
   { id: "cuervo", url: "https://cuervo-pelu.netlify.app" },
   { id: "1918", url: "https://1918-peluqueria.netlify.app" },
   { id: "lunagui", url: "https://lunagui-viajes.netlify.app" },
-  { id: "for-her", url: "https://for-her-estudio.netlify.app" },
+  { id: "ateneo", url: "https://ateneo-estudio.netlify.app" },
   { id: "casas-de-sierra", url: "https://casas-de-sierra-cba.netlify.app" },
 ];
 
@@ -109,7 +109,7 @@ try {
   // Proyectos reales (sitios en vivo, no dependen de BASE).
   const carpetaProyectos = new URL("../public/proyectos/", import.meta.url);
   await mkdir(carpetaProyectos, { recursive: true });
-  for (const proyecto of SOLO_CAJAS || SOLO_AGENDA || SOLO_DEMOS ? [] : PROYECTOS) {
+  for (const proyecto of SOLO_CAJAS || SOLO_AGENDA || SOLO_DEMOS ? [] : PROYECTOS.filter((p) => !process.env.PROYECTO || p.id === process.env.PROYECTO)) {
     await capturar(navegador, proyecto.url, VISTAS[0], `${proyecto.id}.jpg`, sinCartelNetlify, carpetaProyectos);
   }
 } finally {

@@ -168,11 +168,11 @@ export const PROYECTOS = [
     url: "https://casas-de-sierra-cba.netlify.app",
   },
   {
-    id: "for-her",
-    nombre: "For her",
+    id: "ateneo",
+    nombre: "Ateneo",
     rubro: "App de estudio",
-    texto: "Plan de estudio, tarjetas y simulacros para preparar un examen final.",
-    url: "https://for-her-estudio.netlify.app",
+    texto: "Plan de estudio, casos clínicos, tarjetas y simulacros para preparar un examen final.",
+    url: "https://ateneo-estudio.netlify.app",
   },
 ];
 

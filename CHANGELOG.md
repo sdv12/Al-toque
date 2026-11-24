@@ -4,6 +4,12 @@ Versionado semántico: PATCH = arreglos y ajustes; MINOR = funcionalidad nueva v
 MAJOR = cambios que rompen algo existente (formato de configs, flujo, backend).
 La versión se muestra en el footer de la home y en el configurador.
 
+## 1.23.0 · 2026-11-24
+- **Nueva plantilla «Salón de belleza»** para peluquerías, uñas y estética, con los diez diseños de la página de estilista: rosa empolvado, salvia, lila, arena, turnero, revista, muestrario, vidriera, corcho y setentas. Cada uno arma la página a su manera; se eligen en el configurador. Demo en /l/demo-estetica y ficha en /web.
+- **Nueva plantilla «Estudio jurídico»** para abogados, con cinco diseños: clásico, editorial, contemporáneo, expediente y boutique nocturna. Áreas de práctica, equipo con matrícula, cómo trabajan, preguntas, contacto y pedido de reunión (en el estudio o por videollamada, con día y hora, confirmada por WhatsApp). Demo en /l/demo-juridico y ficha en /web.
+- **Alto**: «Estética, uñas o spa» usa la plantilla nueva, y el rubro de estudios se separa en «Estudio jurídico o abogado» y «Estudio contable».
+- **Proyectos**: la app de estudio ahora se muestra con Ateneo, una demo con un examen inventado.
+
 ## 1.22.0 · 2026-11-23
 - **Editar cualquier texto desde la vista previa del configurador**: con «Seleccionar texto» se toca un texto de la página y a la izquierda se le cambia el tamaño (en píxeles), el color y la tipografía (ocho a elegir), o se quitan los cambios. Funciona en todas las plantillas y la página publicada se ve igual. El botón tiene un tooltip que aparece al abrir la pestaña «Textos».
 - **Estudio**: el color de acento ahora se ve (portada, filtros, proyectos, servicios, testimonios y formulario) y el modo claro u oscuro funciona: elegir un modo vuelve al fondo de la plantilla en ese modo.
