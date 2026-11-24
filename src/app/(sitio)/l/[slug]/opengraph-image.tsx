@@ -23,6 +23,7 @@ const LLAMADO: Record<Plantilla, string> = {
   consultorio: "Pedí tu turno online",
   alojamiento: "Consultá fechas",
   generico: "Pedí presupuesto",
+  estetica: "Consultá por WhatsApp",
   libre: "Escribinos",
 };
 
@@ -51,6 +52,8 @@ function Detalle({ plantilla, acento, borde }: { plantilla: Plantilla; acento: s
       return <div style={{ position: "absolute", left: 28, top: 28, right: 28, bottom: 28, border: `3px dashed ${borde}`, borderRadius: 28 }} />;
     case "libre":
       return <div style={{ position: "absolute", left: 80, right: 80, bottom: 40, height: 6, borderRadius: 999, background: acento }} />;
+    case "estetica":
+      return <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: 22, background: `repeating-linear-gradient(90deg, ${acento} 0 18px, transparent 18px 26px)` }} />;
     case "generico":
       return <div style={{ position: "absolute", right: -140, top: -140, width: 420, height: 420, borderRadius: 999, background: acento }} />;
   }

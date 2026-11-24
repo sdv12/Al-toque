@@ -252,6 +252,77 @@ export const registry = {
   }),
 
   /**
+   * Salón de belleza: diez diseños con estructura propia, portados de la página de estilista
+   * (src/templates/estetica). El diseño se elige en la portada y arma toda la página; las demás
+   * secciones se prenden o apagan, y el orden lo define cada diseño.
+   */
+  estetica: definirPlantilla({
+    meta: {
+      nombre: "Salón de belleza",
+      rubro: "Peluquería y estética",
+      descripcion:
+        "Diez diseños con estructura propia: del rosa editorial al turnero con tickets, la revista, el muestrario de mechones, la vidriera con neón, el corcho y los setentas. Consultas por WhatsApp y el estado de hoy.",
+      modos: ["claro"],
+      paletas: {
+        claro: { fondo: "#f3d8d2", superficie: "#fae8e5", texto: "#1f1a1a", textoSuave: "#5e4f4c" },
+      },
+      acentos: [
+        { nombre: "El del diseño", hex: "#9a5a50" },
+        { nombre: "Frambuesa", hex: "#a3264f" },
+        { nombre: "Salvia", hex: "#4f6b52" },
+        { nombre: "Lavanda", hex: "#6b4fa8" },
+        { nombre: "Cobre", hex: "#a8592a" },
+      ],
+    },
+    secciones: {
+      portada: {
+        etiqueta: "Diseño y portada",
+        descripcion: "Elegí el diseño: cada uno arma toda la página a su manera.",
+        variantes: {
+          rosa: "Rosa empolvado",
+          salvia: "Salvia",
+          lila: "Lila moderno",
+          arena: "Arena y oro",
+          turnero: "Turnero",
+          revista: "Revista",
+          muestrario: "Muestrario",
+          vidriera: "Vidriera",
+          corcho: "Corcho",
+          setentas: "Setentas",
+        },
+        inicio: true,
+      },
+      hoy: {
+        etiqueta: "Hoy en el salón",
+        descripcion: "Abierto o cerrado según tu horario, con un botón para consultar la espera.",
+        variantes: { diseno: "Según el diseño" },
+      },
+      servicios: {
+        etiqueta: "Servicios",
+        descripcion: "Lo que hacen, cuánto tarda y el precio (o «a consultar»).",
+        variantes: { diseno: "Según el diseño" },
+        requiere: ["servicios"],
+      },
+      consulta: {
+        etiqueta: "Consulta por WhatsApp",
+        descripcion: "Servicio, cuándo pensás venir y un comentario: se arma el mensaje.",
+        variantes: { diseno: "Según el diseño" },
+      },
+      galeria: {
+        etiqueta: "Trabajos",
+        descripcion: "Fotos de trabajos (sin fotos, tonos de ejemplo).",
+        variantes: { diseno: "Según el diseño" },
+        requiere: ["galeria"],
+      },
+      ubicacion: {
+        etiqueta: "Dónde estamos",
+        descripcion: "Dirección, cómo llegar, Instagram y horario.",
+        variantes: { diseno: "Según el diseño" },
+      },
+    },
+  }),
+
+  /**
    * "A tu medida": arranca en blanco (solo header y footer) y se arma agregando bloques.
    * Los bloques marcados `sistema` necesitan backend real y suman costo (ver lib/precios).
    */
@@ -366,10 +437,10 @@ type Registro = typeof registry;
 
 export type Plantilla = keyof Registro;
 
-export const PLANTILLAS = ["barberia", "consultorio", "alojamiento", "generico", "libre"] as const satisfies readonly Plantilla[];
+export const PLANTILLAS = ["barberia", "consultorio", "alojamiento", "generico", "estetica", "libre"] as const satisfies readonly Plantilla[];
 
 /** Plantillas con estructura propia y demo (las que se muestran en Al Toque Web). */
-export const PLANTILLAS_DE_RUBRO = ["barberia", "alojamiento", "generico"] as const satisfies readonly Plantilla[];
+export const PLANTILLAS_DE_RUBRO = ["barberia", "estetica", "alojamiento", "generico"] as const satisfies readonly Plantilla[];
 
 /**
  * Plantillas que Al Toque no ofrece: salud queda para Sala de Espera, la marca de ese rubro. El

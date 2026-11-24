@@ -7,6 +7,7 @@ const TIPO_SCHEMA_ORG: Record<Plantilla, string> = {
   consultorio: "MedicalClinic",
   alojamiento: "LodgingBusiness",
   generico: "LocalBusiness",
+  estetica: "BeautySalon",
   libre: "LocalBusiness",
 };
 

@@ -8,6 +8,7 @@ import { ESQUINAS, type Estilo, type Modo } from "@/core/schema/comun";
 import { fuentes as fuentesAlojamiento } from "@/templates/alojamiento";
 import { fuentes as fuentesBarberia } from "@/templates/barberia";
 import { fuentes as fuentesConsultorio } from "@/templates/consultorio";
+import { fuentes as fuentesEstetica } from "@/templates/estetica";
 import { fuentes as fuentesGenerico } from "@/templates/generico";
 import { fuentes as fuentesLibre } from "@/templates/libre";
 import { PlantillaRaiz } from "@/ui/PlantillaRaiz";
@@ -20,6 +21,7 @@ const FUENTES: Record<Plantilla, string> = {
   consultorio: fuentesConsultorio,
   alojamiento: fuentesAlojamiento,
   generico: fuentesGenerico,
+  estetica: fuentesEstetica,
   libre: fuentesLibre,
 };
 

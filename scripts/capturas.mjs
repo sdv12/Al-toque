@@ -17,6 +17,8 @@ const BASE = process.env.BASE ?? "http://localhost:3124";
 const SOLO_PROYECTOS = process.env.SOLO === "proyectos";
 const SOLO_CAJAS = process.env.SOLO === "cajas";
 const SOLO_AGENDA = process.env.SOLO === "agenda";
+/** Solo las muestras de las plantillas (DEMO=<plantilla> para una sola). */
+const SOLO_DEMOS = process.env.SOLO === "demos";
 const DISENOS_AGENDA = ["base", "ticket", "bruto", "agenda", "kiosco", "mes", "historias", "reloj", "pila"];
 const SALIDA = new URL("../public/muestras/", import.meta.url);
 
@@ -25,6 +27,7 @@ const DEMOS = [
   { plantilla: "consultorio", slug: "demo-consultorio" },
   { plantilla: "alojamiento", slug: "demo-casas" },
   { plantilla: "generico", slug: "demo-portfolio" },
+  { plantilla: "estetica", slug: "demo-estetica" },
   // Estudio no es una plantilla aparte (es Portfolio modular sobrio), pero tiene su ficha en /web.
   { plantilla: "estudio", slug: "demo-arquitectos", ruta: "/estudio" },
 ];
@@ -75,13 +78,13 @@ async function capturar(navegador, url, vista, archivo, preparar, carpeta = SALI
 await mkdir(SALIDA, { recursive: true });
 const navegador = await lanzar();
 try {
-  for (const demo of SOLO_PROYECTOS || SOLO_CAJAS || SOLO_AGENDA ? [] : DEMOS) {
+  for (const demo of SOLO_PROYECTOS || SOLO_CAJAS || SOLO_AGENDA ? [] : DEMOS.filter((d) => !process.env.DEMO || d.plantilla === process.env.DEMO)) {
     for (const vista of VISTAS) {
       await capturar(navegador, `${BASE}${demo.ruta ?? `/l/${demo.slug}`}`, vista, `${demo.plantilla}-${vista.nombre}.jpg`);
     }
   }
   // Las cajas: la demo de verdulería en Vender y en Caja del día (con los datos de ejemplo).
-  if (!SOLO_PROYECTOS && !SOLO_AGENDA) {
+  if (!SOLO_PROYECTOS && !SOLO_AGENDA && !SOLO_DEMOS) {
     // Sin el cartel de "Prueba" de las demos: en la home se muestra la caja como la usa el negocio.
     const sinAviso = (p) => p.addStyleTag({ content: "[data-aviso-prueba]{display:none!important}" });
     await capturar(navegador, `${BASE}/c/demo-verduleria`, VISTAS[1], "caja-vender.jpg", sinAviso);
@@ -89,14 +92,14 @@ try {
   }
   // El configurador, con el borrador limpio y una plantilla elegida para que se vea el preview.
   // Agenda de turnos: cada diseño en celular (sin el selector de diseños flotante, ?embed) y el panel.
-  if (!SOLO_PROYECTOS && !SOLO_CAJAS) {
+  if (!SOLO_PROYECTOS && !SOLO_CAJAS && !SOLO_DEMOS) {
     for (const d of DISENOS_AGENDA) await capturar(navegador, `${BASE}/turnos/demo?d=${d}&embed=1#/`, VISTAS[1], `agenda-${d}.jpg`);
     await capturar(navegador, `${BASE}/turnos/demo#/admin/numeros`, VISTAS[0], "agenda-panel.jpg", async (p) => {
       await p.evaluate(() => sessionStorage.setItem("ar-admin", "1"));
       await p.reload({ waitUntil: "networkidle" });
     });
   }
-  if (!SOLO_PROYECTOS && !SOLO_CAJAS && !SOLO_AGENDA) await capturar(navegador, `${BASE}/configurador`, VISTAS[0], "configurador.jpg", async (p) => {
+  if (!SOLO_PROYECTOS && !SOLO_CAJAS && !SOLO_AGENDA && !SOLO_DEMOS) await capturar(navegador, `${BASE}/configurador`, VISTAS[0], "configurador.jpg", async (p) => {
     await p.evaluate(() => localStorage.clear());
     await p.reload({ waitUntil: "networkidle" });
     await p.getByRole("tab", { name: "Estilo" }).click();
@@ -105,7 +108,7 @@ try {
   // Proyectos reales (sitios en vivo, no dependen de BASE).
   const carpetaProyectos = new URL("../public/proyectos/", import.meta.url);
   await mkdir(carpetaProyectos, { recursive: true });
-  for (const proyecto of SOLO_CAJAS || SOLO_AGENDA ? [] : PROYECTOS) {
+  for (const proyecto of SOLO_CAJAS || SOLO_AGENDA || SOLO_DEMOS ? [] : PROYECTOS) {
     await capturar(navegador, proyecto.url, VISTAS[0], `${proyecto.id}.jpg`, sinCartelNetlify, carpetaProyectos);
   }
 } finally {

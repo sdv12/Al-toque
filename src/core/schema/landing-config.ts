@@ -78,6 +78,7 @@ export const landingConfigSchema = z
       configPara("consultorio"),
       configPara("alojamiento"),
       configPara("generico"),
+      configPara("estetica"),
       configPara("libre"),
     ],
     { error: `Plantilla desconocida. Opciones: ${PLANTILLAS.join(", ")}` },

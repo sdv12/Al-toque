@@ -6,11 +6,12 @@ import { PlantillaRaiz } from "@/ui/PlantillaRaiz";
 import { LandingAlojamiento, fuentes as fuentesAlojamiento } from "./alojamiento";
 import { LandingBarberia, fuentes as fuentesBarberia } from "./barberia";
 import { LandingConsultorio, fuentes as fuentesConsultorio } from "./consultorio";
+import { LandingEstetica, fuentes as fuentesEstetica } from "./estetica";
 import { LandingGenerico, fuentes as fuentesGenerico } from "./generico";
 import { LandingLibre, fuentes as fuentesLibre } from "./libre";
 
 /** Plantillas con implementación completa. */
-export const PLANTILLAS_LISTAS: readonly Plantilla[] = ["barberia", "consultorio", "alojamiento", "generico", "libre"];
+export const PLANTILLAS_LISTAS: readonly Plantilla[] = ["barberia", "consultorio", "alojamiento", "generico", "estetica", "libre"];
 
 /**
  * Único punto que conoce todas las plantillas: elige la presentación según la config y la
@@ -47,6 +48,14 @@ export function RenderLanding({ config, adapter }: { config: LandingConfig; adap
         <PlantillaRaiz plantilla="generico" estilo={config.estilo} fuentes={fuentesGenerico}>
           <AdapterProvider config={config} {...(adapter ? { adapter } : {})}>
             <LandingGenerico config={config} />
+          </AdapterProvider>
+        </PlantillaRaiz>
+      );
+    case "estetica":
+      return (
+        <PlantillaRaiz plantilla="estetica" estilo={config.estilo} fuentes={fuentesEstetica}>
+          <AdapterProvider config={config} {...(adapter ? { adapter } : {})}>
+            <LandingEstetica config={config} />
           </AdapterProvider>
         </PlantillaRaiz>
       );

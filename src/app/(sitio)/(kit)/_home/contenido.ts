@@ -36,6 +36,16 @@ export const FICHAS: Record<Plantilla, Ficha> = {
       "Calendario de fechas con noches, estimado y seña.",
     ],
   },
+  estetica: {
+    slug: "demo-estetica",
+    fuenteDisplay: "var(--fuente-es-playfair)",
+    bajada: "Diez diseños para peluquerías, uñas y estética: del rosa clásico a la revista y el neón.",
+    destacados: [
+      "Cartel de «abierto ahora» con el horario del día y la espera.",
+      "Servicios con duración y precio, y consulta directa por WhatsApp.",
+      "Trabajos, dónde queda y el Instagram del salón.",
+    ],
+  },
   generico: {
     slug: "demo-portfolio",
     fuenteDisplay: "var(--fuente-generico-display)",

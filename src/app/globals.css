@@ -10,6 +10,7 @@
 @import "../templates/consultorio/tokens.css";
 @import "../templates/alojamiento/tokens.css";
 @import "../templates/generico/tokens.css";
+@import "../templates/estetica/tokens.css";
 @import "../templates/libre/tokens.css";
 
 /*
@@ -88,6 +89,27 @@
   --radius-control: var(--lk-radio-control);
 
   --container-medida: var(--lk-medida);
+}
+
+/*
+ * Colores de los diseños de la plantilla Salón de belleza (templates/estetica): leen la paleta del
+ * diseño activo (--c-*, en "R G B"). Con prefijo es- para no chocar con los tokens del kit.
+ */
+@theme inline {
+  --color-es-rosa: rgb(var(--c-fondo));
+  --color-es-rosa-2: rgb(var(--c-fondo2));
+  --color-es-carta: rgb(var(--c-carta));
+  --color-es-tinta: rgb(var(--c-tinta));
+  --color-es-tinta-2: rgb(var(--c-tinta2));
+  --color-es-suave: rgb(var(--c-suave));
+  --color-es-vino: rgb(var(--c-vino));
+  --color-es-acento: rgb(var(--c-acento));
+  --color-es-acento-2: rgb(var(--c-acento2));
+  --color-es-linea: rgb(var(--c-linea));
+  --color-es-claro: rgb(var(--c-claro));
+  --color-es-verde: #2e8a5a;
+  --color-es-blanco: #ffffff;
+  --color-es-negro: #000000;
 }
 
 @layer base {

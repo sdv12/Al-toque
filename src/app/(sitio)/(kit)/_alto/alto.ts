@@ -28,7 +28,7 @@ export interface RubroAlto {
 
 export const RUBROS: RubroAlto[] = [
   { id: "barberia", nombre: "Barbería o peluquería", plantilla: "barberia", profesion: "peluqueria" },
-  { id: "estetica", nombre: "Estética, uñas o spa", plantilla: "barberia", profesion: "unas" },
+  { id: "estetica", nombre: "Estética, uñas o spa", plantilla: "estetica", profesion: "unas" },
   { id: "clases", nombre: "Clases o entrenamiento", plantilla: "generico", profesion: "entrenamiento" },
   { id: "oficios", nombre: "Taller u oficio", plantilla: "generico", profesion: "taller" },
   { id: "alojamiento", nombre: "Cabañas o alojamiento", plantilla: "alojamiento" },

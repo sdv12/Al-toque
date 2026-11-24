@@ -3,6 +3,7 @@ import type { ConfigDe } from "../schema/landing-config";
 import { alojamientoDefault } from "./alojamiento";
 import { barberiaDefault } from "./barberia";
 import { consultorioDefault } from "./consultorio";
+import { esteticaDefault } from "./estetica";
 import { genericoDefault } from "./generico";
 import { libreDefault } from "./libre";
 
@@ -12,5 +13,6 @@ export const configsPorDefecto: { [P in Plantilla]: ConfigDe<P> } = {
   consultorio: consultorioDefault,
   alojamiento: alojamientoDefault,
   generico: genericoDefault,
+  estetica: esteticaDefault,
   libre: libreDefault,
 };
